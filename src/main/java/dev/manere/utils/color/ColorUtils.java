@@ -1,5 +1,7 @@
 package dev.manere.utils.color;
 
+import net.md_5.bungee.api.ChatColor;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,5 +69,63 @@ public class ColorUtils {
         }
 
         return translatedLore;
+    }
+
+    /**
+     * Replaces color code placeholders in the input string with actual ChatColor values.
+     * Also translates standard Minecraft color codes.
+     *
+     * @param message the message string with color code placeholders
+     * @return the message string with actual color formatting
+     */
+    public static String color(String message) {
+        // Replace <color code name> with the actual color code using ChatColor
+        message = message.replaceAll("<black>", ChatColor.BLACK.toString());
+        message = message.replaceAll("<dark_blue>", ChatColor.DARK_BLUE.toString());
+        message = message.replaceAll("<dark_green>", ChatColor.DARK_GREEN.toString());
+        message = message.replaceAll("<dark_aqua>", ChatColor.DARK_AQUA.toString());
+        message = message.replaceAll("<dark_light_blue>", ChatColor.DARK_AQUA.toString());
+        message = message.replaceAll("<dark_red>", ChatColor.DARK_RED.toString());
+        message = message.replaceAll("<dark_purple>", ChatColor.DARK_PURPLE.toString());
+        message = message.replaceAll("<dark_pink>", ChatColor.DARK_PURPLE.toString());
+        message = message.replaceAll("<gold>", ChatColor.GOLD.toString());
+        message = message.replaceAll("<dark_yellow>", ChatColor.GOLD.toString());
+        message = message.replaceAll("<gray>", ChatColor.GRAY.toString());
+        message = message.replaceAll("<grey>", ChatColor.GRAY.toString());
+        message = message.replaceAll("<dark_gray>", ChatColor.DARK_GRAY.toString());
+        message = message.replaceAll("<dark_grey>", ChatColor.DARK_GRAY.toString());
+        message = message.replaceAll("<blue>", ChatColor.BLUE.toString());
+        message = message.replaceAll("<green>", ChatColor.GREEN.toString());
+        message = message.replaceAll("<lime>", ChatColor.GREEN.toString());
+        message = message.replaceAll("<aqua>", ChatColor.AQUA.toString());
+        message = message.replaceAll("<light_blue>", ChatColor.AQUA.toString());
+        message = message.replaceAll("<red>", ChatColor.RED.toString());
+        message = message.replaceAll("<pink>", ChatColor.LIGHT_PURPLE.toString());
+        message = message.replaceAll("<purple>", ChatColor.LIGHT_PURPLE.toString());
+        message = message.replaceAll("<light_purple>", ChatColor.LIGHT_PURPLE.toString());
+        message = message.replaceAll("<light_pink>", ChatColor.LIGHT_PURPLE.toString());
+        message = message.replaceAll("<magenta>", ChatColor.LIGHT_PURPLE.toString());
+        message = message.replaceAll("<yellow>", ChatColor.YELLOW.toString());
+        message = message.replaceAll("<light_yellow>", ChatColor.YELLOW.toString());
+        message = message.replaceAll("<white>", ChatColor.WHITE.toString());
+
+        // Replace <#hex> with the actual hex color code using ChatColor
+        message = message.replaceAll("<#([A-Fa-f0-9]{6})>", ChatColor.COLOR_CHAR + "x$1");
+
+        // Replace special formatting tags
+        message = message.replaceAll("<bold>", ChatColor.BOLD.toString());
+        message = message.replaceAll("<reset>", ChatColor.RESET.toString());
+        message = message.replaceAll("<underline>", ChatColor.UNDERLINE.toString());
+        message = message.replaceAll("<italic>", ChatColor.ITALIC.toString());
+        message = message.replaceAll("<strikethrough>", ChatColor.STRIKETHROUGH.toString());
+        message = message.replaceAll("<strike>", ChatColor.STRIKETHROUGH.toString());
+        message = message.replaceAll("<obfuscated>", ChatColor.MAGIC.toString());
+        message = message.replaceAll("<magic>", ChatColor.MAGIC.toString());
+        message = message.replaceAll("<random>", ChatColor.MAGIC.toString());
+
+        // Translate color codes
+        message = ChatColor.translateAlternateColorCodes('&', message);
+
+        return message;
     }
 }

@@ -283,7 +283,7 @@ public class ItemBuilder {
      * Retrieves the itemstack from the ItemBuilder.
      * @return The itemstack created/modified by the ItemBuilder instance.
      */
-    public ItemStack toItemStack(){
+    public ItemStack build(){
         return is;
     }
 }
