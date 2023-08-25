@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.manere</groupId>
-    <artifactId>Utils</artifactId>
+    <artifactId>utils</artifactId>
     <version>1.1.0</version>
     <packaging>jar</packaging>
 
@@ -85,5 +85,4 @@
             <url>https://maven.pkg.github.com/Manered/YetAnotherManeredUtility</url>
         </repository>
     </distributionManagement>
-
 </project>
