@@ -77,4 +77,13 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Manered Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/Manered/YetAnotherManeredUtility</url>
+        </repository>
+    </distributionManagement>
+
 </project>
