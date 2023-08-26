@@ -12,7 +12,7 @@ public class ColorUtils {
      * @param message the message string containing color codes
      * @return the translated message string
      */
-    public static String translate(String message) {
+    public static String translateAlternateColorCodes(String message) {
         final Pattern colorPattern = Pattern.compile("(#[A-Fa-f0-9]{6})|(&[0-9a-fk-or])");
         Matcher matcher = colorPattern.matcher(message);
         StringBuilder buffer = new StringBuilder(message.length() + 4 * 8);
@@ -49,6 +49,37 @@ public class ColorUtils {
         return matcher.appendTail(buffer).toString();
     }
 
+    public static String translateHex(String message) {
+        final Pattern colorPattern = Pattern.compile("(<#[A-Fa-f0-9]{6}>)|(&[0-9a-fk-or])");
+        Matcher matcher = colorPattern.matcher(message);
+        StringBuilder buffer = new StringBuilder(message.length() + 4 * 8);
+
+        // Track the current active color
+        String activeColor = null;
+
+        while (matcher.find()) {
+            String group = matcher.group();
+
+            if (group.startsWith("<#")) {
+                String hexCode = group.substring(2, group.length() - 1);
+
+                // Convert the hex color code to Minecraft formatting codes
+                StringBuilder colorCode = new StringBuilder("§x");
+                for (int i = 0; i < 6; i += 2) {
+                    colorCode.append("§").append(hexCode.charAt(i)).append("§").append(hexCode.charAt(i + 1));
+                }
+
+                if (!colorCode.toString().equals(activeColor)) {
+                    matcher.appendReplacement(buffer, colorCode.toString());
+                    activeColor = colorCode.toString();
+                }
+            }
+        }
+
+        return matcher.appendTail(buffer).toString();
+    }
+
+
     /**
      * Translates an array of strings containing color codes to the appropriate format for display.
      *
@@ -64,7 +95,7 @@ public class ColorUtils {
 
         for (int i = 0; i < lore.length; i++) {
             if (lore[i] != null) {
-                translatedLore[i] = translate(lore[i]);
+                translatedLore[i] = translateAlternateColorCodes(lore[i]);
             }
         }
 
@@ -110,7 +141,7 @@ public class ColorUtils {
         message = message.replaceAll("<white>", ChatColor.WHITE.toString());
 
         // Replace <#hex> with the actual hex color code using ChatColor
-        message = message.replaceAll("<#([A-Fa-f0-9]{6})>", ChatColor.COLOR_CHAR + "x$1");
+        message = translateHex(message);
 
         // Replace special formatting tags
         message = message.replaceAll("<bold>", ChatColor.BOLD.toString());

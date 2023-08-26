@@ -22,7 +22,7 @@ public class ActionBarUtils {
         player.spigot().sendMessage(
                 ChatMessageType.ACTION_BAR,
                 TextComponent.fromLegacyText(
-                        ColorUtils.translate(
+                        ColorUtils.translateAlternateColorCodes(
                                 message
                         )
                 )
@@ -39,7 +39,7 @@ public class ActionBarUtils {
             player.spigot().sendMessage(
                     ChatMessageType.ACTION_BAR,
                     TextComponent.fromLegacyText(
-                            ColorUtils.translate(
+                            ColorUtils.translateAlternateColorCodes(
                                     message
                             )
                     )
