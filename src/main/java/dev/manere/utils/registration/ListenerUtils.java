@@ -13,7 +13,7 @@ public class ListenerUtils {
      * @param plugin The JavaPlugin instance representing the plugin.
      * @param listener The event listener to register.
      */
-    public static void registerListener(JavaPlugin plugin, Listener listener) {
+    public static void register(JavaPlugin plugin, Listener listener) {
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
     }
 }

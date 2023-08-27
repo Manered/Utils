@@ -16,7 +16,7 @@ public class CommandUtils {
      * @param executor The command executor responsible for handling the command.
      * @throws NullPointerException If the plugin or command executor is null.
      */
-    public static void registerCommand(JavaPlugin plugin, String commandName, CommandExecutor executor) {
+    public static void register(JavaPlugin plugin, String commandName, CommandExecutor executor) {
         Objects.requireNonNull(plugin, "Plugin cannot be null");
         Objects.requireNonNull(executor, "CommandExecutor cannot be null");
 

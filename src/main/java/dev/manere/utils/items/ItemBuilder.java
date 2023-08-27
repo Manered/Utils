@@ -1,63 +1,56 @@
 package dev.manere.utils.items;
 
-import java.util.*;
-
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.*;
+
 /**
- * Easily create itemstacks
- * <i>Note that if you do use this in one of your projects, leave this notice.</i>
- * <i>Please do credit me if you do use this in one of your projects.</i>
- * @author NonameSL
+ * Utility class for building customized {@link ItemStack}s.
+ * Provides methods for setting display name, lore, enchantments, etc.
  */
-
-/* I have my own Item Builder class in some of my projects, but I've decided to use someone elses as mine isn't that good. ~ Manered */
-
 public class ItemBuilder {
-    private final ItemStack is;
+
+    /** The ItemStack being built */
+    private final ItemStack itemStack;
+
     /**
-     * Create a new ItemBuilder from scratch.
-     * @param m The material to create the ItemBuilder with.
+     * Creates a new ItemBuilder for the given material.
+     *
+     * @param material The material to create the ItemStack with
      */
-    public ItemBuilder(Material m){
-        this(m, 1);
+    public ItemBuilder(Material material){
+        this(material, 1);
     }
+
     /**
-     * Create a new ItemBuilder over an existing itemstack.
-     * @param is The itemstack to create the ItemBuilder over.
+     * Creates a new ItemBuilder using the given ItemStack.
+     *
+     * @param itemStack The ItemStack to build upon
      */
-    public ItemBuilder(ItemStack is){
-        this.is=is;
+    public ItemBuilder(ItemStack itemStack){
+        this.itemStack = itemStack;
     }
+
     /**
-     * Create a new ItemBuilder from scratch.
-     * @param m The material of the item.
-     * @param amount The amount of the item.
+     * Creates a new ItemBuilder for the given material and amount.
+     *
+     * @param material The material to create the ItemStack with
+     * @param amount The amount of the material
      */
-    public ItemBuilder(Material m, int amount){
-        is= new ItemStack(m, amount);
+    public ItemBuilder(Material material, int amount){
+        itemStack = new ItemStack(material, amount);
     }
+
     /**
-     * Create a new ItemBuilder from scratch.
-     * @param m The material of the item.
-     * @param amount The amount of the item.
-     * @param durability The durability of the item.
-     */
-    @Deprecated
-    public ItemBuilder(Material m, int amount, byte durability){
-        is = new ItemStack(m, amount, durability);
-    }
-    /**
-     * Clone the ItemBuilder into a new one.
-     * @return The cloned instance.
+     * Creates a clone of this ItemBuilder.
+     *
+     * @return A cloned instance
      */
     public ItemBuilder clone(){
         try {
@@ -65,225 +58,328 @@ public class ItemBuilder {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
-        return new ItemBuilder(is);
+
+        return new ItemBuilder(itemStack);
     }
+
     /**
-     * Change the durability of the item.
-     * @param dur The durability to set it to.
-     */
-    @Deprecated
-    public ItemBuilder setDurability(short dur){
-        is.setDurability(dur);
-        return this;
-    }
-    /**
-     * Set the displayname of the item.
-     * @param name The name to change it to.
+     * Sets the display name of the ItemStack.
+     *
+     * @param name The name to set
+     * @return This builder, for chaining
      */
     public ItemBuilder setName(String name){
-        ItemMeta im = is.getItemMeta();
-        if (im != null) {
-            im.setDisplayName(name);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        if (itemMeta != null) {
+            itemMeta.setDisplayName(name);
         }
-        is.setItemMeta(im);
+
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
+
     /**
-     * Add an unsafe enchantment.
-     * @param ench The enchantment to add.
-     * @param level The level to put the enchantment on.
+     * Adds an unsafe enchantment to the ItemStack.
+     *
+     * @param enchantment The enchantment to add
+     * @param level The level of the enchantment
+     * @return This builder, for chaining
      */
-    public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level){
-        is.addUnsafeEnchantment(ench, level);
+    public ItemBuilder addUnsafeEnchantment(Enchantment enchantment, int level){
+        itemStack.addUnsafeEnchantment(enchantment, level);
         return this;
     }
+
     /**
-     * Remove a certain enchant from the item.
-     * @param ench The enchantment to remove
+     * Removes an enchantment from the ItemStack.
+     *
+     * @param enchantment The enchantment to remove
+     * @return This builder, for chaining
      */
-    public ItemBuilder removeEnchantment(Enchantment ench){
-        is.removeEnchantment(ench);
+    public ItemBuilder removeEnchantment(Enchantment enchantment){
+        itemStack.removeEnchantment(enchantment);
         return this;
     }
+
     /**
-     * Set the skull owner for the item. Works on skulls only.
-     * @param owner The name of the skull's owner.
+     * Sets the skull owner for a skull ItemStack.
+     *
+     * @param owner The UUID or name of the skull owner
+     * @return This builder, for chaining
      */
     public ItemBuilder setSkullOwner(String owner){
-        SkullMeta im = (SkullMeta)is.getItemMeta();
-        if (im != null) {
-            im.setOwnerProfile(Bukkit.getOfflinePlayer(UUID.fromString(owner)).getPlayerProfile());
+        SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
+
+        if (itemMeta != null) {
+            itemMeta.setOwnerProfile(
+                    Bukkit.getOfflinePlayer(UUID.fromString(owner))
+                          .getPlayerProfile()
+            );
         }
-        is.setItemMeta(im);
+
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
+
     /**
-     * Add an enchant to the item.
-     * @param ench The enchantment to add
-     * @param level The level
+     * Adds an enchantment to the ItemStack.
+     *
+     * @param enchantment The enchantment to add
+     * @param level The level of the enchantment
+     * @return This builder, for chaining
      */
-    public ItemBuilder addEnchant(Enchantment ench, int level){
-        ItemMeta im = is.getItemMeta();
-        if (im != null) {
-            im.addEnchant(ench, level, true);
+    public ItemBuilder addEnchant(Enchantment enchantment, int level){
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        if (itemMeta != null) {
+            itemMeta.addEnchant(enchantment, level, true);
         }
-        is.setItemMeta(im);
+
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
+
     /**
-     * Add multiple enchants at once.
-     * @param enchantments The enchants to add.
+     * Adds a map of enchantments to the ItemStack.
+     *
+     * @param enchantments The map of enchantments to add
+     * @return This builder, for chaining
      */
     public ItemBuilder addEnchantments(Map<Enchantment, Integer> enchantments){
-        is.addEnchantments(enchantments);
+        itemStack.addEnchantments(enchantments);
         return this;
     }
+
     /**
-     * Sets infinity durability on the item by setting the durability to Short.MAX_VALUE.
-     */
-    @Deprecated
-    public ItemBuilder setInfinityDurability(){
-        is.setDurability(Short.MAX_VALUE);
-        return this;
-    }
-    /**
-     * Re-sets the lore.
-     * @param lore The lore to set it to.
+     * Sets the lore of the ItemStack.
+     *
+     * @param lore The list of lore to set
+     * @return This builder, for chaining
      */
     public ItemBuilder setLore(String... lore){
-        ItemMeta im = is.getItemMeta();
-        if (im != null) {
-            im.setLore(Arrays.asList(lore));
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        if (itemMeta != null) {
+            itemMeta.setLore(Arrays.asList(lore));
         }
-        is.setItemMeta(im);
+
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
+
     /**
-     * Re-sets the lore.
-     * @param lore The lore to set it to.
+     * Sets the lore of the ItemStack.
+     *
+     * @param lore The list of lore to set
+     * @return This builder, for chaining
      */
     public ItemBuilder setLore(List<String> lore) {
-        ItemMeta im = is.getItemMeta();
-        if (im != null) {
-            im.setLore(lore);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        if (itemMeta != null) {
+            itemMeta.setLore(lore);
         }
-        is.setItemMeta(im);
+
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
+
     /**
-     * Remove a lore line.
-     * @param line The line of lore to remove.
+     * Removes a line of lore from the ItemStack
+     * based on the text of the line.
+     *
+     * @param line The text of the line to remove
+     * @return This builder, for chaining
      */
     public ItemBuilder removeLoreLine(String line){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta itemMeta = itemStack.getItemMeta();
         List<String> lore = null;
-        if (im != null) {
-            lore = new ArrayList<>(Objects.requireNonNull(im.getLore()));
-        }
+
+        if (itemMeta != null) lore = new ArrayList<>(Objects.requireNonNull(itemMeta.getLore()));
+
         if (lore != null && !lore.contains(line)) return this;
-        if (lore != null) {
-            lore.remove(line);
-        }
-        if (im != null) {
-            im.setLore(lore);
-        }
-        is.setItemMeta(im);
+
+        if (lore != null) lore.remove(line);
+
+        if (itemMeta != null) itemMeta.setLore(lore);
+
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
+
     /**
-     * Remove a lore line.
-     * @param index The index of the lore line to remove.
+     * Removes a line of lore from the ItemStack
+     * based on the index of the line.
+     *
+     * @param index The index of the line to remove
+     * @return This builder, for chaining
      */
     public ItemBuilder removeLoreLine(int index){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta itemMeta = itemStack.getItemMeta();
         List<String> lore = null;
-        if (im != null) {
-            lore = new ArrayList<>(Objects.requireNonNull(im.getLore()));
-        }
+
+        if (itemMeta != null) lore = new ArrayList<>(Objects.requireNonNull(itemMeta.getLore()));
+
         if (lore != null && (index < 0 || index > lore.size())) return this;
-        if (lore != null) {
-            lore.remove(index);
-        }
-        if (im != null) {
-            im.setLore(lore);
-        }
-        is.setItemMeta(im);
+
+        if (lore != null) lore.remove(index);
+
+        if (itemMeta != null) itemMeta.setLore(lore);
+
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
+
     /**
-     * Add a lore line.
-     * @param line The lore line to add.
+     * Adds a new line of lore to the end of the ItemStack's lore.
+     *
+     * @param line The text for the new line
+     * @return This builder, for chaining
      */
     public ItemBuilder addLoreLine(String line){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta itemMeta = itemStack.getItemMeta();
         List<String> lore = new ArrayList<>();
-        if (im != null && im.hasLore()) lore = new ArrayList<>(Objects.requireNonNull(im.getLore()));
-        lore.add(line);
-        if (im != null) {
-            im.setLore(lore);
+
+        if (itemMeta != null && itemMeta.hasLore()) lore = new ArrayList<>(Objects.requireNonNull(itemMeta.getLore()));
+
+        if (itemMeta != null) {
+            lore.add(line);
+            itemMeta.setLore(lore);
         }
-        is.setItemMeta(im);
+
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
+
     /**
-     * Add a lore line.
-     * @param line The lore line to add.
-     * @param pos The index of where to put it.
+     * Adds or replaces a line of lore at a specific position.
+     *
+     * @param line The text for the line
+     * @param pos The index where the line should be added or replaced
+     * @return This builder, for chaining
      */
     public ItemBuilder addLoreLine(String line, int pos){
-        ItemMeta im = is.getItemMeta();
+        ItemMeta itemMeta = itemStack.getItemMeta();
         List<String> lore = null;
-        if (im != null) {
-            lore = new ArrayList<>(Objects.requireNonNull(im.getLore()));
-        }
-        if (lore != null) {
-            lore.set(pos, line);
-        }
-        if (im != null) {
-            im.setLore(lore);
-        }
-        is.setItemMeta(im);
+
+        if (itemMeta != null) lore = new ArrayList<>(Objects.requireNonNull(itemMeta.getLore()));
+
+        if (lore != null) lore.set(pos, line);
+
+        if (itemMeta != null) itemMeta.setLore(lore);
+
+        itemStack.setItemMeta(itemMeta);
         return this;
     }
+
     /**
-     * Sets the dye color on an item.
-     * <b>* Notice that this doesn't check for item type, sets the literal data of the dyecolor as durability.</b>
-     * @param color The color to put.
+     * Sets the amount of the ItemStack.
+     *
+     * @param amount The new amount
+     * @return This builder, for chaining
      */
-    @Deprecated
-    public ItemBuilder setDyeColor(DyeColor color){
-        this.is.setDurability(color.getDyeData());
+    public ItemBuilder setAmount(int amount) {
+        itemStack.setAmount(amount);
         return this;
     }
+
     /**
-     * Sets the dye color of a wool item. Works only on wool.
-     * @deprecated As of version 1.2 changed to setDyeColor.
-     * @see ItemBuilder@setDyeColor(DyeColor)
-     * @param color The DyeColor to set the wool item to.
+     * Sets the durability of the ItemStack.
+     *
+     * @param durability The durability to set
+     * @return This builder, for chaining
      */
-    @Deprecated
-    public ItemBuilder setWoolColor(DyeColor color){
-        if(!is.getType().equals(Material.LEGACY_WOOL))return this;
-        this.is.setDurability(color.getDyeData());
-        return this;
-    }
-    /**
-     * Sets the armor color of a leather armor piece. Works only on leather armor pieces.
-     * @param color The color to set it to.
-     */
-    public ItemBuilder setLeatherArmorColor(Color color){
-        LeatherArmorMeta im = (LeatherArmorMeta)is.getItemMeta();
-        if (im != null) {
-            im.setColor(color);
+    public ItemBuilder setDurability(int durability) {
+        if (itemStack.getItemMeta() instanceof Damageable damageable) {
+            damageable.setDamage(durability);
+            itemStack.setItemMeta(damageable);
+        } else {
+            throw new IllegalArgumentException("ItemMeta is required to be an instance of Damageable to set the durability!");
         }
-        is.setItemMeta(im);
+
         return this;
     }
+
     /**
-     * Retrieves the itemstack from the ItemBuilder.
-     * @return The itemstack created/modified by the ItemBuilder instance.
+     * Adds glow effect to the ItemStack.
+     *
+     * @return This builder, for chaining
+     */
+    public ItemBuilder addGlow() {
+        addUnsafeEnchantment(Enchantment.LUCK, 1);
+        return this;
+    }
+
+    /**
+     * Removes glow effect from the ItemStack.
+     *
+     * @return This builder, for chaining
+     */
+    public ItemBuilder removeGlow() {
+        removeEnchantment(Enchantment.LUCK);
+        return this;
+    }
+
+    /**
+     * Sets the ItemStack to be unbreakable.
+     *
+     * @return This builder, for chaining
+     */
+    public ItemBuilder setUnbreakable() {
+        ItemMeta meta = itemStack.getItemMeta();
+
+        if (meta != null) {
+            meta.setUnbreakable(true);
+        }
+
+        itemStack.setItemMeta(meta);
+        return this;
+    }
+
+    /**
+     * Sets the custom model data of the ItemStack.
+     *
+     * @param data The custom model data to set
+     * @return This builder, for chaining
+     */
+    public ItemBuilder setCustomModelData(int data) {
+        ItemMeta meta = itemStack.getItemMeta();
+
+        if (meta != null) {
+            meta.setCustomModelData(data);
+        }
+
+        itemStack.setItemMeta(meta);
+        return this;
+    }
+
+    /**
+     * Sets the meta of the ItemStack.
+     *
+     * @param itemMeta The item meta to set the item stack's item meta to
+     * @return This builder, for chaining
+     */
+    public ItemBuilder setMeta(ItemMeta itemMeta) {
+        itemStack.setItemMeta(itemMeta);
+        return this;
+    }
+
+    /**
+     * Gets the {@link ItemMeta} that is being built.
+     *
+     * @return The ItemMeta
+     */
+    public ItemMeta getMeta() {
+        return itemStack.getItemMeta();
+    }
+
+    /**
+     * Builds and returns the final {@link ItemStack}.
+     *
+     * @return The built ItemStack
      */
     public ItemStack build(){
-        return is;
+        return itemStack;
     }
 }
