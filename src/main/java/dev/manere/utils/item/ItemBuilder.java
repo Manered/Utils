@@ -1,8 +1,9 @@
-package dev.manere.utils.items;
+package dev.manere.utils.item;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -83,23 +84,19 @@ public class ItemBuilder {
      * Adds an unsafe enchantment to the ItemStack.
      *
      * @param enchantment The enchantment to add
-     * @param level The level of the enchantment
-     * @return This builder, for chaining
+     * @param level       The level of the enchantment
      */
-    public ItemBuilder addUnsafeEnchantment(Enchantment enchantment, int level){
+    public void addUnsafeEnchantment(Enchantment enchantment, int level){
         itemStack.addUnsafeEnchantment(enchantment, level);
-        return this;
     }
 
     /**
      * Removes an enchantment from the ItemStack.
      *
      * @param enchantment The enchantment to remove
-     * @return This builder, for chaining
      */
-    public ItemBuilder removeEnchantment(Enchantment enchantment){
+    public void removeEnchantment(Enchantment enchantment){
         itemStack.removeEnchantment(enchantment);
-        return this;
     }
 
     /**
@@ -302,6 +299,40 @@ public class ItemBuilder {
     }
 
     /**
+     * Adds an ItemFlag to the ItemStack.
+     *
+     * @param flag The Item Flag to add
+     * @return This builder, for chaining
+     */
+    public ItemBuilder addFlag(ItemFlag flag) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        if (itemMeta != null) {
+            itemMeta.addItemFlags(flag);
+            itemStack.setItemMeta(itemMeta);
+        }
+
+        return this;
+    }
+
+    /**
+     * Removes an ItemFlag from the ItemStack.
+     *
+     * @param flag The Item Flag to remove
+     * @return This builder, for chaining
+     */
+    public ItemBuilder removeFlag(ItemFlag flag) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        if (itemMeta != null) {
+            itemMeta.removeItemFlags(flag);
+            itemStack.setItemMeta(itemMeta);
+        }
+
+        return this;
+    }
+
+    /**
      * Adds glow effect to the ItemStack.
      *
      * @return This builder, for chaining
@@ -372,6 +403,16 @@ public class ItemBuilder {
      */
     public ItemMeta getMeta() {
         return itemStack.getItemMeta();
+    }
+
+    /**
+     * Creates an ItemBuilder from an existing {@link ItemStack}.
+     *
+     * @param itemStack The ItemStack to convert to an ItemBuilder
+     * @return The converted ItemBuilder
+     */
+    public ItemBuilder from(ItemStack itemStack) {
+        return new ItemBuilder(itemStack);
     }
 
     /**

@@ -66,11 +66,11 @@ public class SmallFontConverter {
         smallFontMap.put('w' , 'ᴡ');
         smallFontMap.put('x' , 'x');
         smallFontMap.put('y' , 'ʏ');
-        smallFontMap.put('z', 'ᴢ');
-        smallFontMap.put('{', '{');
-        smallFontMap.put('|', '|');
-        smallFontMap.put('}', '}');
-        smallFontMap.put('~', '˜');
+        smallFontMap.put('z' , 'ᴢ');
+        smallFontMap.put('{' , '{');
+        smallFontMap.put('|' , '|');
+        smallFontMap.put('}' , '}');
+        smallFontMap.put('~' , '˜');
     }
 
     /**
@@ -79,7 +79,7 @@ public class SmallFontConverter {
      * @param text The input text to be converted.
      * @return The converted text in small font representation.
      */
-    public static String convert(String text) {
+    public static String toSmallFont(String text) {
         text = text.toLowerCase();
         StringBuilder result = new StringBuilder();
 

@@ -1,4 +1,4 @@
-package dev.manere.utils.items;
+package dev.manere.utils.item;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

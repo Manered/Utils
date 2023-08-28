@@ -1,4 +1,4 @@
-package dev.manere.utils.placeholders;
+package dev.manere.utils.placeholder;
 
 import java.util.HashMap;
 import java.util.Map;

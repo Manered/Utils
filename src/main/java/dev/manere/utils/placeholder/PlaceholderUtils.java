@@ -1,4 +1,4 @@
-package dev.manere.utils.placeholders;
+package dev.manere.utils.placeholder;
 
 /**
  * A utility class for simple placeholder replacement.
