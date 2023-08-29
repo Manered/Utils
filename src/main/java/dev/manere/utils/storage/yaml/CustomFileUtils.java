@@ -1,6 +1,5 @@
-package dev.manere.utils.storage;
+package dev.manere.utils.storage.yaml;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 

@@ -1,14 +1,18 @@
 package dev.manere.utils.player;
 
+import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.text.color.ColorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * A utility class for common operations related to players in Bukkit.
@@ -35,9 +39,10 @@ public class PlayerUtils {
      * Clears the chat for the given player by sending empty messages.
      *
      * @param player The player whose chat will be cleared.
+     * @param count  The number of empty messages to send.
      */
-    public static void clearChat(Player player) {
-        for (int i = 0; i < 100; i++) {
+    public static void clearChat(Player player, int count) {
+        for (int i = 0; i < count; i++) {
             player.sendMessage("");
         }
     }
@@ -73,7 +78,7 @@ public class PlayerUtils {
      */
     public static void heal(Player player) {
         player.setSaturation(20.0f);
-        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
         player.setArrowsInBody(0);
         player.setFoodLevel(20);
     }
@@ -84,7 +89,7 @@ public class PlayerUtils {
      * @param player The player to send the message to.
      * @param text   The text of the message.
      */
-    public static void message(Player player, String text) {
+    public static void chat(Player player, String text) {
         player.sendMessage(
                 ColorUtils.color(
                         text
@@ -130,6 +135,100 @@ public class PlayerUtils {
                     stay,
                     fadeOut
             );
+        }
+    }
+
+    /**
+     * Teleports the player to the specified location.
+     *
+     * @param player    The player to teleport.
+     * @param location  The target location.
+     */
+    public static void teleport(Player player, Location location) {
+        player.teleport(location);
+    }
+
+    /**
+     * Teleports the player to the location of the target player.
+     *
+     * @param player    The player to teleport.
+     * @param target    The target player.
+     */
+    public static void teleport(Player player, Player target) {
+        player.teleport(target.getLocation());
+    }
+
+    /**
+     * Gives the player the specified item.
+     *
+     * @param player    The player to give the item to.
+     * @param item      The item to give.
+     */
+    public static void giveItem(Player player, ItemBuilder item) {
+        player.getInventory().addItem(item.build());
+    }
+
+    /**
+     * Clears the inventory of the specified player.
+     *
+     * @param player    The player whose inventory will be cleared.
+     */
+    public static void clearInventory(Player player) {
+        player.getInventory().clear();
+    }
+
+    /**
+     * Applies a potion effect to the specified player.
+     *
+     * @param player    The player to apply the potion effect to.
+     * @param type      The type of potion effect.
+     * @param duration  The duration of the potion effect in ticks.
+     * @param amplifier The amplifier of the potion effect.
+     */
+    public static void applyPotionEffect(Player player, PotionEffectType type, int duration, int amplifier) {
+        player.addPotionEffect(new PotionEffect(type, duration, amplifier));
+    }
+
+    /**
+     * Removes a potion effect from the specified player.
+     *
+     * @param player    The player to remove the potion effect from.
+     * @param type      The type of potion effect to remove.
+     */
+    public static void removePotionEffect(Player player, PotionEffectType type) {
+        player.removePotionEffect(type);
+    }
+
+    /**
+     * Clears all active potion effects from the specified player.
+     *
+     * @param player    The player whose potion effects will be cleared.
+     */
+    public static void clearPotionEffects(Player player) {
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
+    }
+
+    /**
+     * Removes the specified item from the player's inventory.
+     *
+     * @param player    The player from whose inventory the item will be removed.
+     * @param item      The item to be removed.
+     */
+    public static void removeItem(Player player, ItemBuilder item) {
+        player.getInventory().removeItem(item.build());
+    }
+
+    /**
+     * Sets the game mode of a list of players.
+     *
+     * @param gamemode  The game mode to be set.
+     * @param players   The list of players whose game mode will be changed.
+     */
+    public static void setGamemodeOfPlayers(GameMode gamemode, List<Player> players) {
+        for (Player player : players) {
+            player.setGameMode(gamemode);
         }
     }
 }

@@ -1,4 +1,4 @@
-package dev.manere.utils.sql;
+package dev.manere.utils.storage.sql;
 
 /**
  * Represents various SQL data types.

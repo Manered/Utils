@@ -60,8 +60,6 @@ public class ActionBarUtils {
      * @param text The text to send.
      */
     private static void sendAsync(Plugin plugin, Player player, String text) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            send(player, text);
-        });
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> send(player, text));
     }
 }

@@ -1,4 +1,4 @@
-package dev.manere.utils.sql;
+package dev.manere.utils.storage.sql;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
