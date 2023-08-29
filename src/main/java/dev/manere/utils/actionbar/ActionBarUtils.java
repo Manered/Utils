@@ -50,7 +50,7 @@ public class ActionBarUtils {
      * @param text The text to send.
      */
     public static void sendFor(long delay, long period, Plugin plugin, Player player, String text) {
-        Bukkit.getScheduler().runTaskTimer(plugin, () -> sendAsync(plugin, player, text), delay, period);
+        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> sendAsync(plugin, player, text), delay, period);
     }
 
     /**
@@ -60,6 +60,6 @@ public class ActionBarUtils {
      * @param text The text to send.
      */
     private static void sendAsync(Plugin plugin, Player player, String text) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> send(player, text));
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> send(player, text));
     }
 }
