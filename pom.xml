@@ -6,7 +6,7 @@
 
     <groupId>dev.manere</groupId>
     <artifactId>utils</artifactId>
-    <version>1.1.7</version>
+    <version>1.1.8</version>
     <packaging>jar</packaging>
 
     <name>Utils</name>
@@ -54,6 +54,10 @@
 
     <repositories>
         <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -76,6 +80,23 @@
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fastasyncworldedit</groupId>
+            <artifactId>FastAsyncWorldEdit-Core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fastasyncworldedit</groupId>
+            <artifactId>FastAsyncWorldEdit-Bukkit</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>FastAsyncWorldEdit-Core</artifactId>
+                    <groupId>*</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <distributionManagement>
@@ -85,4 +106,16 @@
             <url>https://maven.pkg.github.com/Manered/YetAnotherManeredUtility</url>
         </repository>
     </distributionManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.intellectualsites.bom</groupId>
+                <artifactId>bom-newest</artifactId>
+                <version>1.37</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
