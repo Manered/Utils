@@ -96,9 +96,7 @@ public class SchematicUtils {
                     throw new RuntimeException(e);
                 }
             }
-        });
 
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, bukkitTask -> {
             clipboard.get().paste(world, to);
         });
     }
