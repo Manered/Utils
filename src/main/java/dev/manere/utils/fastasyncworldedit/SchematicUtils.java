@@ -5,6 +5,7 @@ import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
+import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -43,7 +44,9 @@ public class SchematicUtils {
                 world, region, clipboard, region.getMinimumPoint()
         );
 
-        Operations.completeBlindly(forwardExtentCopy);
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            Operations.complete(forwardExtentCopy);
+        });
 
         File schem = getSchematicFile(plugin, name);
 
@@ -76,24 +79,24 @@ public class SchematicUtils {
      * @param corner1 the location to paste the schematic
      */
     public static void pasteSchematic(JavaPlugin plugin, String name, Location corner1) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            File file = getSchematicFile(plugin, name);
-            World world = BukkitAdapter.adapt(corner1.getWorld());
+        File file = getSchematicFile(plugin, name);
+        World world = BukkitAdapter.adapt(corner1.getWorld());
 
-            BlockVector3 to = BukkitAdapter.adapt(corner1).toBlockPoint();
+        BlockVector3 to = BukkitAdapter.adapt(corner1).toBlockPoint();
 
-            ClipboardFormat format = ClipboardFormats.findByFile(file);
+        ClipboardFormat format = ClipboardFormats.findByFile(file);
 
-            Clipboard clipboard;
+        Clipboard clipboard;
 
-            try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
-                clipboard = reader.read();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+            clipboard = reader.read();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, (bukkitTask -> {
             clipboard.paste(world, to);
-        });
+        }));
     }
 
 }
