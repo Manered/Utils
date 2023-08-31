@@ -5,37 +5,23 @@ import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
-import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Utility class for asynchronous WorldEdit schematic operations.
  */
 public class SchematicUtils {
-
-    /**
-     * Saves a schematic of the region asynchronously.
-     *
-     * @param plugin the JavaPlugin instance
-     * @param name the name for the schematic file
-     * @param corner1 one corner location of the region
-     * @param corner2 the opposite corner location of the region
-     */
-    public static CompletableFuture<Void> saveSchematicAsync(JavaPlugin plugin, String name, Location corner1, Location corner2) {
-        return CompletableFuture.runAsync(() -> saveSchematic(plugin, name, corner1, corner2));
-    }
-
     /**
      * Saves a schematic of the region.
      *
@@ -57,11 +43,11 @@ public class SchematicUtils {
                 world, region, clipboard, region.getMinimumPoint()
         );
 
-        Operations.complete(forwardExtentCopy);
+        Operations.completeBlindly(forwardExtentCopy);
 
         File schem = getSchematicFile(plugin, name);
 
-        try (ClipboardWriter writer = BuiltInClipboardFormat.FAST.getWriter(Files.newOutputStream(schem.toPath()))) {
+        try (ClipboardWriter writer = BuiltInClipboardFormat.FAST.getWriter(new FileOutputStream(schem))) {
             if (!schem.exists()) schem.createNewFile();
             writer.write(clipboard);
         } catch (IOException e) {
@@ -77,20 +63,9 @@ public class SchematicUtils {
      * @return the File instance
      */
     public static File getSchematicFile(JavaPlugin plugin, String name) {
-        File dir = new File(Objects.requireNonNull(plugin.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit")).getDataFolder() + "/schematics");
+        File dir = new File(Objects.requireNonNull(plugin.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit")).getDataFolder() + "/schematics/");
         if (!dir.exists()) dir.mkdir();
         return new File(dir, name + ".schem");
-    }
-
-    /**
-     * Pastes a schematic asynchronously at the given location.
-     *
-     * @param plugin the JavaPlugin instance
-     * @param name the name of the schematic file
-     * @param corner1 the location to paste the schematic
-     */
-    public static CompletableFuture<Void> pasteSchematicAsync(JavaPlugin plugin, String name, Location corner1) {
-        return CompletableFuture.runAsync(() -> pasteSchematic(plugin, name, corner1));
     }
 
     /**
@@ -102,20 +77,21 @@ public class SchematicUtils {
      */
     public static void pasteSchematic(JavaPlugin plugin, String name, Location corner1) {
         File file = getSchematicFile(plugin, name);
-        Clipboard clipboard;
+        World world = BukkitAdapter.adapt(corner1.getWorld());
+
+        BlockVector3 to = BukkitAdapter.adapt(corner1).toBlockPoint();
+
         ClipboardFormat format = ClipboardFormats.findByFile(file);
-        if (format != null) {
-            try (ClipboardReader reader = format.getReader(Files.newInputStream(file.toPath()))) {
-                clipboard = reader.read();
-                Operation operation = new ClipboardHolder(clipboard)
-                        .createPaste(BukkitAdapter.adapt(corner1.getWorld()))
-                        .to(BukkitAdapter.adapt(corner1).toBlockPoint())
-                        .build();
-                Operations.complete(operation);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+        Clipboard clipboard;
+
+        try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+            clipboard = reader.read();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
+        clipboard.paste(world, to);
     }
 
 }
