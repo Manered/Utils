@@ -1,11 +1,10 @@
-package dev.manere.utils.fastasyncworldedit;
+package dev.manere.utils.worldedit;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
-import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -18,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Utility class for asynchronous WorldEdit schematic operations.
@@ -86,17 +86,21 @@ public class SchematicUtils {
 
         ClipboardFormat format = ClipboardFormats.findByFile(file);
 
-        Clipboard clipboard;
+        AtomicReference<Clipboard> clipboard = new AtomicReference<>();
 
-        try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
-            clipboard = reader.read();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, bukkitTask -> {
+            if (format != null) {
+                try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                    clipboard.set(reader.read());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, (bukkitTask -> {
-            clipboard.paste(world, to);
-        }));
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, bukkitTask -> {
+            clipboard.get().paste(world, to);
+        });
     }
 
 }
