@@ -44,7 +44,7 @@ public class SchematicUtils {
      * @param corner1 one corner location of the region
      * @param corner2 the opposite corner location of the region
      */
-    private static void saveSchematic(JavaPlugin plugin, String name, Location corner1, Location corner2) {
+    public static void saveSchematic(JavaPlugin plugin, String name, Location corner1, Location corner2) {
         World world = BukkitAdapter.adapt(corner1.getWorld());
         CuboidRegion region = new CuboidRegion(
                 BukkitAdapter.adapt(corner1).toBlockPoint(),
@@ -76,7 +76,7 @@ public class SchematicUtils {
      * @param name the name for the schematic file
      * @return the File instance
      */
-    private static File getSchematicFile(JavaPlugin plugin, String name) {
+    public static File getSchematicFile(JavaPlugin plugin, String name) {
         File dir = new File(Objects.requireNonNull(plugin.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit")).getDataFolder() + "/schematics");
         if (!dir.exists()) dir.mkdir();
         return new File(dir, name + ".schem");
@@ -100,7 +100,7 @@ public class SchematicUtils {
      * @param name the name of the schematic file
      * @param corner1 the location to paste the schematic
      */
-    private static void pasteSchematic(JavaPlugin plugin, String name, Location corner1) {
+    public static void pasteSchematic(JavaPlugin plugin, String name, Location corner1) {
         File file = getSchematicFile(plugin, name);
         Clipboard clipboard;
         ClipboardFormat format = ClipboardFormats.findByFile(file);
