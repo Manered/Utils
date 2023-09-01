@@ -11,13 +11,13 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.world.World;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Utility class for asynchronous WorldEdit schematic operations.
@@ -81,24 +81,23 @@ public class SchematicUtils {
     public static void pasteSchematic(JavaPlugin plugin, String name, Location corner1) {
         File file = getSchematicFile(plugin, name);
         World world = BukkitAdapter.adapt(corner1.getWorld());
-
         BlockVector3 to = BukkitAdapter.adapt(corner1).toBlockPoint();
 
         ClipboardFormat format = ClipboardFormats.findByFile(file);
 
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, bukkitTask -> {
-            AtomicReference<Clipboard> clipboard = new AtomicReference<>();
-
-            if (format != null) {
-                try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
-                    clipboard.set(reader.read());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        if (format != null) {
+            try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                Clipboard clipboard = reader.read();
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        clipboard.paste(world, to);
+                        Operations.complete(clipboard.commit());
+                    }
+                }.runTaskAsynchronously(plugin);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            clipboard.get().paste(world, to);
-        });
+        }
     }
-
 }
