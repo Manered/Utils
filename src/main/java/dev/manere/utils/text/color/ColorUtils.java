@@ -1,6 +1,7 @@
 package dev.manere.utils.text.color;
 
 import net.md_5.bungee.api.ChatColor;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +13,8 @@ public class ColorUtils {
      * @param text the text string containing color codes
      * @return the translated text string
      */
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = "v1.2.0")
     public static String colorOld(String text) {
         final Pattern colorPattern = Pattern.compile("(#[A-Fa-f0-9]{6})|(&[0-9a-fk-or])");
         Matcher matcher = colorPattern.matcher(text);
@@ -50,56 +53,27 @@ public class ColorUtils {
     }
 
     public static String colorHex(String text) {
-        final Pattern colorPattern = Pattern.compile("(<#[A-Fa-f0-9]{6}>)|(&[0-9a-fk-or])");
+        // Define a regular expression pattern to match <#HEX> tags
+        String pattern = "<#([A-Fa-f0-9]{6})>";
+
+        // Create a pattern object and a matcher to find matches
+        Pattern colorPattern = Pattern.compile(pattern);
         Matcher matcher = colorPattern.matcher(text);
-        StringBuilder buffer = new StringBuilder(text.length() + 4 * 8);
 
-        // Track the current active color
-        String activeColor = null;
+        // Use a StringBuffer to build the modified message
+        StringBuffer modifiedMessage = new StringBuffer();
 
+        // Iterate through the matches and replace them with ChatColor.of()
         while (matcher.find()) {
-            String group = matcher.group();
-
-            if (group.startsWith("<#")) {
-                String hexCode = group.substring(2, group.length() - 1);
-
-                // Convert the hex color code to Minecraft formatting codes
-                StringBuilder colorCode = new StringBuilder("§x");
-                for (int i = 0; i < 6; i += 2) {
-                    colorCode.append("§").append(hexCode.charAt(i)).append("§").append(hexCode.charAt(i + 1));
-                }
-
-                if (!colorCode.toString().equals(activeColor)) {
-                    matcher.appendReplacement(buffer, colorCode.toString());
-                    activeColor = colorCode.toString();
-                }
-            }
+            String hexColor = matcher.group(1); // Extract the HEX color
+            ChatColor color = ChatColor.of("#" + hexColor); // Convert to ChatColor
+            matcher.appendReplacement(modifiedMessage, color.toString()); // Replace with ChatColor
         }
 
-        return matcher.appendTail(buffer).toString();
-    }
+        // Append the remaining text to the modified message
+        matcher.appendTail(modifiedMessage);
 
-
-    /**
-     * Translates an array of strings containing color codes to the appropriate format for display.
-     *
-     * @param lore the array of lore strings containing color codes
-     * @return the translated array of lore strings
-     */
-    public static String[] colorOld(String... lore) {
-        if (lore == null) {
-            return null;
-        }
-
-        String[] translatedLore = new String[lore.length];
-
-        for (int i = 0; i < lore.length; i++) {
-            if (lore[i] != null) {
-                translatedLore[i] = colorOld(lore[i]);
-            }
-        }
-
-        return translatedLore;
+        return modifiedMessage.toString();
     }
 
     /**
@@ -140,9 +114,6 @@ public class ColorUtils {
         text = text.replaceAll("<light_yellow>", ChatColor.YELLOW.toString());
         text = text.replaceAll("<white>", ChatColor.WHITE.toString());
 
-        // Replace <#hex> with the actual hex color code using ChatColor
-        text = colorHex(text);
-
         // Replace special formatting tags
         text = text.replaceAll("<bold>", ChatColor.BOLD.toString());
         text = text.replaceAll("<reset>", ChatColor.RESET.toString());
@@ -156,6 +127,9 @@ public class ColorUtils {
 
         // Translate color codes
         text = ChatColor.translateAlternateColorCodes('&', text);
+
+        // Replace <#hex> with the actual hex color code using ChatColor
+        text = colorHex(text);
 
         return text;
     }

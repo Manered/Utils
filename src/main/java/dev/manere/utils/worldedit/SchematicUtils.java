@@ -1,22 +1,24 @@
 package dev.manere.utils.worldedit;
 
+import com.fastasyncworldedit.core.FaweAPI;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
+import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Objects;
 
 /**
@@ -44,13 +46,11 @@ public class SchematicUtils {
                 world, region, clipboard, region.getMinimumPoint()
         );
 
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            Operations.complete(forwardExtentCopy);
-        });
+        Operations.complete(forwardExtentCopy);
 
         File schem = getSchematicFile(plugin, name);
 
-        try (ClipboardWriter writer = BuiltInClipboardFormat.FAST.getWriter(new FileOutputStream(schem))) {
+        try (ClipboardWriter writer = BuiltInClipboardFormat.FAST.getWriter(Files.newOutputStream(schem.toPath()))) {
             if (!schem.exists()) schem.createNewFile();
             writer.write(clipboard);
         } catch (IOException e) {
@@ -80,21 +80,24 @@ public class SchematicUtils {
      */
     public static void pasteSchematic(JavaPlugin plugin, String name, Location corner1) {
         File file = getSchematicFile(plugin, name);
-        World world = BukkitAdapter.adapt(corner1.getWorld());
-        BlockVector3 to = BukkitAdapter.adapt(corner1).toBlockPoint();
-
+        Clipboard clipboard;
         ClipboardFormat format = ClipboardFormats.findByFile(file);
-
+        World world = BukkitAdapter.adapt(corner1.getWorld());
         if (format != null) {
-            try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
-                Clipboard clipboard = reader.read();
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        clipboard.paste(world, to);
-                        Operations.complete(clipboard.commit());
-                    }
-                }.runTaskAsynchronously(plugin);
+            try (ClipboardReader reader = format.getReader(Files.newInputStream(file.toPath()))) {
+                EditSession editSession = WorldEdit.getInstance().newEditSession(world);
+
+                clipboard = reader.read();
+
+                Operation operation = new ClipboardHolder(clipboard)
+                        .createPaste(editSession)
+                        .ignoreAirBlocks(true)
+                        .to(BukkitAdapter.adapt(corner1).toBlockPoint())
+                        .build();
+
+                Operations.complete(operation);
+
+                editSession.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
