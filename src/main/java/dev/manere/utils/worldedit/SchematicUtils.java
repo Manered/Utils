@@ -86,9 +86,9 @@ public class SchematicUtils {
 
         ClipboardFormat format = ClipboardFormats.findByFile(file);
 
-        AtomicReference<Clipboard> clipboard = new AtomicReference<>();
-
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, bukkitTask -> {
+            AtomicReference<Clipboard> clipboard = new AtomicReference<>();
+
             if (format != null) {
                 try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
                     clipboard.set(reader.read());
