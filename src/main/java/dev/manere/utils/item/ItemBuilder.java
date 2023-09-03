@@ -339,6 +339,7 @@ public class ItemBuilder {
      */
     public ItemBuilder addGlow() {
         addUnsafeEnchantment(Enchantment.LUCK, 1);
+        addFlag(ItemFlag.HIDE_ENCHANTS);
         return this;
     }
 

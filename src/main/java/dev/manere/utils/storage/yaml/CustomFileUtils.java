@@ -1,6 +1,7 @@
 package dev.manere.utils.storage.yaml;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -35,7 +36,7 @@ public class CustomFileUtils {
             }
         }
 
-        customFile = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(file);
+        customFile = YamlConfiguration.loadConfiguration(file);
     }
 
     /**
