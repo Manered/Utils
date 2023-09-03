@@ -2,6 +2,7 @@ package dev.manere.utils.library;
 
 import dev.manere.utils.listener.PlayerDeathByPlayerWithCrystalEvent;
 import dev.manere.utils.listener.SpigotEventListener;
+import dev.manere.utils.menu.listeners.MenuListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -13,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Utils {
 
-    private final JavaPlugin plugin;
+    public static JavaPlugin plugin;
 
     /**
      * Constructs a new {@code Utils} instance.
@@ -21,9 +22,14 @@ public class Utils {
      * @param plugin The JavaPlugin instance that will be used for event registration.
      */
     public Utils(JavaPlugin plugin) {
-        this.plugin = plugin;
+        Utils.plugin = plugin;
 
         // Register Spigot event listener
         plugin.getServer().getPluginManager().registerEvents(new SpigotEventListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new MenuListener(), plugin);
+    }
+
+    public static JavaPlugin getPlugin() {
+        return plugin;
     }
 }

@@ -86,8 +86,9 @@ public class ItemBuilder {
      * @param enchantment The enchantment to add
      * @param level       The level of the enchantment
      */
-    public void addUnsafeEnchantment(Enchantment enchantment, int level){
+    public ItemBuilder addUnsafeEnchantment(Enchantment enchantment, int level){
         itemStack.addUnsafeEnchantment(enchantment, level);
+        return this;
     }
 
     /**
@@ -95,8 +96,9 @@ public class ItemBuilder {
      *
      * @param enchantment The enchantment to remove
      */
-    public void removeEnchantment(Enchantment enchantment){
+    public ItemBuilder removeEnchantment(Enchantment enchantment){
         itemStack.removeEnchantment(enchantment);
+        return this;
     }
 
     /**
@@ -111,7 +113,7 @@ public class ItemBuilder {
         if (itemMeta != null) {
             itemMeta.setOwnerProfile(
                     Bukkit.getOfflinePlayer(UUID.fromString(owner))
-                          .getPlayerProfile()
+                            .getPlayerProfile()
             );
         }
 
@@ -126,7 +128,7 @@ public class ItemBuilder {
      * @param level The level of the enchantment
      * @return This builder, for chaining
      */
-    public ItemBuilder addEnchant(Enchantment enchantment, int level){
+    public ItemBuilder addEnchantment(Enchantment enchantment, int level){
         ItemMeta itemMeta = itemStack.getItemMeta();
 
         if (itemMeta != null) {
