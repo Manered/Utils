@@ -1,63 +1,89 @@
 package dev.manere.utils.command;
 
-import org.bukkit.command.Command;
+import dev.manere.utils.library.Utils;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.plugin.java.JavaPlugin;
 
-/**
- * An abstract class that provides a foundation for creating custom command executors in Bukkit.
- */
-public abstract class CommandBuilder implements CommandExecutor {
+import java.lang.reflect.Field;
 
-    /** The sender of the command. */
-    protected CommandSender sender;
+public class CommandBuilder {
+    private final PluginCommand command;
+    private String shortHelpDescription;
 
-    /** The executed command. */
-    protected Command command;
-
-    /** The label of the executed command. */
-    protected String label;
-
-    /** The arguments provided with the command. */
-    protected String[] args;
-
-    /** Indicates whether the command sender is a player. */
-    protected boolean isPlayer;
-
-    /** If the sender is a player, this holds the player instance. */
-    protected Player player;
-
-    /**
-     * Executes the command when it is triggered.
-     *
-     * @param sender The sender of the command.
-     * @param command The command that was executed.
-     * @param label The alias that was used to trigger the command.
-     * @param args The arguments provided with the command.
-     * @return {@code true} if the command was successfully executed, {@code false} otherwise.
-     */
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        this.sender = sender;
-        this.command = command;
-        this.label = label;
-        this.args = args;
-
-        if (sender instanceof Player) {
-            this.isPlayer = true;
-            this.player = (Player) sender;
+    public CommandBuilder(JavaPlugin plugin, String name) {
+        command = plugin.getCommand(name);
+        if (command == null) {
+            throw new IllegalArgumentException("Command not found: " + name);
         }
-
-        return onExecute();
     }
 
-    /**
-     * This method is called when the command is executed and should be overridden by subclasses
-     * to define the behavior of the command.
-     *
-     * @return {@code true} if the command was successfully executed, {@code false} otherwise.
-     */
-    public abstract boolean onExecute();
+    public CommandBuilder setPermission(String permission) {
+        command.setPermission(permission);
+        return this;
+    }
+
+    public CommandBuilder setUsage(String usage) {
+        command.setUsage(usage);
+        return this;
+    }
+
+    public CommandBuilder setDescription(String description) {
+        command.setDescription(description);
+        return this;
+    }
+
+    public CommandBuilder setShortHelpDescription(String shortHelpDescription) {
+        this.shortHelpDescription = shortHelpDescription;
+        return this;
+    }
+
+    public CommandBuilder setPermissionMessage(String permissionMessage) {
+        command.setPermissionMessage(permissionMessage);
+        return this;
+    }
+
+    public CommandBuilder setAliases(String... aliases) {
+        command.setAliases(java.util.Arrays.asList(aliases));
+        return this;
+    }
+
+    public CommandBuilder setTabCompleter(TabCompleter tabCompleter) {
+        command.setTabCompleter(tabCompleter);
+        return this;
+    }
+
+    public CommandBuilder addAlias(String alias) {
+        command.getAliases().add(alias);
+        return this;
+    }
+
+    public CommandBuilder setExecutor(CommandExecutor executor) {
+        command.setExecutor(executor);
+        return this;
+    }
+
+    public CommandBuilder build() {
+        if (!command.isRegistered()) {
+            try {
+                Field bukkitCommandMap = Utils.getPlugin().getServer().getClass().getDeclaredField("commandMap");
+
+                bukkitCommandMap.setAccessible(true);
+                CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Utils.getPlugin().getServer());
+
+                if (commandMap.getCommand(command.getName()) == null) {
+                    commandMap.register(command.getName(), command);
+
+                    if (shortHelpDescription != null) {
+                        Utils.getPlugin().getServer().getHelpMap().getHelpTopic(command.getName()).amendTopic(shortHelpDescription, command.getDescription());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return this;
+    }
 }
