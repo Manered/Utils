@@ -71,17 +71,19 @@ public class CustomFileUtils {
     /**
      * Asynchronously reloads the configuration from the file.
      */
-    public void reloadConfigAsync() {
+    public CustomFileUtils reloadConfigAsync() {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, this::reloadConfig);
+        return this;
     }
 
     /**
      * Synchronously reloads the configuration from the file.
      */
-    public void reloadConfig() {
+    public CustomFileUtils reloadConfig() {
         synchronized (this) {
             customFile = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(file);
         }
+        return this;
     }
 
     /**
@@ -90,8 +92,9 @@ public class CustomFileUtils {
      * @param path  The path to the value.
      * @param value The value to set.
      */
-    public void setValueAsync(String path, Object value) {
+    public CustomFileUtils setValueAsync(String path, Object value) {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> setValue(path, value));
+        return this;
     }
 
     /**
@@ -100,10 +103,11 @@ public class CustomFileUtils {
      * @param path  The path to the value.
      * @param value The value to set.
      */
-    public void setValue(String path, Object value) {
+    public CustomFileUtils setValue(String path, Object value) {
         synchronized (this) {
             customFile.set(path, value);
         }
+        return this;
     }
 
     /**
