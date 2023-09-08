@@ -1,89 +1,164 @@
 package dev.manere.utils.command;
 
+import dev.manere.utils.command.arguments.CommandArgument;
 import dev.manere.utils.library.Utils;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
+/**
+ * A utility class for building and configuring Bukkit plugin commands.
+ */
 public class CommandBuilder {
     private final PluginCommand command;
     private String shortHelpDescription;
+    private final List<CommandArgument<?>> arguments = new ArrayList<>();
 
-    public CommandBuilder(JavaPlugin plugin, String name) {
-        command = plugin.getCommand(name);
+    /**
+     * Creates a new CommandBuilder for the specified command name.
+     *
+     * @param name The name of the command.
+     * @throws IllegalArgumentException If the specified command name is not found.
+     */
+    public CommandBuilder(String name) {
+        command = Utils.getPlugin().getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException("Command not found: " + name);
         }
     }
 
+    /**
+     * Sets the permission required to execute the command.
+     *
+     * @param permission The permission node.
+     * @return This CommandBuilder for method chaining.
+     */
     public CommandBuilder setPermission(String permission) {
         command.setPermission(permission);
         return this;
     }
 
+    /**
+     * Sets the arguments for the command.
+     *
+     * @param arguments The command arguments.
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder setArguments(CommandArgument<?>... arguments) {
+        this.arguments.addAll(Arrays.asList(arguments));
+        return this;
+    }
+
+    /**
+     *
+     * Retrieves the list of command arguments.
+     *
+     * @return The list of command arguments.
+     */
+    public List<CommandArgument<?>> getArguments() {
+        return arguments;
+    }
+
+    /**
+     * Sets the usage message for the command.
+     *
+     * @param usage The usage message.
+     * @return This CommandBuilder for method chaining.
+     */
     public CommandBuilder setUsage(String usage) {
         command.setUsage(usage);
         return this;
     }
 
+    /**
+     * Sets the description of the command.
+     *
+     * @param description The description of the command.
+     * @return This CommandBuilder for method chaining.
+     */
     public CommandBuilder setDescription(String description) {
         command.setDescription(description);
         return this;
     }
 
+    /**
+     * Sets a short help description for the command.
+     *
+     * @param shortHelpDescription The short help description.
+     * @return This CommandBuilder for method chaining.
+     */
     public CommandBuilder setShortHelpDescription(String shortHelpDescription) {
-        this.shortHelpDescription = shortHelpDescription;
+        if (!(Objects.equals(this.shortHelpDescription, shortHelpDescription))) {
+            this.shortHelpDescription = shortHelpDescription;
+        }
         return this;
     }
 
+    /**
+     * Sets the message sent to players without the required permission.
+     *
+     * @param permissionMessage The permission message.
+     * @return This CommandBuilder for method chaining.
+     */
     public CommandBuilder setPermissionMessage(String permissionMessage) {
         command.setPermissionMessage(permissionMessage);
         return this;
     }
 
+    /**
+     * Sets the aliases for the command.
+     *
+     * @param aliases The command aliases.
+     * @return This CommandBuilder for method chaining.
+     */
     public CommandBuilder setAliases(String... aliases) {
         command.setAliases(java.util.Arrays.asList(aliases));
         return this;
     }
 
+    /**
+     * Sets a TabCompleter for the command.
+     *
+     * @param tabCompleter The TabCompleter to be used.
+     * @return This CommandBuilder for method chaining.
+     */
     public CommandBuilder setTabCompleter(TabCompleter tabCompleter) {
         command.setTabCompleter(tabCompleter);
         return this;
     }
 
+    /**
+     * Adds an alias to the command.
+     *
+     * @param alias The alias to add.
+     * @return This CommandBuilder for method chaining.
+     */
     public CommandBuilder addAlias(String alias) {
         command.getAliases().add(alias);
         return this;
     }
 
+    /**
+     * Sets the executor for the command.
+     *
+     * @param executor The CommandExecutor to be used.
+     * @return This CommandBuilder for method chaining.
+     */
     public CommandBuilder setExecutor(CommandExecutor executor) {
         command.setExecutor(executor);
         return this;
     }
 
-    public CommandBuilder build() {
-        if (!command.isRegistered()) {
-            try {
-                Field bukkitCommandMap = Utils.getPlugin().getServer().getClass().getDeclaredField("commandMap");
-
-                bukkitCommandMap.setAccessible(true);
-                CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Utils.getPlugin().getServer());
-
-                if (commandMap.getCommand(command.getName()) == null) {
-                    commandMap.register(command.getName(), command);
-
-                    if (shortHelpDescription != null) {
-                        Utils.getPlugin().getServer().getHelpMap().getHelpTopic(command.getName()).amendTopic(shortHelpDescription, command.getDescription());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return this;
+    /**
+     * Builds and configures the command.
+     */
+    public void build() {
+        Utils.getPlugin().getCommand(command.getName()).setExecutor(command.getExecutor());
+        Utils.getPlugin().getCommand(command.getName()).setTabCompleter(command.getTabCompleter());
     }
 }
