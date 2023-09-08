@@ -1,63 +1,164 @@
 package dev.manere.utils.command;
 
-import org.bukkit.command.Command;
+import dev.manere.utils.command.arguments.CommandArgument;
+import dev.manere.utils.library.Utils;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
- * An abstract class that provides a foundation for creating custom command executors in Bukkit.
+ * A utility class for building and configuring Bukkit plugin commands.
  */
-public abstract class CommandBuilder implements CommandExecutor {
-
-    /** The sender of the command. */
-    protected CommandSender sender;
-
-    /** The executed command. */
-    protected Command command;
-
-    /** The label of the executed command. */
-    protected String label;
-
-    /** The arguments provided with the command. */
-    protected String[] args;
-
-    /** Indicates whether the command sender is a player. */
-    protected boolean isPlayer;
-
-    /** If the sender is a player, this holds the player instance. */
-    protected Player player;
+public class CommandBuilder {
+    private final PluginCommand command;
+    private String shortHelpDescription;
+    private final List<CommandArgument<?>> arguments = new ArrayList<>();
 
     /**
-     * Executes the command when it is triggered.
+     * Creates a new CommandBuilder for the specified command name.
      *
-     * @param sender The sender of the command.
-     * @param command The command that was executed.
-     * @param label The alias that was used to trigger the command.
-     * @param args The arguments provided with the command.
-     * @return {@code true} if the command was successfully executed, {@code false} otherwise.
+     * @param name The name of the command.
+     * @throws IllegalArgumentException If the specified command name is not found.
      */
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        this.sender = sender;
-        this.command = command;
-        this.label = label;
-        this.args = args;
-
-        if (sender instanceof Player) {
-            this.isPlayer = true;
-            this.player = (Player) sender;
+    public CommandBuilder(String name) {
+        command = Utils.getPlugin().getCommand(name);
+        if (command == null) {
+            throw new IllegalArgumentException("Command not found: " + name);
         }
-
-        return onExecute();
     }
 
     /**
-     * This method is called when the command is executed and should be overridden by subclasses
-     * to define the behavior of the command.
+     * Sets the permission required to execute the command.
      *
-     * @return {@code true} if the command was successfully executed, {@code false} otherwise.
+     * @param permission The permission node.
+     * @return This CommandBuilder for method chaining.
      */
-    public abstract boolean onExecute();
+    public CommandBuilder setPermission(String permission) {
+        command.setPermission(permission);
+        return this;
+    }
+
+    /**
+     * Sets the arguments for the command.
+     *
+     * @param arguments The command arguments.
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder setArguments(CommandArgument<?>... arguments) {
+        this.arguments.addAll(Arrays.asList(arguments));
+        return this;
+    }
+
+    /**
+     *
+     * Retrieves the list of command arguments.
+     *
+     * @return The list of command arguments.
+     */
+    public List<CommandArgument<?>> getArguments() {
+        return arguments;
+    }
+
+    /**
+     * Sets the usage message for the command.
+     *
+     * @param usage The usage message.
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder setUsage(String usage) {
+        command.setUsage(usage);
+        return this;
+    }
+
+    /**
+     * Sets the description of the command.
+     *
+     * @param description The description of the command.
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder setDescription(String description) {
+        command.setDescription(description);
+        return this;
+    }
+
+    /**
+     * Sets a short help description for the command.
+     *
+     * @param shortHelpDescription The short help description.
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder setShortHelpDescription(String shortHelpDescription) {
+        if (!(Objects.equals(this.shortHelpDescription, shortHelpDescription))) {
+            this.shortHelpDescription = shortHelpDescription;
+        }
+        return this;
+    }
+
+    /**
+     * Sets the message sent to players without the required permission.
+     *
+     * @param permissionMessage The permission message.
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder setPermissionMessage(String permissionMessage) {
+        command.setPermissionMessage(permissionMessage);
+        return this;
+    }
+
+    /**
+     * Sets the aliases for the command.
+     *
+     * @param aliases The command aliases.
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder setAliases(String... aliases) {
+        command.setAliases(java.util.Arrays.asList(aliases));
+        return this;
+    }
+
+    /**
+     * Sets a TabCompleter for the command.
+     *
+     * @param tabCompleter The TabCompleter to be used.
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder setTabCompleter(TabCompleter tabCompleter) {
+        command.setTabCompleter(tabCompleter);
+        return this;
+    }
+
+    /**
+     * Adds an alias to the command.
+     *
+     * @param alias The alias to add.
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder addAlias(String alias) {
+        command.getAliases().add(alias);
+        return this;
+    }
+
+    /**
+     * Sets the executor for the command.
+     *
+     * @param executor The CommandExecutor to be used.
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder setExecutor(CommandExecutor executor) {
+        command.setExecutor(executor);
+        return this;
+    }
+
+    /**
+     * Builds and configures the command.
+     */
+    public void build() {
+        Utils.getPlugin().getCommand(command.getName()).setExecutor(command.getExecutor());
+        Utils.getPlugin().getCommand(command.getName()).setTabCompleter(command.getTabCompleter());
+    }
 }
