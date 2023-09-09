@@ -10,11 +10,18 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Array;
 import java.util.Objects;
 
+/**
+ * A custom implementation of a scoreboard for a specific player.
+ * This class extends the ScoreboardBase class, providing additional functionality.
+ */
 public class CustomScoreboard extends ScoreboardBase<String> {
 
     private static final MethodHandle MESSAGE_FROM_STRING;
     private static final Object EMPTY_MESSAGE;
 
+    // (Static initialization block)
+    // MESSAGE_FROM_STRING: Method handle for converting a String to a chat message
+    // EMPTY_MESSAGE: An empty chat message object
     static {
         try {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -26,10 +33,22 @@ public class CustomScoreboard extends ScoreboardBase<String> {
         }
     }
 
+    /**
+     * Constructs a CustomScoreboard for a specific player.
+     *
+     * @param player The player for whom the scoreboard is being created.
+     */
     public CustomScoreboard(Player player) {
         super(player);
     }
 
+    /**
+     * Sets the title of the scoreboard.
+     *
+     * @param title The title to be set. Must not be null.
+     * @return The CustomScoreboard instance with the updated title.
+     * @throws IllegalArgumentException If the title is longer than 32 characters (prior to Minecraft 1.13).
+     */
     @Override
     public ScoreboardBase<String> setTitle(String title) {
         Objects.requireNonNull(title, "title");
@@ -42,6 +61,13 @@ public class CustomScoreboard extends ScoreboardBase<String> {
         return this;
     }
 
+    /**
+     * Sets the lines of the scoreboard.
+     *
+     * @param lines The lines to be set. Must not be null.
+     * @return The CustomScoreboard instance with the updated lines.
+     * @throws IllegalArgumentException If any line is longer than 30 characters (prior to Minecraft 1.13).
+     */
     @Override
     public ScoreboardBase<String> setLines(String... lines) {
         Objects.requireNonNull(lines, "lines");
@@ -60,6 +86,12 @@ public class CustomScoreboard extends ScoreboardBase<String> {
         return this;
     }
 
+    /**
+     * Sends a change in a scoreboard line to the player.
+     *
+     * @param score The score corresponding to the line being changed.
+     * @throws Throwable If an error occurs during the operation.
+     */
     @Override
     protected void sendLineChange(int score) throws Throwable {
         int maxLength = hasLinesMaxLength() ? 16 : 1024;
@@ -97,6 +129,13 @@ public class CustomScoreboard extends ScoreboardBase<String> {
         sendTeamPacket(score, TeamMode.UPDATE, prefix, suffix);
     }
 
+    /**
+     * Converts a string to a Minecraft component object.
+     *
+     * @param line The string to be converted.
+     * @return The corresponding Minecraft component object.
+     * @throws Throwable If an error occurs during the operation.
+     */
     @Override
     protected Object toMinecraftComponent(String line) throws Throwable {
         if (line == null || line.isEmpty()) {
@@ -106,11 +145,21 @@ public class CustomScoreboard extends ScoreboardBase<String> {
         return Array.get(MESSAGE_FROM_STRING.invoke(line), 0);
     }
 
+    /**
+     * Provides the representation of an empty line in the scoreboard.
+     *
+     * @return An empty string.
+     */
     @Override
     protected String emptyLine() {
         return "";
     }
 
+    /**
+     * Checks if the server version supports maximum line length.
+     *
+     * @return True if the server version is not higher or equal to 1.13, false otherwise.
+     */
     protected boolean hasLinesMaxLength() {
         return !VersionType.V1_13.isHigherOrEqual();
     }

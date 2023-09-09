@@ -13,6 +13,12 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * An abstract base class for creating and managing scoreboards for Bukkit players.
+ * This class provides methods to interact with the scoreboard system.
+ *
+ * @param <T> The type of the scoreboard lines.
+ */
 public abstract class ScoreboardBase<T> {
     private static final Map<Class<?>, Field[]> PACKETS = new HashMap<>(8);
     protected static final String[] COLOR_CODES = Arrays.stream(ChatColor.values())
@@ -119,6 +125,11 @@ public abstract class ScoreboardBase<T> {
         }
     }
 
+    /**
+     * Constructs a ScoreboardBase for a specific player.
+     *
+     * @param player The player for whom the scoreboard is being created.
+     */
     protected ScoreboardBase(Player player) {
         this.player = Objects.requireNonNull(player, "player");
         this.id = "utilsscoreboardapi-" + Integer.toHexString(ThreadLocalRandom.current().nextInt());
@@ -131,10 +142,21 @@ public abstract class ScoreboardBase<T> {
         }
     }
 
+    /**
+     * Gets the title of the scoreboard.
+     *
+     * @return The title of the scoreboard.
+     */
     public T getTitle() {
         return this.title;
     }
 
+    /**
+     * Sets the title of the scoreboard.
+     *
+     * @param title The new title for the scoreboard.
+     * @return The ScoreboardBase instance with the updated title.
+     */
     public ScoreboardBase<T> setTitle(T title) {
         if (this.title.equals(Objects.requireNonNull(title, "title"))) return null;
 
@@ -149,16 +171,36 @@ public abstract class ScoreboardBase<T> {
         return this;
     }
 
+    /**
+     * Gets a list of lines on the scoreboard.
+     *
+     * @return A list containing the lines of the scoreboard.
+     */
     public List<T> getLines() {
         return new ArrayList<>(this.lines);
     }
 
+    /**
+     * Gets a specific line of the scoreboard.
+     *
+     * @param line The index of the line to retrieve.
+     * @return The line at the specified index.
+     * @throws IllegalArgumentException if the line index is out of bounds.
+     */
     public T getLine(int line) {
         checkLineNumber(line, true, false);
 
         return this.lines.get(line);
     }
 
+    /**
+     * Sets a specific line of the scoreboard.
+     *
+     * @param line The index of the line to set.
+     * @param text The new text for the line.
+     * @return The ScoreboardBase instance with the updated line.
+     * @throws IllegalArgumentException if the line index is out of bounds.
+     */
     public synchronized ScoreboardBase<T> setLine(int line, T text) {
         checkLineNumber(line, false, true);
 
@@ -188,6 +230,13 @@ public abstract class ScoreboardBase<T> {
         return this;
     }
 
+    /**
+     * Removes a specific line from the scoreboard.
+     *
+     * @param line The index of the line to remove.
+     * @return The ScoreboardBase instance with the line removed.
+     * @throws IllegalArgumentException if the line index is out of bounds.
+     */
     public synchronized ScoreboardBase<T> removeLine(int line) {
         checkLineNumber(line, false, false);
 
@@ -202,11 +251,23 @@ public abstract class ScoreboardBase<T> {
         return this;
     }
 
+    /**
+     * Sets multiple lines on the scoreboard.
+     *
+     * @param lines The lines to set.
+     * @return The ScoreboardBase instance with the updated lines.
+     */
     public ScoreboardBase<T> setLines(T... lines) {
         setLines(Arrays.asList(lines));
         return this;
     }
 
+    /**
+     * Sets multiple lines on the scoreboard.
+     *
+     * @param lines A collection of lines to set.
+     * @return The ScoreboardBase instance with the updated lines.
+     */
     public synchronized void setLines(Collection<T> lines) {
         Objects.requireNonNull(lines, "lines");
         checkLineNumber(lines.size(), false, true);
@@ -246,22 +307,45 @@ public abstract class ScoreboardBase<T> {
         }
     }
 
+    /**
+     * Gets the player associated with this scoreboard.
+     *
+     * @return The player.
+     */
     public Player getPlayer() {
         return this.player;
     }
 
+    /**
+     * Gets the unique identifier for this scoreboard.
+     *
+     * @return The ID.
+     */
     public String getId() {
         return this.id;
     }
 
+    /**
+     * Checks if this scoreboard has been deleted.
+     *
+     * @return True if the scoreboard has been deleted, otherwise false.
+     */
     public boolean isDeleted() {
         return this.deleted;
     }
 
+    /**
+     * Gets the number of lines on the scoreboard.
+     *
+     * @return The number of lines.
+     */
     public int size() {
         return this.lines.size();
     }
 
+    /**
+     * Deletes the scoreboard.
+     */
     public void delete() {
         try {
             for (int i = 0; i < this.lines.size(); i++) {
@@ -276,10 +360,28 @@ public abstract class ScoreboardBase<T> {
         this.deleted = true;
     }
 
+    /**
+     * Sends a change in a scoreboard line to the player.
+     *
+     * @param score The score corresponding to the line being changed.
+     * @throws Throwable If an error occurs during the operation.
+     */
     protected abstract void sendLineChange(int score) throws Throwable;
 
+    /**
+     * Converts an object of type T to a Minecraft component object.
+     *
+     * @param value The value to be converted.
+     * @return The corresponding Minecraft component object.
+     * @throws Throwable If an error occurs during the operation.
+     */
     protected abstract Object toMinecraftComponent(T value) throws Throwable;
 
+    /**
+     * Provides the representation of an empty line in the scoreboard.
+     *
+     * @return An empty line value of type T.
+     */
     protected abstract T emptyLine();
 
     private void checkLineNumber(int line, boolean checkInRange, boolean checkMax) {
@@ -442,21 +544,38 @@ public abstract class ScoreboardBase<T> {
         }
     }
 
+    /**
+     * Enumeration of modes for managing objectives.
+     */
     public enum ObjectiveMode {
         CREATE, REMOVE, UPDATE
     }
 
+    /**
+     * Enumeration of modes for managing teams.
+     */
     public enum TeamMode {
         CREATE, REMOVE, UPDATE, ADD_PLAYERS, REMOVE_PLAYERS
     }
 
+    /**
+     * Enumeration of scoreboard actions.
+     */
     public enum ScoreboardAction {
         CHANGE, REMOVE
     }
 
+    /**
+     * Enumeration of supported Minecraft versions.
+     */
     enum VersionType {
         V1_7, V1_8, V1_13, V1_17;
 
+        /**
+         * Checks if the current version is higher or equal to this version.
+         *
+         * @return True if the current version is higher or equal, otherwise false.
+         */
         public boolean isHigherOrEqual() {
             return VERSION_TYPE.ordinal() >= ordinal();
         }
