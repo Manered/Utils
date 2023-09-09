@@ -79,7 +79,7 @@ public class ReflectionUtils {
         }
     }
 
-    static Class<?> innerClass(Class<?> parentClass, Predicate<Class<?>> classPredicate) throws ClassNotFoundException {
+    public static Class<?> innerClass(Class<?> parentClass, Predicate<Class<?>> classPredicate) throws ClassNotFoundException {
         for (Class<?> innerClass : parentClass.getDeclaredClasses()) {
             if (classPredicate.test(innerClass)) {
                 return innerClass;
@@ -113,7 +113,7 @@ public class ReflectionUtils {
     }
 
     @FunctionalInterface
-    interface PacketConstructor {
+    public interface PacketConstructor {
         Object invoke() throws Throwable;
     }
 }
