@@ -13,7 +13,16 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.Map;
 
+/**
+ * A listener class for handling click events in paginated menus.
+ */
 public class PaginatedMenuListener implements Listener {
+
+    /**
+     * Handles click events in menus.
+     *
+     * @param event The InventoryClickEvent to handle.
+     */
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
