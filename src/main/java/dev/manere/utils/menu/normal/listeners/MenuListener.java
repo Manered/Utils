@@ -1,6 +1,7 @@
-package dev.manere.utils.menu.listeners;
+package dev.manere.utils.menu.normal.listeners;
 
-import dev.manere.utils.menu.MenuBuilder;
+import dev.manere.utils.menu.MenuButtonListener;
+import dev.manere.utils.menu.normal.MenuBuilder;
 import dev.manere.utils.menu.MenuButton;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;

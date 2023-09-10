@@ -3,7 +3,7 @@ package dev.manere.utils.library;
 import dev.manere.utils.command.CommandBuilder;
 import dev.manere.utils.listener.PlayerDeathByPlayerWithCrystalEvent;
 import dev.manere.utils.listener.SpigotEventListener;
-import dev.manere.utils.menu.listeners.MenuListener;
+import dev.manere.utils.menu.normal.listeners.MenuListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

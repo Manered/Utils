@@ -1,7 +1,8 @@
-package dev.manere.utils.menu;
+package dev.manere.utils.menu.normal;
 
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
+import dev.manere.utils.menu.MenuButton;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
