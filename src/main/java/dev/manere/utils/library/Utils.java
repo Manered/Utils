@@ -4,6 +4,7 @@ import dev.manere.utils.command.CommandBuilder;
 import dev.manere.utils.listener.PlayerDeathByPlayerWithCrystalEvent;
 import dev.manere.utils.listener.SpigotEventListener;
 import dev.manere.utils.menu.normal.listeners.MenuListener;
+import dev.manere.utils.menu.paginated.listeners.PaginatedMenuListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -28,6 +29,7 @@ public class Utils {
         // Register Spigot event listener
         plugin.getServer().getPluginManager().registerEvents(new SpigotEventListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new MenuListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PaginatedMenuListener(), plugin);
     }
 
     public static JavaPlugin getPlugin() {
