@@ -1,8 +1,8 @@
 package dev.manere.utils.menu.paginated;
 
 import dev.manere.utils.item.ItemBuilder;
+import dev.manere.utils.library.Utils;
 import dev.manere.utils.menu.MenuButton;
-import dev.manere.utils.menu.normal.MenuBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class PaginatedMenuBuilder implements InventoryHolder {
     public final Inventory inventory;
@@ -22,6 +23,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
     private int currentPage;
     public final HashMap<Integer, ItemBuilder> previousButton;
     public final HashMap<Integer, ItemBuilder> nextButton;
+    public final HashMap<MenuButton, String[]> borderMap;
 
     public PaginatedMenuBuilder(String title, int size) {
         this.inventory = Bukkit.createInventory(this, size, title);
@@ -32,6 +34,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         this.currentPage = 1;
         this.previousButton = new HashMap<>();
         this.nextButton = new HashMap<>();
+        this.borderMap = new HashMap<>();
     }
 
     public String getTitle() {
@@ -93,6 +96,59 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         return this;
     }
 
+    public PaginatedMenuBuilder setBorder(MenuButton borderItem, String... borderPatterns) {
+        int row = 0;
+        for (String borderPattern : borderPatterns) {
+            if (row < this.size) {
+                String[] rowCharacters = borderPattern.split(" ");
+                for (int col = 0; col < rowCharacters.length && col < 9; col++) {
+                    String character = rowCharacters[col];
+                    if (character.equals("X")) {
+                        this.inventory.setItem(col + row * 9, borderItem.getItem().build().clone());
+                        borderMap.put(borderItem, borderPatterns);
+                        buttons.put(new PageSlotHolder(col + row * 9, currentPage), borderItem);
+                    }
+                }
+                row++;
+            }
+        }
+
+        return this;
+    }
+
+    public PaginatedMenuBuilder fill(Object filler, String... pattern) {
+        int row = 0;
+
+        for (String rowPattern : pattern) {
+            if (row < size / 9) {
+                String[] rowCharacters = rowPattern.split(" ");
+
+                for (int col = 0; col < rowCharacters.length && col < 9; col++) {
+                    String character = rowCharacters[col];
+                    int slot = col + row * 9;
+
+                    if (character.equals("X")) {
+                        if (filler instanceof MenuButton) {
+                            setButton(new PageSlotHolder(slot, currentPage), (MenuButton) filler);
+                        } else if (filler instanceof ItemBuilder) {
+                            setItem(new PageSlotHolder(slot, currentPage), (ItemBuilder) filler);
+                        } else {
+                            int callersLineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
+                            Utils.getPlugin().getLogger().log(Level.WARNING, "You can not use PaginatedMenuBuilder.fill(Object filler, String... pattern) with a object different than an ItemBuilder or MenuButton!");
+                            Utils.getPlugin().getLogger().log(Level.WARNING, "    Line: [" + callersLineNumber + "], File: [" + Thread.currentThread().getStackTrace()[2].getFileName() + "]");
+                        }
+                    }
+                }
+                row++;
+            }
+        }
+        return this;
+    }
+
+    public HashMap<MenuButton, String[]> getBorder() {
+        return borderMap;
+    }
+
     public void open(Player player) {
         player.openInventory(this.inventory);
 
@@ -114,6 +170,12 @@ public class PaginatedMenuBuilder implements InventoryHolder {
 
         for (Map.Entry<Integer, ItemBuilder> entry : nextButton.entrySet()) {
             this.inventory.setItem(entry.getKey(), nextButton.get(entry.getKey()).build());
+        }
+
+        if (!borderMap.isEmpty()) {
+            for (Map.Entry<MenuButton, String[]> entry : borderMap.entrySet()) {
+                setBorder(entry.getKey(), borderMap.get(entry.getKey()));
+            }
         }
     }
 
@@ -140,6 +202,12 @@ public class PaginatedMenuBuilder implements InventoryHolder {
 
         for (Map.Entry<Integer, ItemBuilder> entry : nextButton.entrySet()) {
             this.inventory.setItem(entry.getKey(), nextButton.get(entry.getKey()).build());
+        }
+
+        if (!borderMap.isEmpty()) {
+            for (Map.Entry<MenuButton, String[]> entry : borderMap.entrySet()) {
+                setBorder(entry.getKey(), borderMap.get(entry.getKey()));
+            }
         }
     }
 
