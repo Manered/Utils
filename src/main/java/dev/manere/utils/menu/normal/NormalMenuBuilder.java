@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * The MenuBuilder class allows you to create custom menus with buttons and items in Bukkit/Spigot.
+ * The NormalMenuBuilder class allows you to create custom menus with buttons and items in Bukkit/Spigot.
  * You can set buttons, items, borders, and fill patterns within the menu.
  * Menus are displayed to players using the open(Player player) method.
  */
-public class MenuBuilder implements InventoryHolder {
+public class NormalMenuBuilder implements InventoryHolder {
     private final Inventory inventory;
     private final String title;
     private final int size;
@@ -25,12 +25,12 @@ public class MenuBuilder implements InventoryHolder {
     private final Map<Integer, ItemBuilder> items;
 
     /**
-     * Constructs a new MenuBuilder with the specified title and size.
+     * Constructs a new NormalMenuBuilder with the specified title and size.
      *
      * @param title The title of the menu.
      * @param size  The size (number of slots) of the menu.
      */
-    public MenuBuilder(String title, int size) {
+    public NormalMenuBuilder(String title, int size) {
         this.inventory = Utils.getPlugin().getServer().createInventory(this, size, title);
         this.title = title;
         this.size = size;
@@ -43,9 +43,9 @@ public class MenuBuilder implements InventoryHolder {
      *
      * @param slot   The slot to set the button.
      * @param button The MenuButton to set at the slot.
-     * @return The MenuBuilder instance.
+     * @return The NormalMenuBuilder instance.
      */
-    public MenuBuilder setButton(int slot, MenuButton button) {
+    public NormalMenuBuilder setButton(int slot, MenuButton button) {
         buttons.putIfAbsent(slot, button);
         this.inventory.setItem(slot, button.getItem().build());
         return this;
@@ -56,9 +56,9 @@ public class MenuBuilder implements InventoryHolder {
      *
      * @param slot The slot to set the item.
      * @param item The ItemBuilder to set at the slot.
-     * @return The MenuBuilder instance.
+     * @return The NormalMenuBuilder instance.
      */
-    public MenuBuilder setItem(int slot, ItemBuilder item) {
+    public NormalMenuBuilder setItem(int slot, ItemBuilder item) {
         items.putIfAbsent(slot, item);
         this.inventory.setItem(slot, item.build());
         return this;
@@ -96,9 +96,9 @@ public class MenuBuilder implements InventoryHolder {
      *
      * @param borderItem    The MenuButton to use for the border.
      * @param borderPatterns The patterns for the border.
-     * @return The MenuBuilder instance.
+     * @return The NormalMenuBuilder instance.
      */
-    public MenuBuilder setBorder(MenuButton borderItem, String... borderPatterns) {
+    public NormalMenuBuilder setBorder(MenuButton borderItem, String... borderPatterns) {
         int row = 0;
         for (String borderPattern : borderPatterns) {
             if (row < this.size) {
@@ -122,9 +122,9 @@ public class MenuBuilder implements InventoryHolder {
      *
      * @param filler  The filler object (MenuButton or ItemBuilder) to fill the slots with.
      * @param pattern The pattern to use for filling.
-     * @return The MenuBuilder instance.
+     * @return The NormalMenuBuilder instance.
      */
-    public MenuBuilder fill(Object filler, String... pattern) {
+    public NormalMenuBuilder fill(Object filler, String... pattern) {
         int row = 0;
 
         for (String rowPattern : pattern) {
@@ -142,7 +142,7 @@ public class MenuBuilder implements InventoryHolder {
                             setItem(slot, (ItemBuilder) filler);
                         } else {
                             int callersLineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
-                            Utils.getPlugin().getLogger().log(Level.WARNING, "You can not use MenuBuilder.fill(Object filler, String... pattern) with a object different than an ItemBuilder or MenuButton!");
+                            Utils.getPlugin().getLogger().log(Level.WARNING, "You can not use NormalMenuBuilder.fill(Object filler, String... pattern) with a object different than an ItemBuilder or MenuButton!");
                             Utils.getPlugin().getLogger().log(Level.WARNING, "    Line: [" + callersLineNumber + "], File: [" + Thread.currentThread().getStackTrace()[2].getFileName() + "]");
                         }
                     }
@@ -204,7 +204,7 @@ public class MenuBuilder implements InventoryHolder {
     }
 
     /**
-     * Retrieves the Bukkit Inventory associated with this MenuBuilder.
+     * Retrieves the Bukkit Inventory associated with this NormalMenuBuilder.
      *
      * @return The Inventory object.
      */
