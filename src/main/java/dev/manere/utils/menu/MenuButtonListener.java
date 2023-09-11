@@ -1,4 +1,4 @@
-package dev.manere.utils.menu.listeners;
+package dev.manere.utils.menu;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 

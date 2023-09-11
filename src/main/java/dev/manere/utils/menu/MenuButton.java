@@ -1,7 +1,6 @@
 package dev.manere.utils.menu;
 
 import dev.manere.utils.item.ItemBuilder;
-import dev.manere.utils.menu.listeners.MenuButtonListener;
 
 /**
  * The MenuButton class represents a button in a menu with an associated ItemBuilder and listener.
