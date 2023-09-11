@@ -1,7 +1,6 @@
 package dev.manere.utils.menu.paginated.listeners;
 
 import dev.manere.utils.item.ItemBuilder;
-import dev.manere.utils.menu.MenuButtonListener;
 import dev.manere.utils.menu.MenuButton;
 import dev.manere.utils.menu.paginated.PageSlotHolder;
 import dev.manere.utils.menu.paginated.PaginatedMenuBuilder;
@@ -32,20 +31,19 @@ public class PaginatedMenuListener implements Listener {
         final Player player = (Player) event.getWhoClicked();
 
         if (event.getInventory().getHolder() instanceof PaginatedMenuBuilder menu) {
-            MenuButton button = menu.getButton(new PageSlotHolder(event.getSlot(), menu.getCurrentPage()));
+            MenuButton stickyButton = menu.getStickyButton(event.getSlot());
 
-            if (button != null) {
-                MenuButtonListener listener = button.getListener();
-                if (listener != null) {
-                    listener.onClick(event);
-                }
+            if (menu.currentPageItemEnabled && event.getSlot() == menu.currentPageItemSlot) {
+                event.setCancelled(true);
             }
 
             for (Map.Entry<Integer, ItemBuilder> entry : menu.previousButton.entrySet()) {
                 if (event.getSlot() == entry.getKey()) {
                     event.setCancelled(true);
 
-                    menu.previousPage(player);
+                    if (menu.getCurrentPage() > 1) {
+                        menu.open(player, menu.getCurrentPage() - 1);
+                    }
                 }
             }
 
@@ -53,7 +51,27 @@ public class PaginatedMenuListener implements Listener {
                 if (event.getSlot() == entry.getKey()) {
                     event.setCancelled(true);
 
-                    menu.nextPage(player);
+                    if (menu.getTotalPages() > 1) {
+                        menu.open(player, menu.getCurrentPage() + 1);
+                    }
+                }
+            }
+
+            for (Map.Entry<Integer, MenuButton> entry : menu.getStickyButtons().entrySet()) {
+                if (event.getSlot() == entry.getKey()) {
+                    if (stickyButton != null && stickyButton.getListener() != null) {
+                        stickyButton.getListener().onClick(event);
+                    }
+                }
+            }
+
+            for (Map.Entry<PageSlotHolder, MenuButton> entry : menu.getButtons().entrySet()) {
+                PageSlotHolder slotHolder = entry.getKey();
+                if (slotHolder.getSlot() == event.getSlot() && slotHolder.getPage() == menu.getCurrentPage()) {
+                    MenuButton button = entry.getValue();
+                    if (button != null && button.getListener() != null) {
+                        button.getListener().onClick(event);
+                    }
                 }
             }
         }

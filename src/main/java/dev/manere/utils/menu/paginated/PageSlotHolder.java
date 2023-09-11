@@ -6,14 +6,7 @@ package dev.manere.utils.menu.paginated;
  */
 public class PageSlotHolder {
 
-    /**
-     * The slot number within a page.
-     */
     public int slot;
-
-    /**
-     * The page number.
-     */
     public int page;
 
     /**

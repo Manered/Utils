@@ -4,6 +4,7 @@ import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.menu.MenuButton;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -25,11 +26,17 @@ public class PaginatedMenuBuilder implements InventoryHolder {
     public final int size;
     public final Map<PageSlotHolder, MenuButton> buttons;
     public final Map<PageSlotHolder, ItemBuilder> items;
-    private int totalPages;
-    private int currentPage;
+    public int totalPages;
+    public int currentPage;
     public final HashMap<Integer, ItemBuilder> previousButton;
     public final HashMap<Integer, ItemBuilder> nextButton;
     public final HashMap<MenuButton, String[]> borderMap;
+    public final HashMap<Integer, MenuButton> stickyButtons;
+    public boolean currentPageItemEnabled;
+    public int currentPageItemSlot;
+    public Material currentPageItemMaterial;
+    public String currentPageItemName;
+    public String[] currentPageItemLore;
 
     /**
      * Constructs a new PaginatedMenuBuilder with the specified title and size.
@@ -43,10 +50,11 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         this.size = size;
         this.buttons = new HashMap<>();
         this.items = new HashMap<>();
-        this.currentPage = 1;
         this.previousButton = new HashMap<>();
+        this.currentPage = 1;
         this.nextButton = new HashMap<>();
         this.borderMap = new HashMap<>();
+        this.stickyButtons = new HashMap<>();
     }
 
     /**
@@ -74,6 +82,42 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      */
     public Map<PageSlotHolder, MenuButton> getButtons() {
         return buttons;
+    }
+
+    /**
+     * Get a map of previous buttons in the menu.
+     *
+     * @return A map of previous buttons and their positions.
+     */
+    public HashMap<Integer, ItemBuilder> getPreviousButton() {
+        return previousButton;
+    }
+
+    /**
+     * Get a map of next buttons in the menu.
+     *
+     * @return A map of next buttons and their positions.
+     */
+    public HashMap<Integer, ItemBuilder> getNextButton() {
+        return nextButton;
+    }
+
+    /**
+     * Get a map of border items in the menu.
+     *
+     * @return A map of border items and their patterns.
+     */
+    public HashMap<MenuButton, String[]> getBorderMap() {
+        return borderMap;
+    }
+
+    /**
+     * Get a map of sticky buttons in the menu.
+     *
+     * @return A map of sticky buttons and their positions.
+     */
+    public HashMap<Integer, MenuButton> getStickyButtons() {
+        return stickyButtons;
     }
 
     /**
@@ -122,11 +166,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @return This PaginatedMenuBuilder instance.
      */
     public PaginatedMenuBuilder setButton(PageSlotHolder where, MenuButton button) {
-        buttons.putIfAbsent(where, button);
-
-        if (currentPage == where.getPage()) {
-            this.inventory.setItem(where.getSlot(), button.getItem().build());
-        }
+        buttons.put(where, button);
 
         return this;
     }
@@ -139,11 +179,20 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @return This PaginatedMenuBuilder instance.
      */
     public PaginatedMenuBuilder setItem(PageSlotHolder where, ItemBuilder item) {
-        items.putIfAbsent(where, item);
+        items.put(where, item);
 
-        if (currentPage == where.getPage()) {
-            this.inventory.setItem(where.getSlot(), item.build());
-        }
+        return this;
+    }
+
+    /**
+     * Set a sticky button in the menu at a specific location.
+     *
+     * @param where  The position to place the sticky button.
+     * @param button The sticky button to set.
+     * @return This PaginatedMenuBuilder instance.
+     */
+    public PaginatedMenuBuilder setStickyButton(int where, MenuButton button) {
+        stickyButtons.put(where, button);
 
         return this;
     }
@@ -163,6 +212,18 @@ public class PaginatedMenuBuilder implements InventoryHolder {
 
         this.inventory.setItem(nextItemSlot, nextItem.build());
         nextButton.put(nextItemSlot, nextItem);
+
+        return this;
+    }
+
+    public PaginatedMenuBuilder setCurrentPageButton(int slot, Material material, String name, String... lore) {
+        this.currentPageItemEnabled = true;
+        this.currentPageItemMaterial = material;
+
+        if (lore != null) this.currentPageItemLore = lore;
+
+        this.currentPageItemSlot = slot;
+        this.currentPageItemName = name;
 
         return this;
     }
@@ -245,33 +306,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @param player The player to open the menu for.
      */
     public void open(Player player) {
-        player.openInventory(this.inventory);
-
-        for (MenuButton button : buttons.values()) {
-            if (getPageSlotHolderByButton(button).getPage() == 1) {
-                this.inventory.setItem(getPageSlotHolderByButton(button).getSlot(), button.getItem().build());
-            }
-        }
-
-        for (ItemBuilder item : items.values()) {
-            if (getPageSlotHolderByItem(item).getPage() == 1) {
-                this.inventory.setItem(getPageSlotHolderByItem(item).getSlot(), item.build());
-            }
-        }
-
-        for (Map.Entry<Integer, ItemBuilder> entry : previousButton.entrySet()) {
-            this.inventory.setItem(entry.getKey(), previousButton.get(entry.getKey()).build());
-        }
-
-        for (Map.Entry<Integer, ItemBuilder> entry : nextButton.entrySet()) {
-            this.inventory.setItem(entry.getKey(), nextButton.get(entry.getKey()).build());
-        }
-
-        if (!borderMap.isEmpty()) {
-            for (Map.Entry<MenuButton, String[]> entry : borderMap.entrySet()) {
-                setBorder(entry.getKey(), borderMap.get(entry.getKey()));
-            }
-        }
+        open(player, 1);
     }
 
     /**
@@ -281,9 +316,23 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @param page   The page to open.
      */
     public void open(Player player, int page) {
+        this.inventory.clear();
+
         player.openInventory(this.inventory);
 
         this.currentPage = page;
+
+        int highestPage = 1;
+
+        for (PageSlotHolder slotHolder : buttons.keySet()) {
+            highestPage = Math.max(highestPage, slotHolder.getPage());
+        }
+
+        for (PageSlotHolder slotHolder : items.keySet()) {
+            highestPage = Math.max(highestPage, slotHolder.getPage());
+        }
+
+        this.totalPages = highestPage;
 
         for (MenuButton button : buttons.values()) {
             if (getPageSlotHolderByButton(button).getPage() == currentPage) {
@@ -297,12 +346,16 @@ public class PaginatedMenuBuilder implements InventoryHolder {
             }
         }
 
-        for (Map.Entry<Integer, ItemBuilder> entry : previousButton.entrySet()) {
-            this.inventory.setItem(entry.getKey(), previousButton.get(entry.getKey()).build());
+        if (currentPage > 1) {
+            for (Map.Entry<Integer, ItemBuilder> entry : previousButton.entrySet()) {
+                this.inventory.setItem(entry.getKey(), previousButton.get(entry.getKey()).build());
+            }
         }
 
-        for (Map.Entry<Integer, ItemBuilder> entry : nextButton.entrySet()) {
-            this.inventory.setItem(entry.getKey(), nextButton.get(entry.getKey()).build());
+        if (currentPage < totalPages) {
+            for (Map.Entry<Integer, ItemBuilder> entry : nextButton.entrySet()) {
+                this.inventory.setItem(entry.getKey(), nextButton.get(entry.getKey()).build());
+            }
         }
 
         if (!borderMap.isEmpty()) {
@@ -310,6 +363,41 @@ public class PaginatedMenuBuilder implements InventoryHolder {
                 setBorder(entry.getKey(), borderMap.get(entry.getKey()));
             }
         }
+
+        for (Map.Entry<Integer, MenuButton> entry : stickyButtons.entrySet()) {
+            this.inventory.setItem(entry.getKey(), stickyButtons.get(entry.getKey()).getItem().build());
+        }
+
+        if (totalPages > 1 && currentPageItemEnabled) {
+            this.inventory.setItem(
+                    currentPageItemSlot,
+                    currentPageItemLore
+                            != null
+
+                            ? new ItemBuilder(currentPageItemMaterial)
+                            .setLore(currentPageItemLore)
+                            .setName(currentPageItemName.replace(
+                                            "{current_page}",
+                                            String.valueOf(
+                                                    getCurrentPage()
+                                            )
+                                    )
+                            )
+                            .build()
+
+                            : new ItemBuilder(currentPageItemMaterial)
+                            .setName(currentPageItemName.replace(
+                                            "{current_page}",
+                                            String.valueOf(
+                                                    getCurrentPage()
+                                            )
+                                    )
+                            )
+                            .build()
+            );
+        }
+
+        player.updateInventory();
     }
 
     /**
@@ -351,6 +439,16 @@ public class PaginatedMenuBuilder implements InventoryHolder {
     }
 
     /**
+     * Get a sticky button at a specific position in the menu.
+     *
+     * @param where The position to get the sticky button from.
+     * @return The sticky button at the specified position.
+     */
+    public MenuButton getStickyButton(int where) {
+        return stickyButtons.get(where);
+    }
+
+    /**
      * Get the position of a button in the menu.
      *
      * @param button The button to find the position of.
@@ -380,6 +478,22 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         }
 
         return null;
+    }
+
+    /**
+     * Get the slot of a sticky button in the menu.
+     *
+     * @param button The sticky button to find the slot of.
+     * @return The slot of the sticky button.
+     */
+    public int getSlotByStickyButton(MenuButton button) {
+        for (Map.Entry<Integer, MenuButton> entry : stickyButtons.entrySet()) {
+            if (entry.getValue() == button) {
+                return entry.getKey();
+            }
+        }
+
+        return -1;
     }
 
     /**
