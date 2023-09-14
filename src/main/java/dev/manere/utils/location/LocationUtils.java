@@ -1,10 +1,10 @@
 package dev.manere.utils.location;
 
+import dev.manere.utils.library.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,15 +60,14 @@ public class LocationUtils {
     /**
      * Retrieves a list of players within a certain radius of a specified location.
      *
-     * @param plugin The plugin to retrieve {@link Bukkit} from.
      * @param center The center location.
      * @param radius The radius in which to search for players.
      * @return A list of players within the specified radius of the center location.
      */
-    public static List<Player> getPlayersInRadius(JavaPlugin plugin, Location center, double radius) {
+    public static List<Player> getPlayersInRadius(Location center, double radius) {
         List<Player> nearbyPlayers = new ArrayList<>();
 
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : Utils.getPlugin().getServer().getOnlinePlayers()) {
             Location playerLocation = player.getLocation();
             if (Objects.equals(center.getWorld(), playerLocation.getWorld()) &&
                     center.distance(playerLocation) <= radius) {
@@ -82,16 +81,15 @@ public class LocationUtils {
     /**
      * Retrieves a list of players within a certain radius of a target player.
      *
-     * @param plugin The plugin to retrieve {@link Bukkit} from.
      * @param targetPlayer The target player around whom to search for other players.
      * @param radius       The radius in which to search for players.
      * @return A list of players within the specified radius of the target player.
      */
-    public static List<Player> getPlayersNearPlayer(JavaPlugin plugin, Player targetPlayer, double radius) {
+    public static List<Player> getPlayersNearPlayer(Player targetPlayer, double radius) {
         List<Player> nearbyPlayers = new ArrayList<>();
         Location targetLocation = targetPlayer.getLocation();
 
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : Utils.getPlugin().getServer().getOnlinePlayers()) {
             if (!player.equals(targetPlayer)) {
                 Location playerLocation = player.getLocation();
                 if (Objects.equals(targetLocation.getWorld(), playerLocation.getWorld()) &&

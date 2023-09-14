@@ -1,12 +1,21 @@
 package dev.manere.utils.text.color;
 
 import net.md_5.bungee.api.ChatColor;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Utility class for handling color formatting in text strings.
+ */
 public class ColorUtils {
+
+    /**
+     * Replaces hexadecimal color tags (<#HEX>) in the input string with ChatColor values.
+     *
+     * @param text the text string with hexadecimal color tags
+     * @return the text string with ChatColor formatting
+     */
     public static String colorHex(String text) {
         // Define a regular expression pattern to match <#HEX> tags
         String pattern = "<#([A-Fa-f0-9]{6})>";
@@ -16,7 +25,7 @@ public class ColorUtils {
         Matcher matcher = colorPattern.matcher(text);
 
         // Use a StringBuffer to build the modified message
-        StringBuffer modifiedMessage = new StringBuffer();
+        StringBuilder modifiedMessage = new StringBuilder();
 
         // Iterate through the matches and replace them with ChatColor.of()
         while (matcher.find()) {

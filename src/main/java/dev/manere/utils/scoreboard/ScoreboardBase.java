@@ -266,7 +266,6 @@ public abstract class ScoreboardBase<T> {
      * Sets multiple lines on the scoreboard.
      *
      * @param lines A collection of lines to set.
-     * @return The ScoreboardBase instance with the updated lines.
      */
     public synchronized void setLines(Collection<T> lines) {
         Objects.requireNonNull(lines, "lines");

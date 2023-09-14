@@ -1,6 +1,6 @@
 package dev.manere.utils.listener;
 
-import org.bukkit.Bukkit;
+import dev.manere.utils.library.Utils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -21,7 +21,7 @@ public class SpigotEventListener implements Listener {
     /**
      * Resets temporary data related to the events.
      */
-    private void resetTempData() {
+    private void reset() {
         this.crystal = null;
         this.victim = null;
         this.killer = null;
@@ -39,7 +39,7 @@ public class SpigotEventListener implements Listener {
 
         if (event.getDamager().getType() != EntityType.PLAYER) return;
 
-        this.resetTempData();
+        this.reset();
         this.crystal = event.getEntity();
         this.killer = (Player) event.getDamager();
     }
@@ -54,12 +54,12 @@ public class SpigotEventListener implements Listener {
         if (event.getEntityType() != EntityType.PLAYER) return;
 
         if (this.crystal == null) {
-            this.resetTempData();
+            this.reset();
             return;
         }
 
         if (event.getDamager() != this.crystal) {
-            this.resetTempData();
+            this.reset();
             return;
         }
 
@@ -86,8 +86,8 @@ public class SpigotEventListener implements Listener {
                 this.killer, this.victim, this.crystal, this.playerDamageEvent, event
         );
 
-        Bukkit.getPluginManager().callEvent(calledEvent);
+        Utils.getPlugin().getServer().getPluginManager().callEvent(calledEvent);
 
-        this.resetTempData();
+        this.reset();
     }
 }

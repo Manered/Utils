@@ -1,11 +1,11 @@
 package dev.manere.utils.actionbar;
 
+import dev.manere.utils.library.Utils;
 import dev.manere.utils.text.color.ColorUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 /**
  * Utility class for sending action bar texts to players.
@@ -34,9 +34,9 @@ public class ActionBarUtils {
      *
      * @param text The text to send.
      */
-    public static void sendAll(Plugin plugin, String text) {
+    public static void sendAll(String text) {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            sendAsync(plugin, player, text);
+            sendAsync(player, text);
         }
     }
 
@@ -45,12 +45,11 @@ public class ActionBarUtils {
      *
      * @param delay   The delay before the first text is sent.
      * @param period  The time between subsequent texts.
-     * @param plugin  The Plugin instance responsible for scheduling.
      * @param player  The player to send the text to.
      * @param text The text to send.
      */
-    public static void sendFor(long delay, long period, Plugin plugin, Player player, String text) {
-        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> sendAsync(plugin, player, text), delay, period);
+    public static void sendFor(long delay, long period, Player player, String text) {
+        Utils.getPlugin().getServer().getScheduler().runTaskTimer(Utils.getPlugin(), () -> sendAsync(player, text), delay, period);
     }
 
     /**
@@ -59,7 +58,7 @@ public class ActionBarUtils {
      * @param player  The player to send the text to.
      * @param text The text to send.
      */
-    private static void sendAsync(Plugin plugin, Player player, String text) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> send(player, text));
+    private static void sendAsync(Player player, String text) {
+        Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), () -> send(player, text));
     }
 }

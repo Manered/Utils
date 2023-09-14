@@ -1,31 +1,17 @@
 package dev.manere.utils.menu.paginated;
 
 /**
- * The PageSlotHolder class represents a holder for a slot and page number in a menu system.
+ * The PageSlotHolder record represents a holder for a slot and page number in a menu system.
  * It is used to associate a specific slot on a page within a menu.
  */
-public class PageSlotHolder {
-
-    public int slot;
-    public int page;
-
-    /**
-     * Constructs a new PageSlotHolder with the specified slot and page.
-     *
-     * @param slot The slot number within a page.
-     * @param page The page number.
-     */
-    public PageSlotHolder(int slot, int page) {
-        this.slot = slot;
-        this.page = page;
-    }
-
+public record PageSlotHolder(int slot, int page) {
     /**
      * Gets the slot number within a page.
      *
      * @return The slot number.
      */
-    public int getSlot() {
+    @Override
+    public int slot() {
         return slot;
     }
 
@@ -34,7 +20,8 @@ public class PageSlotHolder {
      *
      * @return The page number.
      */
-    public int getPage() {
+    @Override
+    public int page() {
         return page;
     }
 }

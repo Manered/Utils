@@ -1,13 +1,13 @@
 package dev.manere.utils.player;
 
 import dev.manere.utils.item.ItemBuilder;
+import dev.manere.utils.library.Utils;
 import dev.manere.utils.text.color.ColorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -50,24 +50,22 @@ public class PlayerUtils {
     /**
      * Hides the target player from all other online players.
      *
-     * @param plugin The plugin instance.
      * @param target The player to hide.
      */
-    public static void hide(Plugin plugin, Player target) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.hidePlayer(plugin, target);
+    public static void hide(Player target) {
+        for (Player player : Utils.getPlugin().getServer().getOnlinePlayers()) {
+            player.hidePlayer(Utils.getPlugin(), target);
         }
     }
 
     /**
      * Shows the target player to all other online players.
      *
-     * @param plugin The plugin instance.
      * @param target The player to show.
      */
-    public static void show(Plugin plugin, Player target) {
+    public static void show(Player target) {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.showPlayer(plugin, target);
+            player.showPlayer(Utils.getPlugin(), target);
         }
     }
 

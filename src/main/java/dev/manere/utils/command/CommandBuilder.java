@@ -2,6 +2,7 @@ package dev.manere.utils.command;
 
 import dev.manere.utils.command.arguments.CommandArgument;
 import dev.manere.utils.library.Utils;
+import dev.manere.utils.registration.RegistrationUtils;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
@@ -15,6 +16,7 @@ import java.util.Objects;
  * A utility class for building and configuring Bukkit plugin commands.
  */
 public class CommandBuilder {
+    private final String name;
     private final PluginCommand command;
     private String shortHelpDescription;
     private final List<CommandArgument<?>> arguments = new ArrayList<>();
@@ -26,6 +28,7 @@ public class CommandBuilder {
      * @throws IllegalArgumentException If the specified command name is not found.
      */
     public CommandBuilder(String name) {
+        this.name = name;
         command = Utils.getPlugin().getCommand(name);
         if (command == null) {
             throw new IllegalArgumentException("Command not found: " + name);
@@ -41,6 +44,24 @@ public class CommandBuilder {
     public CommandBuilder setPermission(String permission) {
         command.setPermission(permission);
         return this;
+    }
+
+    /**
+     * Retrieves the name of the command.
+     *
+     * @return The name of the command.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Retrieves the PluginCommand variable.
+     *
+     * @return The PluginCommand variable.
+     */
+    public PluginCommand getCommand() {
+        return command;
     }
 
     /**
@@ -157,8 +178,13 @@ public class CommandBuilder {
     /**
      * Builds and configures the command.
      */
-    public void build() {
-        Utils.getPlugin().getCommand(command.getName()).setExecutor(command.getExecutor());
-        Utils.getPlugin().getCommand(command.getName()).setTabCompleter(command.getTabCompleter());
+    public void build(boolean useCommandMap, boolean shouldTabComplete) {
+        if (useCommandMap) RegistrationUtils.registerCommandMap(Utils.getPlugin(), this);
+
+        else Utils.getPlugin().getCommand(command.getName()).setExecutor(command.getExecutor());
+
+        if (shouldTabComplete) {
+            Utils.getPlugin().getCommand(command.getName()).setTabCompleter(command.getTabCompleter());
+        }
     }
 }

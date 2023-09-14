@@ -325,24 +325,24 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         int highestPage = 1;
 
         for (PageSlotHolder slotHolder : buttons.keySet()) {
-            highestPage = Math.max(highestPage, slotHolder.getPage());
+            highestPage = Math.max(highestPage, slotHolder.page());
         }
 
         for (PageSlotHolder slotHolder : items.keySet()) {
-            highestPage = Math.max(highestPage, slotHolder.getPage());
+            highestPage = Math.max(highestPage, slotHolder.page());
         }
 
         this.totalPages = highestPage;
 
         for (MenuButton button : buttons.values()) {
-            if (getPageSlotHolderByButton(button).getPage() == currentPage) {
-                this.inventory.setItem(getPageSlotHolderByButton(button).getSlot(), button.getItem().build());
+            if (getPageSlotHolderByButton(button).page() == currentPage) {
+                this.inventory.setItem(getPageSlotHolderByButton(button).slot(), button.getItem().build());
             }
         }
 
         for (ItemBuilder item : items.values()) {
-            if (getPageSlotHolderByItem(item).getPage() == currentPage) {
-                this.inventory.setItem(getPageSlotHolderByItem(item).getSlot(), item.build());
+            if (getPageSlotHolderByItem(item).page() == currentPage) {
+                this.inventory.setItem(getPageSlotHolderByItem(item).slot(), item.build());
             }
         }
 

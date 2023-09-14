@@ -67,7 +67,7 @@ public class PaginatedMenuListener implements Listener {
 
             for (Map.Entry<PageSlotHolder, MenuButton> entry : menu.getButtons().entrySet()) {
                 PageSlotHolder slotHolder = entry.getKey();
-                if (slotHolder.getSlot() == event.getSlot() && slotHolder.getPage() == menu.getCurrentPage()) {
+                if (slotHolder.slot() == event.getSlot() && slotHolder.page() == menu.getCurrentPage()) {
                     MenuButton button = entry.getValue();
                     if (button != null && button.getListener() != null) {
                         button.getListener().onClick(event);
