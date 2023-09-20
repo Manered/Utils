@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class ColorUtils {
 
     /**
-     * Replaces hexadecimal color tags (<#HEX>) in the input string with ChatColor values.
+     * Replaces hexadecimal color tags in the input string with ChatColor values.
      *
      * @param text the text string with hexadecimal color tags
      * @return the text string with ChatColor formatting
