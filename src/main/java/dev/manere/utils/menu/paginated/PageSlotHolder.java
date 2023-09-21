@@ -16,12 +16,30 @@ public record PageSlotHolder(int slot, int page) {
     }
 
     /**
+     * Gets the slot number within a page.
+     *
+     * @return The slot number.
+     */
+    public int getSlot() {
+        return slot;
+    }
+
+    /**
      * Gets the page number.
      *
      * @return The page number.
      */
     @Override
     public int page() {
+        return page;
+    }
+
+    /**
+     * Gets the page number.
+     *
+     * @return The page number.
+     */
+    public int getPage() {
         return page;
     }
 }

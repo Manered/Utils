@@ -24,7 +24,7 @@ public class MenuButton {
      * @param listener The MenuButtonListener to set as the listener.
      * @return The MenuButton instance.
      */
-    public MenuButton withListener(MenuButtonListener listener) {
+    public MenuButton onClick(MenuButtonListener listener) {
         this.listener = listener;
         return this;
     }
