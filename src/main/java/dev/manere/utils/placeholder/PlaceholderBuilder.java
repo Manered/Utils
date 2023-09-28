@@ -51,4 +51,13 @@ public class PlaceholderBuilder {
         }
         return text;
     }
+
+    /**
+     * Creates a new PlaceholderBuilder instance.
+     *
+     * @return The newly created PlaceholderBuilder instance.
+     */
+    public static PlaceholderBuilder of() {
+        return new PlaceholderBuilder();
+    }
 }

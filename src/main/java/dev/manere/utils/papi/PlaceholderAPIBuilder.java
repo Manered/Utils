@@ -1,5 +1,6 @@
 package dev.manere.utils.papi;
 
+import dev.manere.utils.library.Utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -22,6 +23,10 @@ public class PlaceholderAPIBuilder {
      */
     private PlaceholderAPIBuilder(String identifier) {
         this.identifier = identifier;
+        this.version = Utils.getPlugin().getDescription().getVersion();
+        this.playerResult = null;
+        this.offlinePlayerResult = null;
+        this.author = "Anonymous";
     }
 
     /**
@@ -30,7 +35,7 @@ public class PlaceholderAPIBuilder {
      * @param identifier The identifier for the PlaceholderAPI expansion.
      * @return A new PlaceholderAPIBuilder instance.
      */
-    public static PlaceholderAPIBuilder create(String identifier) {
+    public static PlaceholderAPIBuilder of(String identifier) {
         return new PlaceholderAPIBuilder(identifier);
     }
 
@@ -85,21 +90,34 @@ public class PlaceholderAPIBuilder {
      */
     public PlaceholderExpansion build() {
         PlaceholderExpansion expansion = new PlaceholderExpansion() {
+
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public @NotNull String getIdentifier() {
                 return identifier;
             }
 
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public @NotNull String getAuthor() {
                 return author;
             }
 
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public @NotNull String getVersion() {
                 return version;
             }
 
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public String onPlaceholderRequest(Player player, @NotNull String params) {
                 if (playerResult != null) {
@@ -108,6 +126,9 @@ public class PlaceholderAPIBuilder {
                 return null;
             }
 
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public String onRequest(OfflinePlayer offlinePlayer, @NotNull String params) {
                 if (offlinePlayerResult != null) {

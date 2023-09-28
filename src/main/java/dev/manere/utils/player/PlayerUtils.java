@@ -6,6 +6,7 @@ import dev.manere.utils.text.color.ColorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -13,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A utility class for common operations related to players in Bukkit.
@@ -228,5 +230,78 @@ public class PlayerUtils {
         for (Player player : players) {
             player.setGameMode(gamemode);
         }
+    }
+
+    /**
+     * Gets the online player associated with the given Player object.
+     *
+     * @param player The Player object representing the online player.
+     * @return The online player associated with the provided Player object.
+     */
+    public static Player getPlayer(Player player) {
+        return player;
+    }
+
+    /**
+     * Gets the online player with the specified UUID.
+     *
+     * @param uuid The UUID of the player.
+     * @return The online player with the specified UUID, or null if not found.
+     */
+    public static Player getPlayer(UUID uuid) {
+        return Utils.getPlugin().getServer().getPlayer(uuid);
+    }
+
+    /**
+     * Gets the online player with the specified UUID string.
+     *
+     * @param uuid The UUID string of the player.
+     * @return The online player with the specified UUID, or null if not found.
+     * @throws IllegalArgumentException If the UUID string is invalid.
+     */
+    public static Player getPlayer(String uuid) {
+        return Utils.getPlugin().getServer().getPlayer(UUID.fromString(uuid));
+    }
+
+    /**
+     * Gets the online player with the given player name.
+     *
+     * @param playerName The name of the player.
+     * @return The online player with the provided name, or null if not found.
+     */
+    public static Player getPlayerFromName(String playerName) {
+        return Utils.getPlugin().getServer().getPlayer(playerName);
+    }
+
+    /**
+     * Gets the offline player with the specified UUID.
+     *
+     * @param uuid The UUID of the player.
+     * @return The offline player with the specified UUID.
+     */
+    public static OfflinePlayer getOfflinePlayer(UUID uuid) {
+        return Utils.getPlugin().getServer().getOfflinePlayer(uuid);
+    }
+
+    /**
+     * Gets the offline player with the specified UUID string.
+     *
+     * @param uuid The UUID string of the player.
+     * @return The offline player with the specified UUID.
+     * @throws IllegalArgumentException If the UUID string is invalid.
+     */
+    public static OfflinePlayer getOfflinePlayer(String uuid) {
+        return Utils.getPlugin().getServer().getOfflinePlayer(UUID.fromString(uuid));
+    }
+
+    /**
+     * Gets the offline player with the given player name.
+     * <p>{@code WARNING}: This is deprecated. Please avoid using this!</p>
+     *
+     * @param playerName The name of the player.
+     * @return The offline player with the provided name.
+     */
+    public static OfflinePlayer getOfflinePlayerFromName(String playerName) {
+        return Utils.getPlugin().getServer().getOfflinePlayer(playerName);
     }
 }

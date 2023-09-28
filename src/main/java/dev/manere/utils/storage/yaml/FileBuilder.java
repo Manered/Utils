@@ -51,7 +51,7 @@ public class FileBuilder {
      * @param name The name of the file.
      * @return The created FileBuilder.
      */
-    public static FileBuilder create(String path, String name) {
+    public static FileBuilder of(String path, String name) {
         FileBuilder fileBuilder = new FileBuilder(path, name);
 
         fileBuilder.file = new File(path, name);
@@ -78,8 +78,8 @@ public class FileBuilder {
      * @param name The name of the file.
      * @return The created FileBuilder.
      */
-    public static FileBuilder create(String name) {
-        return create(Utils.getPlugin().getDataFolder().getPath(), name);
+    public static FileBuilder of(String name) {
+        return of(Utils.getPlugin().getDataFolder().getPath(), name);
     }
 
     /**
@@ -234,10 +234,10 @@ public class FileBuilder {
      */
     public Object getValue(String path, boolean doAsync) {
         if (doAsync) {
-            Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), () -> config.get(path));
+            Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), () -> yamlConfig.get(path));
         } else {
             synchronized (this) {
-                return config.get(path);
+                return yamlConfig.get(path);
             }
         }
 

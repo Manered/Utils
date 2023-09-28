@@ -8,7 +8,7 @@ import dev.manere.utils.menu.paginated.listeners.PaginatedMenuListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * The {@code Utils} class provides utility methods and event registration for the Manere plugin.
+ * The {@code Utils} class provides utility methods and event registration for the YetAnotherManeredUtility library.
  * If you intend to use the {@link PlayerDeathByPlayerWithCrystalEvent} listener or {@link CommandBuilder} menu builder you should instantiate an object of this class.
  * <p></p>
  * To use this utility class, you need to add a {@code public static Utils yetAnotherManeredUtility} variable to your class.
@@ -32,6 +32,11 @@ public class Utils {
         plugin.getServer().getPluginManager().registerEvents(new PaginatedMenuListener(), plugin);
     }
 
+    /**
+     * Returns the JavaPlugin instance that will be used for event registration and more.
+     *
+     * @return The JavaPlugin instance that will be used for event registration and more.
+     */
     public static JavaPlugin getPlugin() {
         return plugin;
     }

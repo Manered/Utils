@@ -16,7 +16,7 @@ import java.util.Objects;
  * A utility class for building and configuring Bukkit plugin commands.
  */
 public class CommandBuilder {
-    private final String name;
+    private String name;
     private final PluginCommand command;
     private String shortHelpDescription;
     private final List<CommandArgument<?>> arguments = new ArrayList<>();
@@ -33,6 +33,15 @@ public class CommandBuilder {
         if (command == null) {
             throw new IllegalArgumentException("Command not found: " + name);
         }
+    }
+
+    /**
+     * Creates a new CommandBuilder instance.
+     *
+     * @return A new CommandBuilder instance.
+     */
+    public static CommandBuilder of(String name) {
+        return new CommandBuilder(name);
     }
 
     /**
@@ -53,6 +62,16 @@ public class CommandBuilder {
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * Sets the name of the command.
+     *
+     * @return This CommandBuilder for method chaining.
+     */
+    public CommandBuilder setName(String name) {
+        this.name = name;
+        return this;
     }
 
     /**

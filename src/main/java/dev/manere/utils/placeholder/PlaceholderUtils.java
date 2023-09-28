@@ -17,4 +17,13 @@ public class PlaceholderUtils {
         }
         return text;
     }
+
+    /**
+     * Creates a new PlaceholderBuilder instance.
+     *
+     * @return The newly created PlaceholderBuilder instance.
+     */
+    public static PlaceholderBuilder builder() {
+        return new PlaceholderBuilder();
+    }
 }
