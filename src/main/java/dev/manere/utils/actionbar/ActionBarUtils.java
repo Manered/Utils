@@ -58,7 +58,7 @@ public class ActionBarUtils {
      * @param player  The player to send the text to.
      * @param text The text to send.
      */
-    private static void sendAsync(Player player, String text) {
+    public static void sendAsync(Player player, String text) {
         Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), () -> send(player, text));
     }
 }
