@@ -49,6 +49,34 @@ public class ItemBuilder {
     }
 
     /**
+     * Creates a new ItemBuilder using the given ItemStack.
+     *
+     * @param itemStack The ItemStack to build upon
+     */
+    public static ItemBuilder of(ItemStack itemStack) {
+        return new ItemBuilder(itemStack);
+    }
+
+    /**
+     * Creates a new ItemBuilder for the given material.
+     *
+     * @param material The material to create the ItemStack with
+     */
+    public static ItemBuilder of(Material material) {
+        return new ItemBuilder(material);
+    }
+
+    /**
+     * Creates a new ItemBuilder for the given material and amount.
+     *
+     * @param material The material to create the ItemStack with
+     * @param amount The amount of the material
+     */
+    public static ItemBuilder of(Material material, int amount) {
+        return new ItemBuilder(material, amount);
+    }
+
+    /**
      * Creates a clone of this ItemBuilder.
      *
      * @return A cloned instance
