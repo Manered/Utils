@@ -46,7 +46,7 @@ public class NormalMenuBuilder implements InventoryHolder {
      * @return The NormalMenuBuilder instance.
      */
     public NormalMenuBuilder setButton(int slot, MenuButton button) {
-        buttons.putIfAbsent(slot, button);
+        buttons.put(slot, button);
         this.inventory.setItem(slot, button.getItem().build());
         return this;
     }
@@ -59,9 +59,27 @@ public class NormalMenuBuilder implements InventoryHolder {
      * @return The NormalMenuBuilder instance.
      */
     public NormalMenuBuilder setItem(int slot, ItemBuilder item) {
-        items.putIfAbsent(slot, item);
+        items.put(slot, item);
         this.inventory.setItem(slot, item.build());
         return this;
+    }
+
+    /**
+     * Creates a new NormalMenuBuilder instance.
+     *
+     * @return A new NormalMenuBuilder instance.
+     */
+    public static NormalMenuBuilder of(String title, int size) {
+        return new NormalMenuBuilder(title, size);
+    }
+
+    /**
+     * Creates a new NormalMenuBuilder instance.
+     *
+     * @return A new NormalMenuBuilder instance.
+     */
+    public static NormalMenuBuilder of(String title, int width, int height) {
+        return of(title, width*height);
     }
 
     /**

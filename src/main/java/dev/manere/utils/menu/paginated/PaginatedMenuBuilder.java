@@ -3,6 +3,7 @@ package dev.manere.utils.menu.paginated;
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.menu.MenuButton;
+import dev.manere.utils.menu.normal.NormalMenuBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -182,6 +183,24 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         items.put(where, item);
 
         return this;
+    }
+
+    /**
+     * Creates a new PaginatedMenuBuilder instance.
+     *
+     * @return A new PaginatedMenuBuilder instance.
+     */
+    public static PaginatedMenuBuilder of(String title, int size) {
+        return new PaginatedMenuBuilder(title, size);
+    }
+
+    /**
+     * Creates a new PaginatedMenuBuilder instance.
+     *
+     * @return A new PaginatedMenuBuilder instance.
+     */
+    public static PaginatedMenuBuilder of(String title, int width, int height) {
+        return of(title, width*height);
     }
 
     /**

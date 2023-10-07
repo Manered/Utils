@@ -5,6 +5,7 @@ package dev.manere.utils.menu.paginated;
  * It is used to associate a specific slot on a page within a menu.
  */
 public record PageSlotHolder(int slot, int page) {
+
     /**
      * Gets the slot number within a page.
      *
