@@ -29,10 +29,9 @@ public class CommandBuilder {
      */
     public CommandBuilder(String name) {
         this.name = name;
+
         command = Utils.getPlugin().getCommand(name);
-        if (command == null) {
-            throw new IllegalArgumentException("Command not found: " + name);
-        }
+        if (command == null) throw new IllegalArgumentException("Command not found: " + name);
     }
 
     /**
@@ -133,9 +132,9 @@ public class CommandBuilder {
      * @return This CommandBuilder for method chaining.
      */
     public CommandBuilder setShortHelpDescription(String shortHelpDescription) {
-        if (!(Objects.equals(this.shortHelpDescription, shortHelpDescription))) {
+        if (!(Objects.equals(this.shortHelpDescription, shortHelpDescription)))
             this.shortHelpDescription = shortHelpDescription;
-        }
+
         return this;
     }
 
@@ -157,7 +156,7 @@ public class CommandBuilder {
      * @return This CommandBuilder for method chaining.
      */
     public CommandBuilder setAliases(String... aliases) {
-        command.setAliases(java.util.Arrays.asList(aliases));
+        command.setAliases(Arrays.asList(aliases));
         return this;
     }
 

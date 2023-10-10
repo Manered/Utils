@@ -33,6 +33,12 @@ public class NormalMenuListener implements Listener {
                     listener.onClick(event);
                 }
             }
+
+            InventoryClickEvent customClickEvent = menu.getOnClick();
+            if (customClickEvent != null) {
+                menu.onClick(event);
+            }
+
         }
     }
 }

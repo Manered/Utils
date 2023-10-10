@@ -43,4 +43,9 @@ public record PageSlotHolder(int slot, int page) {
     public int getPage() {
         return page;
     }
+
+    public static PageSlotHolder of(int slot, int page) {
+        return new PageSlotHolder(slot, page);
+    }
+
 }

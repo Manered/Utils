@@ -4,9 +4,12 @@ import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.menu.MenuButton;
 import dev.manere.utils.menu.normal.NormalMenuBuilder;
+import dev.manere.utils.scheduler.SchedulerBuilder;
+import dev.manere.utils.scheduler.TaskType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +41,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
     public Material currentPageItemMaterial;
     public String currentPageItemName;
     public String[] currentPageItemLore;
+    private InventoryClickEvent onClick;
 
     /**
      * Constructs a new PaginatedMenuBuilder with the specified title and size.
@@ -56,6 +60,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         this.nextButton = new HashMap<>();
         this.borderMap = new HashMap<>();
         this.stickyButtons = new HashMap<>();
+        this.onClick = null;
     }
 
     /**
@@ -65,6 +70,25 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      */
     public String getTitle() {
         return title;
+    }
+
+    /**
+     * Allows you to define custom click actions when the menu is clicked.
+     *
+     * @param event The InventoryClickEvent associated with the click.
+     */
+    public PaginatedMenuBuilder onClick(InventoryClickEvent event) {
+        this.onClick = event;
+        return this;
+    }
+
+    /**
+     * Gets the custom click listener associated with this menu.
+     *
+     * @return The custom click listener associated with this menu.
+     */
+    public InventoryClickEvent getOnClick() {
+        return onClick;
     }
 
     /**
@@ -259,14 +283,17 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         for (String borderPattern : borderPatterns) {
             if (row < this.size) {
                 String[] rowCharacters = borderPattern.split(" ");
+
                 for (int col = 0; col < rowCharacters.length && col < 9; col++) {
                     String character = rowCharacters[col];
+
                     if (character.equals("X")) {
                         this.inventory.setItem(col + row * 9, borderItem.getItem().build().clone());
                         borderMap.put(borderItem, borderPatterns);
                         buttons.put(new PageSlotHolder(col + row * 9, currentPage), borderItem);
                     }
                 }
+
                 row++;
             }
         }
@@ -304,9 +331,11 @@ public class PaginatedMenuBuilder implements InventoryHolder {
                         }
                     }
                 }
+
                 row++;
             }
         }
+
         return this;
     }
 
@@ -345,17 +374,46 @@ public class PaginatedMenuBuilder implements InventoryHolder {
 
         for (PageSlotHolder slotHolder : buttons.keySet()) {
             highestPage = Math.max(highestPage, slotHolder.page());
+            this.totalPages = highestPage;
         }
 
         for (PageSlotHolder slotHolder : items.keySet()) {
-            highestPage = Math.max(highestPage, slotHolder.page());
+            if (totalPages > Math.max(highestPage, slotHolder.page())) {
+                highestPage = Math.max(highestPage, slotHolder.page());
+                this.totalPages = highestPage;
+            }
         }
-
-        this.totalPages = highestPage;
 
         for (MenuButton button : buttons.values()) {
             if (getPageSlotHolderByButton(button).page() == currentPage) {
-                this.inventory.setItem(getPageSlotHolderByButton(button).slot(), button.getItem().build());
+                if (!button.isRefreshingButton()) {
+                    this.inventory.setItem(getPageSlotHolderByButton(button).slot(), button.getItem().build());
+                } else {
+                    SchedulerBuilder.of()
+                            .setType(TaskType.REPEATING)
+                            .setAsynchronous(button.isRefreshingAsync())
+                            .setDelay(button.getRefreshDelay())
+                            .setPeriod(button.getRefreshPeriod())
+                            .setTask(task -> {
+                                if (player.getOpenInventory().getTopInventory() != getInventory()) {
+                                    task.cancel();
+                                    return;
+                                }
+
+                                if (getPageSlotHolderByButton(button).page() != currentPage) {
+                                    task.cancel();
+                                    return;
+                                }
+
+                                int slot = getPageSlotHolderByButton(button).slot();
+
+                                getInventory().clear(slot);
+                                getInventory().setItem(slot, button.getItem().build());
+
+                                player.updateInventory();
+                            })
+                            .build();
+                }
             }
         }
 

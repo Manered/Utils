@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 /**
  * A utility class for common operations related to players in Bukkit.
@@ -44,9 +45,9 @@ public class PlayerUtils {
      * @param count  The number of empty messages to send.
      */
     public static void clearChat(Player player, int count) {
-        for (int i = 0; i < count; i++) {
-            player.sendMessage("");
-        }
+        IntStream.range(0, count)
+                .mapToObj(i -> "")
+                .forEach(player::sendMessage);
     }
 
     /**
@@ -55,9 +56,12 @@ public class PlayerUtils {
      * @param target The player to hide.
      */
     public static void hide(Player target) {
-        for (Player player : Utils.getPlugin().getServer().getOnlinePlayers()) {
-            player.hidePlayer(Utils.getPlugin(), target);
-        }
+        Utils.getPlugin()
+                .getServer()
+                .getOnlinePlayers()
+                .forEach(player -> player.hidePlayer(
+                        Utils.getPlugin(),
+                        target));
     }
 
     /**
@@ -66,9 +70,10 @@ public class PlayerUtils {
      * @param target The player to show.
      */
     public static void show(Player target) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.showPlayer(Utils.getPlugin(), target);
-        }
+        Bukkit.getOnlinePlayers()
+                .forEach(player -> player.showPlayer(
+                        Utils.getPlugin(),
+                        target));
     }
 
     /**
@@ -90,11 +95,7 @@ public class PlayerUtils {
      * @param text   The text of the message.
      */
     public static void chat(Player player, String text) {
-        player.sendMessage(
-                ColorUtils.color(
-                        text
-                )
-        );
+        player.sendMessage(ColorUtils.color(text));
     }
 
     /**
@@ -111,9 +112,7 @@ public class PlayerUtils {
         player.sendTitle(
                 ColorUtils.color(title),
                 ColorUtils.color(subtitle),
-                fadeIn,
-                stay,
-                fadeOut
+                fadeIn, stay, fadeOut
         );
     }
 
@@ -127,15 +126,11 @@ public class PlayerUtils {
      * @param fadeOut   Time in ticks for title fade-out.
      */
     public static void broadcastTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendTitle(
-                    ColorUtils.color(title),
-                    ColorUtils.color(subtitle),
-                    fadeIn,
-                    stay,
-                    fadeOut
-            );
-        }
+        Bukkit.getOnlinePlayers()
+                .forEach(player -> player.sendTitle(
+                        ColorUtils.color(title),
+                        ColorUtils.color(subtitle),
+                        fadeIn, stay, fadeOut));
     }
 
     /**
@@ -205,9 +200,10 @@ public class PlayerUtils {
      * @param player    The player whose potion effects will be cleared.
      */
     public static void clearPotionEffects(Player player) {
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            player.removePotionEffect(effect.getType());
-        }
+        player.getActivePotionEffects()
+                .stream()
+                .map(PotionEffect::getType)
+                .forEach(player::removePotionEffect);
     }
 
     /**
@@ -227,9 +223,7 @@ public class PlayerUtils {
      * @param players   The list of players whose game mode will be changed.
      */
     public static void setGamemodeOfPlayers(GameMode gamemode, List<Player> players) {
-        for (Player player : players) {
-            player.setGameMode(gamemode);
-        }
+        players.forEach(player -> player.setGameMode(gamemode));
     }
 
     /**

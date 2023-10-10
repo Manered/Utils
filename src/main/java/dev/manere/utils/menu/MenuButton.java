@@ -9,12 +9,20 @@ import org.bukkit.Material;
 public class MenuButton {
     private ItemBuilder item;
     private MenuButtonListener listener;
+    private boolean isRefreshingButton;
+    private boolean isRefreshingAsync;
+    private long refreshDelay;
+    private long refreshPeriod;
 
     /**
      * Constructs a new MenuButton with the specified ItemBuilder.
      */
     public MenuButton() {
         this.item = new ItemBuilder(Material.AIR);
+        this.isRefreshingButton = false;
+        this.refreshDelay = 0L;
+        this.refreshPeriod = 20L;
+        this.isRefreshingAsync = true;
     }
 
     /**
@@ -48,6 +56,63 @@ public class MenuButton {
         return new MenuButton()
                 .setItem(item)
                 .setListener(listener);
+    }
+
+    /**
+     * Sets whether the button should refresh asynchronously.
+     *
+     * @param shouldRefreshAsynchronously true if the button should refresh asynchronously, false otherwise
+     * @return The MenuButton instance for method chaining
+     */
+    public MenuButton setShouldRefreshAsynchronously(boolean shouldRefreshAsynchronously) {
+        this.isRefreshingAsync = shouldRefreshAsynchronously;
+        return this;
+    }
+
+    /**
+     * Sets whether the button should be refreshed.
+     *
+     * @param shouldRefresh true if the button should be refreshed, false otherwise
+     * @return The MenuButton instance for method chaining
+     */
+    public MenuButton setShouldRefresh(boolean shouldRefresh) {
+        this.isRefreshingButton = shouldRefresh;
+        return this;
+    }
+
+    /**
+     * Sets the delay before the button refreshes.
+     *
+     * @param refreshDelay The delay in server ticks before the button refreshes
+     * @return The MenuButton instance for method chaining
+     */
+    public MenuButton setRefreshDelay(long refreshDelay) {
+        this.refreshDelay = refreshDelay;
+        return this;
+    }
+
+    /**
+     * Sets the period at which the button should refresh.
+     *
+     * @param refreshPeriod The period in server ticks at which the button should refresh
+     * @return The MenuButton instance for method chaining
+     */
+    public MenuButton setRefreshPeriod(long refreshPeriod) {
+        this.refreshPeriod = refreshPeriod;
+        return this;
+    }
+
+    /**
+     * Sets both the delay and period for refreshing the button.
+     *
+     * @param refreshDelay The delay in server ticks before the button refreshes
+     * @param refreshPeriod The period in server ticks at which the button should refresh
+     * @return The MenuButton instance for method chaining
+     */
+    public MenuButton setRefreshTime(long refreshDelay, long refreshPeriod) {
+        this.refreshDelay = refreshDelay;
+        this.refreshPeriod = refreshPeriod;
+        return this;
     }
 
     /**
@@ -88,5 +153,41 @@ public class MenuButton {
      */
     public MenuButtonListener getListener() {
         return listener;
+    }
+
+    /**
+     * Returns true if this button should refresh automatically.
+     *
+     * @return true if this button should refresh automatically.
+     */
+    public boolean isRefreshingButton() {
+        return isRefreshingButton;
+    }
+
+    /**
+     * Gets the refresh delay associated with the MenuButton.
+     *
+     * @return The refresh delay of the MenuButton.
+     */
+    public long getRefreshDelay() {
+        return refreshDelay;
+    }
+
+    /**
+     * Gets the refresh period associated with the MenuButton.
+     *
+     * @return The refresh period of the MenuButton.
+     */
+    public long getRefreshPeriod() {
+        return refreshPeriod;
+    }
+
+    /**
+     * Returns true if this button's refresh task should be run asynchronously.
+     *
+     * @return true if this button's refresh task should be run asynchronously.
+     */
+    public boolean isRefreshingAsync() {
+        return isRefreshingAsync;
     }
 }

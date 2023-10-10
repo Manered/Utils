@@ -3,7 +3,10 @@ package dev.manere.utils.menu.normal;
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.menu.MenuButton;
+import dev.manere.utils.scheduler.SchedulerBuilder;
+import dev.manere.utils.scheduler.TaskType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +26,7 @@ public class NormalMenuBuilder implements InventoryHolder {
     private final int size;
     private final Map<Integer, MenuButton> buttons;
     private final Map<Integer, ItemBuilder> items;
+    private InventoryClickEvent onClick;
 
     /**
      * Constructs a new NormalMenuBuilder with the specified title and size.
@@ -36,6 +40,7 @@ public class NormalMenuBuilder implements InventoryHolder {
         this.size = size;
         this.buttons = new HashMap<>();
         this.items = new HashMap<>();
+        this.onClick = null;
     }
 
     /**
@@ -48,6 +53,7 @@ public class NormalMenuBuilder implements InventoryHolder {
     public NormalMenuBuilder setButton(int slot, MenuButton button) {
         buttons.put(slot, button);
         this.inventory.setItem(slot, button.getItem().build());
+
         return this;
     }
 
@@ -61,6 +67,7 @@ public class NormalMenuBuilder implements InventoryHolder {
     public NormalMenuBuilder setItem(int slot, ItemBuilder item) {
         items.put(slot, item);
         this.inventory.setItem(slot, item.build());
+
         return this;
     }
 
@@ -101,12 +108,55 @@ public class NormalMenuBuilder implements InventoryHolder {
     }
 
     /**
+     * Allows you to define custom click actions when the menu is clicked.
+     *
+     * @param event The InventoryClickEvent associated with the click.
+     */
+    public NormalMenuBuilder onClick(InventoryClickEvent event) {
+        this.onClick = event;
+        return this;
+    }
+
+    /**
+     * Gets the custom click listener associated with this menu.
+     *
+     * @return The custom click listener associated with this menu.
+     */
+    public InventoryClickEvent getOnClick() {
+        return onClick;
+    }
+
+    /**
      * Opens the menu for a specific player.
      *
      * @param player The player to open the menu for.
      */
     public void open(Player player) {
         player.openInventory(this.inventory);
+
+        for (MenuButton button : buttons.values()) {
+            if (button.isRefreshingButton()) {
+                SchedulerBuilder.of()
+                        .setType(TaskType.REPEATING)
+                        .setAsynchronous(button.isRefreshingAsync())
+                        .setDelay(button.getRefreshDelay())
+                        .setPeriod(button.getRefreshPeriod())
+                        .setTask(task -> {
+                            if (player.getOpenInventory().getTopInventory() != getInventory()) {
+                                task.cancel();
+                                return;
+                            }
+
+                            int slot = getSlotByButton(button);
+
+                            getInventory().clear(slot);
+                            getInventory().setItem(slot, button.getItem().build());
+
+                            player.updateInventory();
+                        })
+                        .build();
+            }
+        }
     }
 
     /**
@@ -121,13 +171,16 @@ public class NormalMenuBuilder implements InventoryHolder {
         for (String borderPattern : borderPatterns) {
             if (row < this.size) {
                 String[] rowCharacters = borderPattern.split(" ");
+
                 for (int col = 0; col < rowCharacters.length && col < 9; col++) {
                     String character = rowCharacters[col];
+
                     if (character.equals("X")) {
                         this.inventory.setItem(col + row * 9, borderItem.getItem().build().clone());
                         buttons.put(col + row * 9, borderItem);
                     }
                 }
+
                 row++;
             }
         }
@@ -165,9 +218,11 @@ public class NormalMenuBuilder implements InventoryHolder {
                         }
                     }
                 }
+
                 row++;
             }
         }
+
         return this;
     }
 

@@ -30,6 +30,14 @@ public class PotionBuilder {
         this.potionMeta = (PotionMeta) item.getItemMeta();
     }
 
+    public static PotionBuilder of(ItemStack item) {
+        return new PotionBuilder(item);
+    }
+
+    public static PotionBuilder of(Material material) {
+        return of(new ItemStack(material));
+    }
+
     /**
      * Constructs a PotionBuilder using a specified material for the potion item.
      *

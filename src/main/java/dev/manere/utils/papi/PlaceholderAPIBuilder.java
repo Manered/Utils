@@ -1,6 +1,7 @@
 package dev.manere.utils.papi;
 
 import dev.manere.utils.library.Utils;
+import dev.manere.utils.prettify.ListPrettify;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -26,7 +27,9 @@ public class PlaceholderAPIBuilder {
         this.version = Utils.getPlugin().getDescription().getVersion();
         this.playerResult = null;
         this.offlinePlayerResult = null;
-        this.author = "Anonymous";
+        this.author = ListPrettify.fromStrings(Utils.getPlugin()
+                .getDescription()
+                .getAuthors());
     }
 
     /**

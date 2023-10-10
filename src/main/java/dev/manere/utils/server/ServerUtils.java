@@ -1,6 +1,7 @@
 package dev.manere.utils.server;
 
 import dev.manere.utils.library.Utils;
+import dev.manere.utils.prettify.ListPrettify;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;

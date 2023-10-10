@@ -74,6 +74,12 @@ public class PaginatedMenuListener implements Listener {
                     }
                 }
             }
+
+            InventoryClickEvent customClickEvent = menu.getOnClick();
+            if (customClickEvent != null) {
+                menu.onClick(event);
+            }
+
         }
     }
 }

@@ -47,6 +47,7 @@ public class ReflectionUtils {
             String classPackage = post1_17package == null ? NM_PACKAGE : NM_PACKAGE + '.' + post1_17package;
             return classPackage + '.' + className;
         }
+
         return NMS_PACKAGE + '.' + VERSION + '.' + className;
     }
 
@@ -143,9 +144,11 @@ public class ReflectionUtils {
             return enumValueOf(enumClass, enumName);
         } catch (IllegalArgumentException e) {
             Object[] constants = enumClass.getEnumConstants();
+
             if (constants.length > fallbackOrdinal) {
                 return constants[fallbackOrdinal];
             }
+
             throw e;
         }
     }
@@ -164,6 +167,7 @@ public class ReflectionUtils {
                 return innerClass;
             }
         }
+
         throw new ClassNotFoundException("No class in " + parentClass.getCanonicalName() + " matches the predicate.");
     }
 

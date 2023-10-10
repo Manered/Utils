@@ -19,14 +19,8 @@ public class ActionBarUtils {
      * @param text The text to send.
      */
     public static void send(Player player, String text) {
-        player.spigot().sendMessage(
-                ChatMessageType.ACTION_BAR,
-                TextComponent.fromLegacyText(
-                        ColorUtils.color(
-                                text
-                        )
-                )
-        );
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
+                ColorUtils.color(text)));
     }
 
     /**
@@ -35,9 +29,8 @@ public class ActionBarUtils {
      * @param text The text to send.
      */
     public static void sendAll(String text) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            sendAsync(player, text);
-        }
+        Bukkit.getOnlinePlayers()
+                .forEach(player -> sendAsync(player, text));
     }
 
     /**
@@ -49,7 +42,10 @@ public class ActionBarUtils {
      * @param text The text to send.
      */
     public static void sendFor(long delay, long period, Player player, String text) {
-        Utils.getPlugin().getServer().getScheduler().runTaskTimer(Utils.getPlugin(), () -> sendAsync(player, text), delay, period);
+        Utils.getPlugin()
+                .getServer()
+                .getScheduler()
+                .runTaskTimer(Utils.getPlugin(), () -> sendAsync(player, text), delay, period);
     }
 
     /**
@@ -59,6 +55,9 @@ public class ActionBarUtils {
      * @param text The text to send.
      */
     public static void sendAsync(Player player, String text) {
-        Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), () -> send(player, text));
+        Utils.getPlugin()
+                .getServer()
+                .getScheduler()
+                .runTaskAsynchronously(Utils.getPlugin(), () -> send(player, text));
     }
 }
