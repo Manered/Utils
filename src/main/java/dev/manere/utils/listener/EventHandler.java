@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @param <T> The type of event to handle.
  */
-class EventHandler<T extends Event> {
+public class EventHandler<T extends Event> {
     final List<Object> actionList;
     final Class<T> eventType;
     EventPriority eventPriority;

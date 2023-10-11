@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  *
  * @param <T> The type of event to handle.
  */
-class EventCallback<T extends Event> implements EventExecutor, Listener {
+public class EventCallback<T extends Event> implements EventExecutor, Listener {
     static final HandlerListCache HANDLER_LIST_CACHE = new HandlerListCache();
 
     final Class<T> eventType;

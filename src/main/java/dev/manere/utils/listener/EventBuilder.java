@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @param <T> Any subclass of {@link Event}
  */
-class EventBuilder<T extends Event> {
+public class EventBuilder<T extends Event> {
 
     final List<Object> actionList;
     final Class<T> eventType;
