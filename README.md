@@ -1,5 +1,5 @@
-# YAMU
-Yet Another Manered Utility
+# Utils
+Library
 
 > [!WARNING]
 > This library is not stable. It's recommended to use `v2.2.0` of this library.
