@@ -53,7 +53,7 @@ public class PotionBuilder {
      * @param consumer A consumer that accepts a PotionMeta and applies custom metadata modifications.
      * @return This PotionBuilder instance for method chaining.
      */
-    public PotionBuilder setMeta(Consumer<PotionMeta> consumer) {
+    public PotionBuilder meta(Consumer<PotionMeta> consumer) {
         consumer.accept(potionMeta);
         return this;
     }

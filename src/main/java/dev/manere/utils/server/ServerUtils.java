@@ -1,8 +1,9 @@
 package dev.manere.utils.server;
 
 import dev.manere.utils.library.Utils;
-import dev.manere.utils.prettify.ListPrettify;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -22,7 +23,7 @@ public class ServerUtils {
      *
      * @return The PluginManager of the server.
      */
-    public static PluginManager getPluginManager() {
+    public static PluginManager manager() {
         return Utils.getPlugin().getServer().getPluginManager();
     }
 
@@ -31,7 +32,7 @@ public class ServerUtils {
      *
      * @return The StructureManager of the server.
      */
-    public static StructureManager getStructureManager() {
+    public static StructureManager structures() {
         return Utils.getPlugin().getServer().getStructureManager();
     }
 
@@ -40,7 +41,7 @@ public class ServerUtils {
      *
      * @return The ScoreboardManager of the server.
      */
-    public static ScoreboardManager getScoreboardManager() {
+    public static ScoreboardManager scoreboards() {
         return Utils.getPlugin().getServer().getScoreboardManager();
     }
 
@@ -49,7 +50,7 @@ public class ServerUtils {
      *
      * @return The BukkitScheduler of the server.
      */
-    public static BukkitScheduler getScheduler() {
+    public static BukkitScheduler scheduler() {
         return Utils.getPlugin().getServer().getScheduler();
     }
 
@@ -58,7 +59,7 @@ public class ServerUtils {
      *
      * @return The ServicesManager of the server.
      */
-    public static ServicesManager getServicesManager() {
+    public static ServicesManager services() {
         return Utils.getPlugin().getServer().getServicesManager();
     }
 
@@ -67,7 +68,7 @@ public class ServerUtils {
      *
      * @return List of online Player objects.
      */
-    public static List<Player> getOnlinePlayers() {
+    public static List<Player> online() {
         return new ArrayList<>(Utils.getPlugin().getServer().getOnlinePlayers());
     }
 
@@ -76,7 +77,27 @@ public class ServerUtils {
      *
      * @return Number of online players.
      */
-    public static int getOnlinePlayersCount() {
-        return getOnlinePlayers().size();
+    public static int playerCount() {
+        return online().size();
+    }
+
+    /**
+     * Gets a plugin from a name.
+     *
+     * @param name Name of any plugin
+     * @return The plugin that is registered under {@code name}
+     */
+    public static Plugin plugin(String name) {
+        return Utils.getPlugin().getServer().getPluginManager().getPlugin(name);
+    }
+
+    /**
+     * Gets a plugin's {@link org.bukkit.Server} from a name.
+     *
+     * @param name Name of any plugin
+     * @return The {@link org.bukkit.Server} of the plugin registered under {@code name}
+     */
+    public static Server server(String name) {
+        return plugin(name).getServer();
     }
 }

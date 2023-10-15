@@ -16,8 +16,8 @@ import java.util.List;
  */
 public class EventBuilder<T extends Event> {
 
-    final List<Object> actionList;
-    final Class<T> eventType;
+    public final List<Object> actionList;
+    public final Class<T> eventType;
 
     /**
      * Constructs a new EventBuilder with the specified event type.
@@ -25,7 +25,7 @@ public class EventBuilder<T extends Event> {
      * @param eventType The event type to listen to
      */
     EventBuilder(Class<T> eventType) {
-        actionList = new ArrayList<>();
+        this.actionList = new ArrayList<>();
         this.eventType = eventType;
     }
 
@@ -35,7 +35,7 @@ public class EventBuilder<T extends Event> {
      * @param consumer The event consumer.
      * @return This EventBuilder instance, for chaining methods.
      */
-    public EventBuilder<T> execute(Consumer<T> consumer) {
+    public EventBuilder<T> listens(Consumer<T> consumer) {
         actionList.add(consumer);
         return this;
     }

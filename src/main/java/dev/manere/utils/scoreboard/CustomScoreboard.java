@@ -1,7 +1,6 @@
 package dev.manere.utils.scoreboard;
 
 import dev.manere.utils.reflection.ReflectionUtils;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -50,14 +49,14 @@ public class CustomScoreboard extends ScoreboardBase<String> {
      * @throws IllegalArgumentException If the title is longer than 32 characters (prior to Minecraft 1.13).
      */
     @Override
-    public ScoreboardBase<String> setTitle(String title) {
+    public ScoreboardBase<String> title(String title) {
         Objects.requireNonNull(title, "title");
 
         if (!VersionType.V1_13.isHigherOrEqual() && title.length() > 32) {
             throw new IllegalArgumentException("Title is longer than 32 chars");
         }
 
-        super.setTitle(title);
+        super.title(title);
         return this;
     }
 
@@ -69,7 +68,7 @@ public class CustomScoreboard extends ScoreboardBase<String> {
      * @throws IllegalArgumentException If any line is longer than 30 characters (prior to Minecraft 1.13).
      */
     @Override
-    public ScoreboardBase<String> setLines(String... lines) {
+    public ScoreboardBase<String> lines(String... lines) {
         Objects.requireNonNull(lines, "lines");
 
         if (!VersionType.V1_13.isHigherOrEqual()) {
@@ -83,7 +82,7 @@ public class CustomScoreboard extends ScoreboardBase<String> {
             }
         }
 
-        super.setLines(lines);
+        super.lines(lines);
         return this;
     }
 
@@ -93,6 +92,7 @@ public class CustomScoreboard extends ScoreboardBase<String> {
      * @param score The score corresponding to the line being changed.
      * @throws Throwable If an error occurs during the operation.
      */
+    @SuppressWarnings("deprecation")
     @Override
     protected void sendLineChange(int score) throws Throwable {
         int maxLength = hasLinesMaxLength() ? 16 : 1024;

@@ -20,14 +20,14 @@ import java.util.function.Consumer;
  * @param <T> The type of event to handle.
  */
 public class EventCallback<T extends Event> implements EventExecutor, Listener {
-    static final HandlerListCache HANDLER_LIST_CACHE = new HandlerListCache();
+    public static final HandlerListCache HANDLER_LIST_CACHE = new HandlerListCache();
 
-    final Class<T> eventType;
-    final EventPriority eventPriority;
-    final boolean ignoredCancelled;
-    final Object[] handlerArray;
-    final AtomicBoolean isRegistered;
-    final JavaPlugin plugin;
+    public final Class<T> eventType;
+    public final EventPriority eventPriority;
+    public final boolean ignoredCancelled;
+    public final Object[] handlerArray;
+    public final AtomicBoolean isRegistered;
+    public final JavaPlugin plugin;
 
     /**
      * Constructs an EventCallback.
@@ -35,16 +35,16 @@ public class EventCallback<T extends Event> implements EventExecutor, Listener {
      * @param plugin       The JavaPlugin instance associated with this event callback.
      * @param eventHandler The EventHandler containing information about the event.
      */
-    EventCallback(JavaPlugin plugin, EventHandler<T> eventHandler) {
+    public EventCallback(JavaPlugin plugin, EventHandler<T> eventHandler) {
         this.plugin = plugin;
-        eventType = eventHandler.eventType;
-        eventPriority = eventHandler.eventPriority;
-        ignoredCancelled = eventHandler.ignoreCancelled;
-        handlerArray = new Object[eventHandler.actionList.size()];
-        isRegistered = new AtomicBoolean();
+        this.eventType = eventHandler.eventType;
+        this.eventPriority = eventHandler.eventPriority;
+        this.ignoredCancelled = eventHandler.ignoreCancelled;
+        this.handlerArray = new Object[eventHandler.actionList.size()];
+        this.isRegistered = new AtomicBoolean();
 
-        for (int i = 0; i < handlerArray.length; i++) {
-            handlerArray[i] = eventHandler.actionList.get(i);
+        for (int i = 0; i < this.handlerArray.length; i++) {
+            this.handlerArray[i] = eventHandler.actionList.get(i);
         }
 
         register();
@@ -116,16 +116,15 @@ public class EventCallback<T extends Event> implements EventExecutor, Listener {
         if (isRegistered.getAndSet(true)) {
             return;
         }
-        register("This doesn't actually matter");
+
+        attemptRegistration();
     }
 
     /**
      * Registers the event callback with a specific method name.
-     *
-     * @param withoutThisTheMethodNameWouldBeRegister0 A dummy parameter (not used).
      */
-    void register(String withoutThisTheMethodNameWouldBeRegister0) {
-        Bukkit.getPluginManager().registerEvent(eventType,this,eventPriority,this,plugin,ignoredCancelled);
+    void attemptRegistration() {
+        Bukkit.getPluginManager().registerEvent(this.eventType, this,eventPriority, this,plugin, this.ignoredCancelled);
     }
 
     /**
@@ -135,6 +134,7 @@ public class EventCallback<T extends Event> implements EventExecutor, Listener {
      * @param event    The event object.
      * @throws EventException If an error occurs during event execution.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void execute(@NotNull Listener listener, Event event) throws EventException {
         if (eventType != event.getClass()) {
@@ -166,9 +166,9 @@ public class EventCallback<T extends Event> implements EventExecutor, Listener {
     /**
      * A cache for storing HandlerLists.
      */
-    static class HandlerListCache implements BiFunction<Class<? extends Event>,EventCallback<?>,HandlerList> {
+    public static class HandlerListCache implements BiFunction<Class<? extends Event>,EventCallback<?>,HandlerList> {
 
-        final Map<Class<? extends Event>, HandlerList> cacheMap = new HashMap<>();
+        public final Map<Class<? extends Event>, HandlerList> cacheMap = new HashMap<>();
 
         /**
          * Retrieves or creates a HandlerList for a specific event class.
@@ -199,7 +199,7 @@ public class EventCallback<T extends Event> implements EventExecutor, Listener {
          * @return The cached HandlerList.
          * @throws ReflectiveOperationException If a reflective operation fails.
          */
-        HandlerList cache(Class<? extends Event> aClass) throws ReflectiveOperationException {
+        public HandlerList cache(Class<? extends Event> aClass) throws ReflectiveOperationException {
             Method method_getHandlerList = aClass.getMethod("getHandlerList");
             return (HandlerList) method_getHandlerList.invoke(null);
         }

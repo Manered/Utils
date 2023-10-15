@@ -124,13 +124,15 @@ public class FileBuilder {
      * @param doAsync Whether to run the operation asynchronously.
      * @return This FileBuilder for method chaining.
      */
-    public FileBuilder setValue(String path, Object value, boolean doAsync) {
+    public FileBuilder value(String path, Object value, boolean doAsync) {
         if (doAsync) {
-            Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), () -> config.set(path, value));
-        } else {
-            synchronized (this) {
+            Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), () -> {
                 config.set(path, value);
-            }
+                save(false);
+            });
+        } else {
+            config.set(path, value);
+            save(false);
         }
 
         return this;
@@ -143,8 +145,8 @@ public class FileBuilder {
      * @param value The value to be set.
      * @return This FileBuilder for method chaining.
      */
-    public FileBuilder setValue(String path, Object value) {
-        return setValue(path, value, false);
+    public FileBuilder value(String path, Object value) {
+        return value(path, value, false);
     }
 
     /**
@@ -154,7 +156,7 @@ public class FileBuilder {
      * @param doAsync Whether to run the operation asynchronously.
      * @return This FileBuilder for method chaining.
      */
-    public FileBuilder setFileToMap(Map<String, Object> values, boolean doAsync) {
+    public FileBuilder fileToMap(Map<String, Object> values, boolean doAsync) {
         if (doAsync) {
             Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), () -> {
                 config = new YamlConfiguration();
@@ -164,12 +166,10 @@ public class FileBuilder {
                 }
             });
         } else {
-            synchronized (this) {
-                config = new YamlConfiguration();
+            config = new YamlConfiguration();
 
-                for (Map.Entry<String, Object> entry : values.entrySet()) {
-                    config.set(entry.getKey(), entry.getValue());
-                }
+            for (Map.Entry<String, Object> entry : values.entrySet()) {
+                config.set(entry.getKey(), entry.getValue());
             }
         }
 
@@ -182,8 +182,8 @@ public class FileBuilder {
      * @param values The map containing the values.
      * @return This FileBuilder for method chaining.
      */
-    public FileBuilder setFileToMap(Map<String, Object> values) {
-        return setFileToMap(values, false);
+    public FileBuilder fileToMap(Map<String, Object> values) {
+        return fileToMap(values, false);
     }
 
     /**
@@ -204,15 +204,13 @@ public class FileBuilder {
                 callback.accept(map);
             });
         } else {
-            synchronized (this) {
-                Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>();
 
-                for (String key : config.getKeys(true)) {
-                    map.put(key, config.get(key));
-                }
-
-                callback.accept(map);
+            for (String key : config.getKeys(true)) {
+                map.put(key, config.get(key));
             }
+
+            callback.accept(map);
         }
     }
 
@@ -234,11 +232,11 @@ public class FileBuilder {
      */
     public Object getValue(String path, boolean doAsync) {
         if (doAsync) {
+            reload();
             Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), () -> yamlConfig.get(path));
         } else {
-            synchronized (this) {
-                return yamlConfig.get(path);
-            }
+            reload();
+            return yamlConfig.get(path);
         }
 
         return null;
@@ -270,12 +268,10 @@ public class FileBuilder {
                 }
             });
         } else {
-            synchronized (this) {
-                try {
-                    config.save(file);
-                } catch (IOException e) {
-                    Utils.getPlugin().getLogger().log(Level.SEVERE, "An error has occurred while attempting to save a file.\n  Message: " + e.getMessage());
-                }
+            try {
+                config.save(file);
+            } catch (IOException e) {
+                Utils.getPlugin().getLogger().log(Level.SEVERE, "An error has occurred while attempting to save a file.\n  Message: " + e.getMessage());
             }
         }
 
@@ -295,31 +291,25 @@ public class FileBuilder {
      * Reloads the configuration from the file.
      *
      * @param doAsync Whether to run the operation asynchronously.
-     * @return This FileBuilder for method chaining.
      */
-    public FileBuilder reload(boolean doAsync) {
+    public void reload(boolean doAsync) {
         if (doAsync) {
             Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), () -> {
                 this.config = YamlConfiguration.loadConfiguration(file);
                 this.yamlConfig = YamlConfiguration.loadConfiguration(file);
             });
         } else {
-            synchronized (this) {
-                this.config = YamlConfiguration.loadConfiguration(file);
-                this.yamlConfig = YamlConfiguration.loadConfiguration(file);
-            }
+            this.config = YamlConfiguration.loadConfiguration(file);
+            this.yamlConfig = YamlConfiguration.loadConfiguration(file);
         }
 
-        return this;
     }
 
     /**
      * Reloads the configuration from the file without asynchronous operation.
-     *
-     * @return This FileBuilder for method chaining.
      */
-    public FileBuilder reload() {
-        return reload(false);
+    public void reload() {
+        reload(false);
     }
 
     /**
@@ -335,10 +325,8 @@ public class FileBuilder {
                 }
             });
         } else {
-            synchronized (this) {
-                if (file.exists()) {
-                    file.delete();
-                }
+            if (file.exists()) {
+                file.delete();
             }
         }
     }
@@ -378,14 +366,12 @@ public class FileBuilder {
                 }
             });
         } else {
-            synchronized (this) {
-                File newFile = new File(newPath, name);
+            File newFile = new File(newPath, name);
 
-                try {
-                    Files.copy(file.toPath(), newFile.toPath());
-                } catch (IOException e) {
-                    Utils.getPlugin().getLogger().log(Level.SEVERE, "An error has occurred while attempting to copy a file.\n  Message: " + e.getMessage());
-                }
+            try {
+                Files.copy(file.toPath(), newFile.toPath());
+            } catch (IOException e) {
+                Utils.getPlugin().getLogger().log(Level.SEVERE, "An error has occurred while attempting to copy a file.\n  Message: " + e.getMessage());
             }
         }
 

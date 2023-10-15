@@ -2,8 +2,6 @@ package dev.manere.utils.listener;
 
 import com.google.common.collect.ImmutableList;
 import dev.manere.utils.library.Utils;
-import net.kyori.adventure.Adventure;
-import net.kyori.adventure.text.format.TextFormat;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,10 +14,10 @@ import java.util.List;
  * @param <T> The type of event to handle.
  */
 public class EventHandler<T extends Event> {
-    final List<Object> actionList;
-    final Class<T> eventType;
-    EventPriority eventPriority;
-    boolean ignoreCancelled;
+    public final List<Object> actionList;
+    public final Class<T> eventType;
+    public EventPriority eventPriority;
+    public boolean ignoreCancelled;
 
     /**
      * Constructs an EventHandler with the specified EventBuilder.

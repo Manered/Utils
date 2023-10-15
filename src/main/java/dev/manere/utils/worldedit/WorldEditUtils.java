@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * A utility class for working with WorldEdit and schematic files.
@@ -35,7 +35,7 @@ public class WorldEditUtils {
      * @param shouldCopyEntities Whether to copy entities as well.
      * @return The clipboard containing the copied region.
      */
-    public static Clipboard copyClipboard(Location corner1, Location corner2, boolean shouldCopyEntities) {
+    public static Clipboard copy(Location corner1, Location corner2, boolean shouldCopyEntities) {
         BlockVector3 bottom = BlockVector3.at(corner1.getBlockX(), corner1.getBlockY(), corner1.getBlockZ());
         BlockVector3 top = BlockVector3.at(corner2.getBlockX(), corner2.getBlockY(), corner2.getBlockZ());
 
@@ -44,7 +44,7 @@ public class WorldEditUtils {
 
         clipboard.setOrigin(BlockVector3.at(corner1.getX(), corner1.getY(), corner1.getZ()));
 
-        try (EditSession editSession = WorldEdit.getInstance().newEditSession(FaweAPI.getWorld(corner1.getWorld().getName()))) {
+        try (EditSession editSession = WorldEdit.getInstance().newEditSession(FaweAPI.getWorld(Objects.requireNonNull(corner1.getWorld()).getName()))) {
             ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, clipboard, region.getMinimumPoint());
 
             forwardExtentCopy.setCopyingEntities(shouldCopyEntities);
@@ -64,10 +64,10 @@ public class WorldEditUtils {
      * @param corner1     The corner of the region to paste into.
      * @param ignoreAir   Whether to ignore air blocks during the paste.
      */
-    public static void placeClipboard(Clipboard clipboard, Location corner1, boolean ignoreAir) {
+    public static void paste(Clipboard clipboard, Location corner1, boolean ignoreAir) {
         if (clipboard == null) return;
 
-        try (EditSession editSession = WorldEdit.getInstance().newEditSession(FaweAPI.getWorld(corner1.getWorld().getName()))) {
+        try (EditSession editSession = WorldEdit.getInstance().newEditSession(FaweAPI.getWorld(Objects.requireNonNull(corner1.getWorld()).getName()))) {
             Operation operation = new ClipboardHolder(clipboard)
                     .createPaste(editSession)
                     .to(BlockVector3.at(corner1.getX(), corner1.getY(), corner1.getZ()))
@@ -86,7 +86,7 @@ public class WorldEditUtils {
      * @param clipboard The clipboard to save.
      * @param path      The path where the schematic file will be saved.
      */
-    public static void saveSchematic(Clipboard clipboard, String path) {
+    public static void save(Clipboard clipboard, String path) {
         File file = new File(path);
 
         try {
@@ -105,7 +105,7 @@ public class WorldEditUtils {
      * @param path The path to the schematic file.
      * @return The loaded clipboard, or null if an error occurs.
      */
-    public static Clipboard loadSchematic(String path) {
+    public static Clipboard load(String path) {
         File file = new File(path);
 
         if (!file.exists()) return null;
@@ -114,7 +114,7 @@ public class WorldEditUtils {
 
         ClipboardFormat format = ClipboardFormats.findByFile(file);
 
-        try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+        try (ClipboardReader reader = Objects.requireNonNull(format).getReader(new FileInputStream(file))) {
             clipboard = reader.read();
         } catch (Exception e) {
             e.printStackTrace();

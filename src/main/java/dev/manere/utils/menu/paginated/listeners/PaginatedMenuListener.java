@@ -33,7 +33,7 @@ public class PaginatedMenuListener implements Listener {
         if (event.getInventory().getHolder() instanceof PaginatedMenuBuilder menu) {
             MenuButton stickyButton = menu.getStickyButton(event.getSlot());
 
-            if (menu.currentPageItemEnabled && event.getSlot() == menu.currentPageItemSlot) {
+            if (menu.currentPageItemEnabled && event.getSlot() == menu.currentPageSlot) {
                 event.setCancelled(true);
             }
 
@@ -74,12 +74,6 @@ public class PaginatedMenuListener implements Listener {
                     }
                 }
             }
-
-            InventoryClickEvent customClickEvent = menu.getOnClick();
-            if (customClickEvent != null) {
-                menu.onClick(event);
-            }
-
         }
     }
 }

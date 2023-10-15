@@ -23,7 +23,7 @@ public class PlaceholderBuilder {
      * @param text The base text containing placeholders to replace.
      * @return The current PlaceholderBuilder instance for method chaining.
      */
-    public PlaceholderBuilder fromText(String text) {
+    public PlaceholderBuilder text(String text) {
         this.text = text;
         return this;
     }

@@ -1,15 +1,25 @@
 package dev.manere.utils.item;
 
+import dev.manere.utils.library.Utils;
+import dev.manere.utils.player.PlayerUtils;
+import dev.manere.utils.scheduler.Schedulers;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Utility class for building customized {@link ItemStack}s.
@@ -97,7 +107,26 @@ public class ItemBuilder {
      * @param name The name to set
      * @return This builder, for chaining
      */
-    public ItemBuilder setName(String name){
+    public ItemBuilder name(Component name){
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        if (itemMeta != null) {
+            itemMeta.displayName(name);
+        }
+
+        itemStack.setItemMeta(itemMeta);
+        return this;
+    }
+
+    /**
+     * Sets the display name of the ItemStack without automatically colorizing it.
+     *
+     * @param name The name to set
+     * @return This builder, for chaining
+     */
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @Deprecated
+    public ItemBuilder rawName(String name) {
         ItemMeta itemMeta = itemStack.getItemMeta();
 
         if (itemMeta != null) {
@@ -132,21 +161,65 @@ public class ItemBuilder {
     /**
      * Sets the skull owner for a skull ItemStack.
      *
-     * @param owner The UUID or name of the skull owner
+     * @param playerName The name of the skull owner
      * @return This builder, for chaining
      */
-    public ItemBuilder setSkullOwner(String owner){
+    public ItemBuilder skullOwner(String playerName){
         SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
 
         if (itemMeta != null) {
-            itemMeta.setOwnerProfile(
-                    Bukkit.getOfflinePlayer(UUID.fromString(owner))
-                            .getPlayerProfile()
-            );
+            Schedulers.async().now(() -> itemMeta.setOwnerProfile(Bukkit.getOfflinePlayer(UUID.fromString(playerName)).getPlayerProfile()));
         }
 
         itemStack.setItemMeta(itemMeta);
         return this;
+    }
+
+    /**
+     * Sets the skull owner for a skull ItemStack.
+     *
+     * @param player The player of the skull owner
+     * @return This builder, for chaining
+     */
+    public ItemBuilder skullOwner(Player player) {
+        SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
+
+        if (itemMeta != null) {
+            Schedulers.async().now(() -> itemMeta.setOwnerProfile(player.getPlayerProfile()));
+        }
+
+        itemStack.setItemMeta(itemMeta);
+        return this;
+    }
+
+    /**
+     * Sets the skull owner for a skull ItemStack.
+     *
+     * @param player The offline player of the skull owner
+     * @return This builder, for chaining
+     */
+    public ItemBuilder skullOwner(OfflinePlayer player) {
+        SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
+
+        if (itemMeta != null) {
+            player.getPlayerProfile()
+                    .update()
+                    .thenAcceptAsync(itemMeta::setOwnerProfile,
+                            runnable -> Bukkit.getScheduler().runTask(Utils.getPlugin(), runnable));
+        }
+
+        itemStack.setItemMeta(itemMeta);
+        return this;
+    }
+
+    /**
+     * Sets the skull owner for a skull ItemStack.
+     *
+     * @param uuid The UUID of the skull owner
+     * @return This builder, for chaining
+     */
+    public ItemBuilder skullOwner(UUID uuid) {
+        return skullOwner(PlayerUtils.offline(uuid));
     }
 
     /**
@@ -184,11 +257,11 @@ public class ItemBuilder {
      * @param lore The list of lore to set
      * @return This builder, for chaining
      */
-    public ItemBuilder setLore(String... lore){
+    public ItemBuilder lore(Component... lore){
         ItemMeta itemMeta = itemStack.getItemMeta();
 
         if (itemMeta != null) {
-            itemMeta.setLore(Arrays.asList(lore));
+            itemMeta.lore(List.of(lore));
         }
 
         itemStack.setItemMeta(itemMeta);
@@ -201,100 +274,12 @@ public class ItemBuilder {
      * @param lore The list of lore to set
      * @return This builder, for chaining
      */
-    public ItemBuilder setLore(List<String> lore) {
+    public ItemBuilder lore(List<Component> lore) {
         ItemMeta itemMeta = itemStack.getItemMeta();
 
         if (itemMeta != null) {
-            itemMeta.setLore(lore);
+            itemMeta.lore(lore);
         }
-
-        itemStack.setItemMeta(itemMeta);
-        return this;
-    }
-
-    /**
-     * Removes a line of lore from the ItemStack
-     * based on the text of the line.
-     *
-     * @param line The text of the line to remove
-     * @return This builder, for chaining
-     */
-    public ItemBuilder removeLoreLine(String line){
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = null;
-
-        if (itemMeta != null) lore = new ArrayList<>(Objects.requireNonNull(itemMeta.getLore()));
-
-        if (lore != null && !lore.contains(line)) return this;
-
-        if (lore != null) lore.remove(line);
-
-        if (itemMeta != null) itemMeta.setLore(lore);
-
-        itemStack.setItemMeta(itemMeta);
-        return this;
-    }
-
-    /**
-     * Removes a line of lore from the ItemStack
-     * based on the index of the line.
-     *
-     * @param index The index of the line to remove
-     * @return This builder, for chaining
-     */
-    public ItemBuilder removeLoreLine(int index){
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = null;
-
-        if (itemMeta != null) lore = new ArrayList<>(Objects.requireNonNull(itemMeta.getLore()));
-
-        if (lore != null && (index < 0 || index > lore.size())) return this;
-
-        if (lore != null) lore.remove(index);
-
-        if (itemMeta != null) itemMeta.setLore(lore);
-
-        itemStack.setItemMeta(itemMeta);
-        return this;
-    }
-
-    /**
-     * Adds a new line of lore to the end of the ItemStack's lore.
-     *
-     * @param line The text for the new line
-     * @return This builder, for chaining
-     */
-    public ItemBuilder addLoreLine(String line){
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = new ArrayList<>();
-
-        if (itemMeta != null && itemMeta.hasLore()) lore = new ArrayList<>(Objects.requireNonNull(itemMeta.getLore()));
-
-        if (itemMeta != null) {
-            lore.add(line);
-            itemMeta.setLore(lore);
-        }
-
-        itemStack.setItemMeta(itemMeta);
-        return this;
-    }
-
-    /**
-     * Adds or replaces a line of lore at a specific position.
-     *
-     * @param line The text for the line
-     * @param pos The index where the line should be added or replaced
-     * @return This builder, for chaining
-     */
-    public ItemBuilder addLoreLine(String line, int pos){
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = null;
-
-        if (itemMeta != null) lore = new ArrayList<>(Objects.requireNonNull(itemMeta.getLore()));
-
-        if (lore != null) lore.set(pos, line);
-
-        if (itemMeta != null) itemMeta.setLore(lore);
 
         itemStack.setItemMeta(itemMeta);
         return this;
@@ -306,7 +291,7 @@ public class ItemBuilder {
      * @param amount The new amount
      * @return This builder, for chaining
      */
-    public ItemBuilder setAmount(int amount) {
+    public ItemBuilder amount(int amount) {
         itemStack.setAmount(amount);
         return this;
     }
@@ -317,7 +302,7 @@ public class ItemBuilder {
      * @param durability The durability to set
      * @return This builder, for chaining
      */
-    public ItemBuilder setDurability(int durability) {
+    public ItemBuilder durability(int durability) {
         if (itemStack.getItemMeta() instanceof Damageable damageable) {
             damageable.setDamage(durability);
             itemStack.setItemMeta(damageable);
@@ -367,7 +352,7 @@ public class ItemBuilder {
      *
      * @return This builder, for chaining
      */
-    public ItemBuilder addGlow() {
+    public ItemBuilder glow() {
         addUnsafeEnchantment(Enchantment.LUCK, 1);
         addFlag(ItemFlag.HIDE_ENCHANTS);
         return this;
@@ -388,7 +373,7 @@ public class ItemBuilder {
      *
      * @return This builder, for chaining
      */
-    public ItemBuilder setUnbreakable() {
+    public ItemBuilder unbreakable() {
         ItemMeta meta = itemStack.getItemMeta();
 
         if (meta != null) {
@@ -405,7 +390,7 @@ public class ItemBuilder {
      * @param data The custom model data to set
      * @return This builder, for chaining
      */
-    public ItemBuilder setCustomModelData(int data) {
+    public ItemBuilder customModelData(int data) {
         ItemMeta meta = itemStack.getItemMeta();
 
         if (meta != null) {
@@ -422,7 +407,7 @@ public class ItemBuilder {
      * @param itemMeta The item meta to set the item stack's item meta to
      * @return This builder, for chaining
      */
-    public ItemBuilder setMeta(ItemMeta itemMeta) {
+    public ItemBuilder meta(ItemMeta itemMeta) {
         itemStack.setItemMeta(itemMeta);
         return this;
     }
@@ -444,6 +429,60 @@ public class ItemBuilder {
      */
     public ItemBuilder from(ItemStack itemStack) {
         return new ItemBuilder(itemStack);
+    }
+
+    public ItemBuilder bookData(BookMeta bookMeta) {
+        itemStack.setItemMeta(bookMeta);
+        return this;
+    }
+
+    public ItemBuilder bannerData(BannerMeta bannerMeta) {
+        itemStack.setItemMeta(bannerMeta);
+        return this;
+    }
+
+    public ItemBuilder leatherArmorColor(Color color) {
+        LeatherArmorMeta meta = (LeatherArmorMeta) itemStack.getItemMeta();
+
+        if (meta != null) meta.setColor(color);
+
+        itemStack.setItemMeta(meta);
+        return this;
+    }
+
+    public ItemBuilder fireworkData(FireworkMeta meta) {
+        itemStack.setItemMeta(meta);
+        return this;
+    }
+
+    public ItemBuilder addItemAttribute(Attribute attribute, AttributeModifier modifier) {
+        ItemMeta meta = itemStack.getItemMeta();
+
+        if (meta != null) meta.addAttributeModifier(attribute, modifier);
+
+        itemStack.setItemMeta(meta);
+        return this;
+    }
+
+    public ItemBuilder clearItemAttributes() {
+        ItemMeta meta = itemStack.getItemMeta();
+
+        if (meta != null) Objects.requireNonNull(meta.getAttributeModifiers())
+                .forEach(meta::removeAttributeModifier);
+
+        itemStack.setItemMeta(meta);
+        return this;
+    }
+
+    public ItemBuilder hideAttributes() {
+        ItemMeta meta = itemStack.getItemMeta();
+
+        if (meta != null) {
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        }
+
+        itemStack.setItemMeta(meta);
+        return this;
     }
 
     /**

@@ -3,13 +3,11 @@ package dev.manere.utils.menu.paginated;
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.menu.MenuButton;
-import dev.manere.utils.menu.normal.NormalMenuBuilder;
-import dev.manere.utils.scheduler.SchedulerBuilder;
-import dev.manere.utils.scheduler.TaskType;
+import dev.manere.utils.scheduler.builder.SchedulerBuilder;
+import dev.manere.utils.scheduler.builder.TaskType;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -23,10 +21,11 @@ import java.util.logging.Level;
  * This class allows you to build and manage paginated menus with customizable buttons,
  * items, and pagination controls.
  */
+
 public class PaginatedMenuBuilder implements InventoryHolder {
 
     public final Inventory inventory;
-    public final String title;
+    public final Component title;
     public final int size;
     public final Map<PageSlotHolder, MenuButton> buttons;
     public final Map<PageSlotHolder, ItemBuilder> items;
@@ -37,11 +36,8 @@ public class PaginatedMenuBuilder implements InventoryHolder {
     public final HashMap<MenuButton, String[]> borderMap;
     public final HashMap<Integer, MenuButton> stickyButtons;
     public boolean currentPageItemEnabled;
-    public int currentPageItemSlot;
-    public Material currentPageItemMaterial;
-    public String currentPageItemName;
-    public String[] currentPageItemLore;
-    private InventoryClickEvent onClick;
+    public ItemBuilder currentPageItem;
+    public int currentPageSlot;
 
     /**
      * Constructs a new PaginatedMenuBuilder with the specified title and size.
@@ -49,7 +45,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @param title The title of the paginated menu.
      * @param size  The size of the paginated menu (number of slots).
      */
-    public PaginatedMenuBuilder(String title, int size) {
+    public PaginatedMenuBuilder(Component title, int size) {
         this.inventory = Bukkit.createInventory(this, size, title);
         this.title = title;
         this.size = size;
@@ -60,7 +56,6 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         this.nextButton = new HashMap<>();
         this.borderMap = new HashMap<>();
         this.stickyButtons = new HashMap<>();
-        this.onClick = null;
     }
 
     /**
@@ -68,27 +63,8 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      *
      * @return The title of the menu.
      */
-    public String getTitle() {
+    public Component getTitle() {
         return title;
-    }
-
-    /**
-     * Allows you to define custom click actions when the menu is clicked.
-     *
-     * @param event The InventoryClickEvent associated with the click.
-     */
-    public PaginatedMenuBuilder onClick(InventoryClickEvent event) {
-        this.onClick = event;
-        return this;
-    }
-
-    /**
-     * Gets the custom click listener associated with this menu.
-     *
-     * @return The custom click listener associated with this menu.
-     */
-    public InventoryClickEvent getOnClick() {
-        return onClick;
     }
 
     /**
@@ -169,7 +145,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @param totalPages The total number of pages.
      * @return This PaginatedMenuBuilder instance.
      */
-    public PaginatedMenuBuilder setTotalPages(int totalPages) {
+    public PaginatedMenuBuilder totalPages(int totalPages) {
         this.totalPages = totalPages;
         return this;
     }
@@ -190,7 +166,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @param button The button to set.
      * @return This PaginatedMenuBuilder instance.
      */
-    public PaginatedMenuBuilder setButton(PageSlotHolder where, MenuButton button) {
+    public PaginatedMenuBuilder button(PageSlotHolder where, MenuButton button) {
         buttons.put(where, button);
 
         return this;
@@ -203,7 +179,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @param item  The item to set.
      * @return This PaginatedMenuBuilder instance.
      */
-    public PaginatedMenuBuilder setItem(PageSlotHolder where, ItemBuilder item) {
+    public PaginatedMenuBuilder item(PageSlotHolder where, ItemBuilder item) {
         items.put(where, item);
 
         return this;
@@ -214,7 +190,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      *
      * @return A new PaginatedMenuBuilder instance.
      */
-    public static PaginatedMenuBuilder of(String title, int size) {
+    public static PaginatedMenuBuilder of(Component title, int size) {
         return new PaginatedMenuBuilder(title, size);
     }
 
@@ -223,7 +199,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      *
      * @return A new PaginatedMenuBuilder instance.
      */
-    public static PaginatedMenuBuilder of(String title, int width, int height) {
+    public static PaginatedMenuBuilder of(Component title, int width, int height) {
         return of(title, width*height);
     }
 
@@ -234,7 +210,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @param button The sticky button to set.
      * @return This PaginatedMenuBuilder instance.
      */
-    public PaginatedMenuBuilder setStickyButton(int where, MenuButton button) {
+    public PaginatedMenuBuilder stickyButton(int where, MenuButton button) {
         stickyButtons.put(where, button);
 
         return this;
@@ -249,7 +225,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @param nextItem         The item for the next page button.
      * @return This PaginatedMenuBuilder instance.
      */
-    public PaginatedMenuBuilder setPaginationButtons(int previousItemSlot, ItemBuilder previousItem, int nextItemSlot, ItemBuilder nextItem) {
+    public PaginatedMenuBuilder paginationButtons(int previousItemSlot, ItemBuilder previousItem, int nextItemSlot, ItemBuilder nextItem) {
         this.inventory.setItem(previousItemSlot, previousItem.build());
         previousButton.put(previousItemSlot, previousItem);
 
@@ -259,14 +235,9 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         return this;
     }
 
-    public PaginatedMenuBuilder setCurrentPageButton(int slot, Material material, String name, String... lore) {
+    public PaginatedMenuBuilder currentPageButton(ItemBuilder currentPageItem) {
         this.currentPageItemEnabled = true;
-        this.currentPageItemMaterial = material;
-
-        if (lore != null) this.currentPageItemLore = lore;
-
-        this.currentPageItemSlot = slot;
-        this.currentPageItemName = name;
+        this.currentPageItem = currentPageItem;
 
         return this;
     }
@@ -278,7 +249,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @param borderPatterns The pattern for the border.
      * @return This PaginatedMenuBuilder instance.
      */
-    public PaginatedMenuBuilder setBorder(MenuButton borderItem, String... borderPatterns) {
+    public PaginatedMenuBuilder border(MenuButton borderItem, String... borderPatterns) {
         int row = 0;
         for (String borderPattern : borderPatterns) {
             if (row < this.size) {
@@ -321,9 +292,9 @@ public class PaginatedMenuBuilder implements InventoryHolder {
 
                     if (character.equals("X")) {
                         if (filler instanceof MenuButton) {
-                            setButton(new PageSlotHolder(slot, currentPage), (MenuButton) filler);
+                            button(new PageSlotHolder(slot, currentPage), (MenuButton) filler);
                         } else if (filler instanceof ItemBuilder) {
-                            setItem(new PageSlotHolder(slot, currentPage), (ItemBuilder) filler);
+                            item(new PageSlotHolder(slot, currentPage), (ItemBuilder) filler);
                         } else {
                             int callersLineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
                             Utils.getPlugin().getLogger().log(Level.WARNING, "You can not use PaginatedMenuBuilder.fill(Object filler, String... pattern) with a object different than an ItemBuilder or MenuButton!");
@@ -363,6 +334,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
      * @param player The player to open the menu for.
      * @param page   The page to open.
      */
+    @SuppressWarnings("UnstableApiUsage")
     public void open(Player player, int page) {
         this.inventory.clear();
 
@@ -390,11 +362,11 @@ public class PaginatedMenuBuilder implements InventoryHolder {
                     this.inventory.setItem(getPageSlotHolderByButton(button).slot(), button.getItem().build());
                 } else {
                     SchedulerBuilder.of()
-                            .setType(TaskType.REPEATING)
-                            .setAsynchronous(button.isRefreshingAsync())
-                            .setDelay(button.getRefreshDelay())
-                            .setPeriod(button.getRefreshPeriod())
-                            .setTask(task -> {
+                            .type(TaskType.REPEATING)
+                            .async(button.isRefreshingAsync())
+                            .after(button.getRefreshDelay())
+                            .every(button.getRefreshPeriod())
+                            .task(task -> {
                                 if (player.getOpenInventory().getTopInventory() != getInventory()) {
                                     task.cancel();
                                     return;
@@ -437,7 +409,7 @@ public class PaginatedMenuBuilder implements InventoryHolder {
 
         if (!borderMap.isEmpty()) {
             for (Map.Entry<MenuButton, String[]> entry : borderMap.entrySet()) {
-                setBorder(entry.getKey(), borderMap.get(entry.getKey()));
+                border(entry.getKey(), borderMap.get(entry.getKey()));
             }
         }
 
@@ -446,32 +418,16 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         }
 
         if (totalPages > 1 && currentPageItemEnabled) {
-            this.inventory.setItem(
-                    currentPageItemSlot,
-                    currentPageItemLore
-                            != null
-
-                            ? new ItemBuilder(currentPageItemMaterial)
-                            .setLore(currentPageItemLore)
-                            .setName(currentPageItemName.replace(
-                                            "{current_page}",
-                                            String.valueOf(
-                                                    getCurrentPage()
-                                            )
-                                    )
-                            )
-                            .build()
-
-                            : new ItemBuilder(currentPageItemMaterial)
-                            .setName(currentPageItemName.replace(
-                                            "{current_page}",
-                                            String.valueOf(
-                                                    getCurrentPage()
-                                            )
-                                    )
-                            )
-                            .build()
-            );
+            //noinspection deprecation
+            this.inventory.setItem(currentPageSlot,
+                    currentPageItem
+                            .rawName(currentPageItem.getMeta()
+                                    .getDisplayName()
+                                    .replaceAll("<current_page>", String.valueOf(currentPage))
+                                    .replaceAll("<page>", String.valueOf(currentPage))
+                                    .replaceAll("\\{current_page}", String.valueOf(currentPage))
+                                    .replaceAll("\\{page}", String.valueOf(currentPage)))
+                            .build());
         }
 
         player.updateInventory();

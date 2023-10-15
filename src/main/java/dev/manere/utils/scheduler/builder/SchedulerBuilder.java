@@ -1,4 +1,4 @@
-package dev.manere.utils.scheduler;
+package dev.manere.utils.scheduler.builder;
 
 import dev.manere.utils.library.Utils;
 import org.bukkit.scheduler.BukkitTask;
@@ -39,11 +39,24 @@ public class SchedulerBuilder {
     /**
      * Sets whether the task should be executed asynchronously.
      *
-     * @param asynchronous true if the task should be asynchronous, false otherwise.
+     * @param async true if the task should be asynchronous, false otherwise.
      * @return This SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder setAsynchronous(boolean asynchronous) {
-        this.asynchronous = asynchronous;
+    public SchedulerBuilder async(boolean async) {
+        this.asynchronous = async;
+        return this;
+    }
+
+    /**
+     * Sets the delay and period (in ticks) of the task.
+     *
+     * @param delay The delay (in ticks).
+     * @param period The period (in ticks).
+     * @return This SchedulerBuilder for method chaining.
+     */
+    public SchedulerBuilder time(long delay, long period) {
+        this.delay = delay;
+        this.period = period;
         return this;
     }
 
@@ -53,7 +66,7 @@ public class SchedulerBuilder {
      * @param delay The delay (in ticks).
      * @return This SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder setDelay(long delay) {
+    public SchedulerBuilder after(long delay) {
         this.delay = delay;
         return this;
     }
@@ -64,7 +77,7 @@ public class SchedulerBuilder {
      * @param type The type of the task.
      * @return This SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder setType(TaskType type) {
+    public SchedulerBuilder type(TaskType type) {
         this.type = type;
         return this;
     }
@@ -75,7 +88,7 @@ public class SchedulerBuilder {
      * @param period The period (in ticks).
      * @return This SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder setPeriod(long period) {
+    public SchedulerBuilder every(long period) {
         this.period = period;
         return this;
     }
@@ -86,7 +99,7 @@ public class SchedulerBuilder {
      * @param task The task to be executed.
      * @return This SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder setTask(Consumer<BukkitTask> task) {
+    public SchedulerBuilder task(Consumer<BukkitTask> task) {
         this.task = task;
         return this;
     }

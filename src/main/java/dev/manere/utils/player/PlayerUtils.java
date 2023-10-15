@@ -2,7 +2,9 @@ package dev.manere.utils.player;
 
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
-import dev.manere.utils.text.color.ColorUtils;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -12,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -89,16 +92,6 @@ public class PlayerUtils {
     }
 
     /**
-     * Sends a colored message to the given player.
-     *
-     * @param player The player to send the message to.
-     * @param text   The text of the message.
-     */
-    public static void chat(Player player, String text) {
-        player.sendMessage(ColorUtils.color(text));
-    }
-
-    /**
      * Sends a title and subtitle with customizable timings to the given player.
      *
      * @param player    The player to send the title to.
@@ -108,12 +101,10 @@ public class PlayerUtils {
      * @param stay      Time in ticks for title to stay.
      * @param fadeOut   Time in ticks for title fade-out.
      */
-    public static void title(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        player.sendTitle(
-                ColorUtils.color(title),
-                ColorUtils.color(subtitle),
-                fadeIn, stay, fadeOut
-        );
+    public static void title(Player player, Component title, Component subtitle, Duration fadeIn, Duration stay, Duration fadeOut) {
+        Audience audience = Audience.audience(player);
+
+        audience.showTitle(Title.title(title, subtitle, Title.Times.times(fadeIn, stay, fadeOut)));
     }
 
     /**
@@ -125,12 +116,9 @@ public class PlayerUtils {
      * @param stay      Time in ticks for title to stay.
      * @param fadeOut   Time in ticks for title fade-out.
      */
-    public static void broadcastTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+    public static void broadcastTitle(Component title, Component subtitle, Duration fadeIn, Duration stay, Duration fadeOut) {
         Bukkit.getOnlinePlayers()
-                .forEach(player -> player.sendTitle(
-                        ColorUtils.color(title),
-                        ColorUtils.color(subtitle),
-                        fadeIn, stay, fadeOut));
+                .forEach(player -> title(player, title, subtitle, fadeIn, stay, fadeOut));
     }
 
     /**
@@ -232,7 +220,7 @@ public class PlayerUtils {
      * @param player The Player object representing the online player.
      * @return The online player associated with the provided Player object.
      */
-    public static Player getPlayer(Player player) {
+    public static Player player(Player player) {
         return player;
     }
 
@@ -242,19 +230,8 @@ public class PlayerUtils {
      * @param uuid The UUID of the player.
      * @return The online player with the specified UUID, or null if not found.
      */
-    public static Player getPlayer(UUID uuid) {
+    public static Player player(UUID uuid) {
         return Utils.getPlugin().getServer().getPlayer(uuid);
-    }
-
-    /**
-     * Gets the online player with the specified UUID string.
-     *
-     * @param uuid The UUID string of the player.
-     * @return The online player with the specified UUID, or null if not found.
-     * @throws IllegalArgumentException If the UUID string is invalid.
-     */
-    public static Player getPlayer(String uuid) {
-        return Utils.getPlugin().getServer().getPlayer(UUID.fromString(uuid));
     }
 
     /**
@@ -263,7 +240,7 @@ public class PlayerUtils {
      * @param playerName The name of the player.
      * @return The online player with the provided name, or null if not found.
      */
-    public static Player getPlayerFromName(String playerName) {
+    public static Player player(String playerName) {
         return Utils.getPlugin().getServer().getPlayer(playerName);
     }
 
@@ -273,29 +250,22 @@ public class PlayerUtils {
      * @param uuid The UUID of the player.
      * @return The offline player with the specified UUID.
      */
-    public static OfflinePlayer getOfflinePlayer(UUID uuid) {
+    public static OfflinePlayer offline(UUID uuid) {
         return Utils.getPlugin().getServer().getOfflinePlayer(uuid);
     }
 
     /**
-     * Gets the offline player with the specified UUID string.
-     *
-     * @param uuid The UUID string of the player.
-     * @return The offline player with the specified UUID.
-     * @throws IllegalArgumentException If the UUID string is invalid.
-     */
-    public static OfflinePlayer getOfflinePlayer(String uuid) {
-        return Utils.getPlugin().getServer().getOfflinePlayer(UUID.fromString(uuid));
-    }
-
-    /**
      * Gets the offline player with the given player name.
-     * <p>{@code WARNING}: This is deprecated. Please avoid using this!</p>
+     *
+     * @apiNote This is a deprecated method.
+     * Please do not use this unless you need to.
+     * Never rely on {@link Bukkit#getOfflinePlayer(String playerName)}.
      *
      * @param playerName The name of the player.
      * @return The offline player with the provided name.
      */
-    public static OfflinePlayer getOfflinePlayerFromName(String playerName) {
+    @Deprecated
+    public static OfflinePlayer offline(String playerName) {
         return Utils.getPlugin().getServer().getOfflinePlayer(playerName);
     }
 }

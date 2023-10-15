@@ -212,7 +212,7 @@ public class LogUtils {
     }
 
     /**
-     * Logs a finest message with the default plugin instance (retrieved from Utils.getPlugin()).
+     * Logs the finest message with the default plugin instance (retrieved from Utils.getPlugin()).
      *
      * @param text The text of the finest message.
      */
@@ -336,7 +336,7 @@ public class LogUtils {
     }
 
     /**
-     * Logs a finest message without automatic prefixing using the default plugin instance (retrieved from Utils.getPlugin()).
+     * Logs the finest message without automatic prefixing using the default plugin instance (retrieved from Utils.getPlugin()).
      *
      * @param text The text of the finest message.
      */

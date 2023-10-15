@@ -33,7 +33,7 @@ public class LogBuilder {
      * @param text The text of the log message.
      * @return This LogBuilder instance for method chaining.
      */
-    public LogBuilder setText(String text) {
+    public LogBuilder text(String text) {
         this.text = text;
         return this;
     }
@@ -44,7 +44,7 @@ public class LogBuilder {
      * @param level The log level for the message.
      * @return This LogBuilder instance for method chaining.
      */
-    public LogBuilder setLevel(Level level) {
+    public LogBuilder level(Level level) {
         this.level = level;
         return this;
     }
@@ -55,7 +55,7 @@ public class LogBuilder {
      * @param plugin The JavaPlugin instance associated with the log message.
      * @return This LogBuilder instance for method chaining.
      */
-    public LogBuilder setPlugin(JavaPlugin plugin) {
+    public LogBuilder plugin(JavaPlugin plugin) {
         this.plugin = plugin;
         return this;
     }
@@ -66,7 +66,7 @@ public class LogBuilder {
      * @param withAutomaticPrefix True if automatic prefixing should be applied, false otherwise.
      * @return This LogBuilder instance for method chaining.
      */
-    public LogBuilder setWithAutomaticPrefix(boolean withAutomaticPrefix) {
+    public LogBuilder prefix(boolean withAutomaticPrefix) {
         this.withAutomaticPrefix = withAutomaticPrefix;
         return this;
     }

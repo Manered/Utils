@@ -1,4 +1,4 @@
-package dev.manere.utils.scheduler;
+package dev.manere.utils.scheduler.builder;
 
 /**
  * Enumeration representing different types of scheduler tasks.

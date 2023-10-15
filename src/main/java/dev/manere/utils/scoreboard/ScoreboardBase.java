@@ -21,6 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public abstract class ScoreboardBase<T> {
     private static final Map<Class<?>, Field[]> PACKETS = new HashMap<>(8);
+    @SuppressWarnings("deprecation")
     protected static final String[] COLOR_CODES = Arrays.stream(ChatColor.values())
             .map(Object::toString)
             .toArray(String[]::new);
@@ -157,7 +158,7 @@ public abstract class ScoreboardBase<T> {
      * @param title The new title for the scoreboard.
      * @return The ScoreboardBase instance with the updated title.
      */
-    public ScoreboardBase<T> setTitle(T title) {
+    public ScoreboardBase<T> title(T title) {
         if (this.title.equals(Objects.requireNonNull(title, "title"))) return null;
 
         this.title = title;
@@ -201,7 +202,7 @@ public abstract class ScoreboardBase<T> {
      * @return The ScoreboardBase instance with the updated line.
      * @throws IllegalArgumentException if the line index is out of bounds.
      */
-    public synchronized ScoreboardBase<T> setLine(int line, T text) {
+    public synchronized ScoreboardBase<T> line(int line, T text) {
         checkLineNumber(line, false, true);
 
         try {
@@ -257,7 +258,8 @@ public abstract class ScoreboardBase<T> {
      * @param lines The lines to set.
      * @return The ScoreboardBase instance with the updated lines.
      */
-    public ScoreboardBase<T> setLines(T... lines) {
+    @SuppressWarnings("unchecked")
+    public ScoreboardBase<T> lines(T... lines) {
         setLines(Arrays.asList(lines));
         return this;
     }

@@ -2,7 +2,6 @@ package dev.manere.utils.prettify;
 
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,7 @@ public class ListPrettify {
      * @param input A List of Strings to be prettified.
      * @return A String containing the elements of the input List separated by commas.
      */
-    public static String fromStrings(List<String> input) {
+    public static String strings(List<String> input) {
         return input.toString()
                 .replaceAll("\\[", "")
                 .replaceAll("]", "");
@@ -34,11 +33,11 @@ public class ListPrettify {
      * @param input A List of Player objects to be prettified.
      * @return A String containing the names of the players in the input List separated by commas.
      */
-    public static String fromPlayers(List<Player> input) {
+    public static String players(List<Player> input) {
         List<String> inputToString = input.stream()
                 .map(Player::getName)
                 .collect(Collectors.toList());
 
-        return fromStrings(inputToString);
+        return strings(inputToString);
     }
 }

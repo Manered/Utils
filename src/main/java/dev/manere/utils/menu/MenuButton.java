@@ -42,7 +42,7 @@ public class MenuButton {
      */
     public static MenuButton of(ItemBuilder item) {
         return new MenuButton()
-                .setItem(item);
+                .item(item);
     }
 
     /**
@@ -54,29 +54,29 @@ public class MenuButton {
      */
     public static MenuButton of(ItemBuilder item, MenuButtonListener listener) {
         return new MenuButton()
-                .setItem(item)
-                .setListener(listener);
+                .item(item)
+                .onClick(listener);
     }
 
     /**
      * Sets whether the button should refresh asynchronously.
      *
-     * @param shouldRefreshAsynchronously true if the button should refresh asynchronously, false otherwise
+     * @param refreshAsync true if the button should refresh asynchronously, false otherwise
      * @return The MenuButton instance for method chaining
      */
-    public MenuButton setShouldRefreshAsynchronously(boolean shouldRefreshAsynchronously) {
-        this.isRefreshingAsync = shouldRefreshAsynchronously;
+    public MenuButton refreshAsync(boolean refreshAsync) {
+        this.isRefreshingAsync = refreshAsync;
         return this;
     }
 
     /**
-     * Sets whether the button should be refreshed.
+     * Sets whether the button should be refreshing.
      *
-     * @param shouldRefresh true if the button should be refreshed, false otherwise
+     * @param refresh true if the button should be refreshing, false otherwise
      * @return The MenuButton instance for method chaining
      */
-    public MenuButton setShouldRefresh(boolean shouldRefresh) {
-        this.isRefreshingButton = shouldRefresh;
+    public MenuButton refresh(boolean refresh) {
+        this.isRefreshingButton = refresh;
         return this;
     }
 
@@ -86,7 +86,7 @@ public class MenuButton {
      * @param refreshDelay The delay in server ticks before the button refreshes
      * @return The MenuButton instance for method chaining
      */
-    public MenuButton setRefreshDelay(long refreshDelay) {
+    public MenuButton refreshDelay(long refreshDelay) {
         this.refreshDelay = refreshDelay;
         return this;
     }
@@ -97,7 +97,7 @@ public class MenuButton {
      * @param refreshPeriod The period in server ticks at which the button should refresh
      * @return The MenuButton instance for method chaining
      */
-    public MenuButton setRefreshPeriod(long refreshPeriod) {
+    public MenuButton refreshPeriod(long refreshPeriod) {
         this.refreshPeriod = refreshPeriod;
         return this;
     }
@@ -109,7 +109,7 @@ public class MenuButton {
      * @param refreshPeriod The period in server ticks at which the button should refresh
      * @return The MenuButton instance for method chaining
      */
-    public MenuButton setRefreshTime(long refreshDelay, long refreshPeriod) {
+    public MenuButton refreshTime(long refreshDelay, long refreshPeriod) {
         this.refreshDelay = refreshDelay;
         this.refreshPeriod = refreshPeriod;
         return this;
@@ -121,7 +121,7 @@ public class MenuButton {
      * @param listener The MenuButtonListener to set as the listener.
      * @return The MenuButton instance.
      */
-    public MenuButton setListener(MenuButtonListener listener) {
+    public MenuButton onClick(MenuButtonListener listener) {
         this.listener = listener;
         return this;
     }
@@ -132,7 +132,7 @@ public class MenuButton {
      * @param item The ItemBuilder to set as the item.
      * @return The MenuButton instance.
      */
-    public MenuButton setItem(ItemBuilder item) {
+    public MenuButton item(ItemBuilder item) {
         this.item = item;
         return this;
     }

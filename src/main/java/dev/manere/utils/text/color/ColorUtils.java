@@ -1,22 +1,26 @@
 package dev.manere.utils.text.color;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Utility class for handling color formatting in text strings.
+ * Utility class for handling legacy formatting in text strings.
  */
+
 public class ColorUtils {
 
     /**
-     * Replaces hexadecimal color tags in the input string with ChatColor values.
-     *
-     * @param text the text string with hexadecimal color tags
+     * Replaces hexadecimal legacy tags in the input string with ChatColor values.
+     * <p></p>
+     * @param text the text string with hexadecimal legacy tags
      * @return the text string with ChatColor formatting
      */
-    public static String colorHex(String text) {
+    @Deprecated
+    public static String legacyHex(String text) {
         // Define a regular expression pattern to match <#HEX> tags
         String pattern = "<#([A-Fa-f0-9]{6})>";
 
@@ -47,7 +51,11 @@ public class ColorUtils {
      * @param text the text string with color code placeholders
      * @return the text string with actual color formatting
      */
-    public static String color(String text) {
+
+    /* Can't do anything about this */
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @Deprecated
+    public static String legacy(String text) {
         // Replace <color code name> with the actual color code using ChatColor
         text = text.replaceAll("<black>", ChatColor.BLACK.toString());
         text = text.replaceAll("<dark_blue>", ChatColor.DARK_BLUE.toString());
@@ -88,13 +96,90 @@ public class ColorUtils {
         text = text.replaceAll("<obfuscated>", ChatColor.MAGIC.toString());
         text = text.replaceAll("<magic>", ChatColor.MAGIC.toString());
         text = text.replaceAll("<random>", ChatColor.MAGIC.toString());
+        text = text.replaceAll("<newline>", "\n");
+        text = text.replaceAll("<nl>", "\n");
 
         // Translate color codes
-        text = ChatColor.translateAlternateColorCodes('&', text);
+        text = legacyTranslate(text);
 
         // Replace <#hex> with the actual hex color code using ChatColor
-        text = colorHex(text);
+        text = legacyHex(text);
 
         return text;
+    }
+
+    /**
+     * Converts a text string to a Component using MiniMessage.
+     *
+     * @param text the text to convert
+     * @return the Component
+     */
+    public static Component component(String text) {
+        MiniMessage miniMessage = MiniMessage.miniMessage();
+
+        return miniMessage.deserialize(text);
+    }
+
+    /**
+     * Converts a Component to a text string using MiniMessage.
+     *
+     * @param component the Component to convert
+     * @return the text string
+     */
+    public static String text(Component component) {
+        MiniMessage miniMessage = MiniMessage.miniMessage();
+
+        return miniMessage.serialize(component);
+    }
+
+    /**
+     * Translates alternate color codes in a text string.
+     *
+     * @param text the text to translate
+     * @return the translated text
+     */
+    @Deprecated
+    public static String legacyTranslate(String text) {
+        return ChatColor.translateAlternateColorCodes('&', text);
+    }
+
+    /**
+     * Gets the ChatColor for a given legacy character code.
+     *
+     * @param input the character
+     * @return the ChatColor
+     */
+    @Deprecated
+    public static ChatColor chatColor(String input) {
+        char character;
+
+        if (input.startsWith("&")) character = input.charAt(1);
+        else character = input.charAt(0);
+
+        return ChatColor.getByChar(character);
+    }
+
+    /**
+     * Gets the string value of a ChatColor.
+     *
+     * @param color the ChatColor
+     * @return the string
+     */
+    @Deprecated
+    public static String value(ChatColor color) {
+        return color.toString();
+    }
+
+    /**
+     * Gets a ChatColor from a hexadecimal string.
+     *
+     * @param hex the hexadecimal string
+     * @return the ChatColor
+     */
+    @Deprecated
+    public static ChatColor hex(String hex) {
+        if (!hex.startsWith("#")) return ChatColor.of("#" + hex);
+
+        return ChatColor.of(hex);
     }
 }

@@ -1,9 +1,11 @@
 package dev.manere.utils.world;
 
+import dev.manere.utils.library.Utils;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -14,11 +16,31 @@ public class WorldUtils {
     /**
      * Retrieves a Bukkit world by its name.
      *
+     * @param name The name of the world to retrieve.
+     * @return The Bukkit World instance, or null if not found.
+     */
+    public static World world(String name) {
+        return world(Utils.getPlugin(), name);
+    }
+
+    /**
+     * Retrieves a Bukkit world by its UUID.
+     *
+     * @param uuid   The UUID of the world to retrieve.
+     * @return The Bukkit World instance, or null if not found.
+     */
+    public static World world(UUID uuid) {
+        return world(Utils.getPlugin(), uuid);
+    }
+
+    /**
+     * Retrieves a Bukkit world by its name.
+     *
      * @param plugin The JavaPlugin instance representing the plugin.
      * @param name   The name of the world to retrieve.
      * @return The Bukkit World instance, or null if not found.
      */
-    public static World get(JavaPlugin plugin, String name) {
+    public static World world(JavaPlugin plugin, String name) {
         return plugin.getServer().getWorld(name);
     }
 
@@ -29,7 +51,7 @@ public class WorldUtils {
      * @param uuid   The UUID of the world to retrieve.
      * @return The Bukkit World instance, or null if not found.
      */
-    public static World get(JavaPlugin plugin, UUID uuid) {
+    public static World world(JavaPlugin plugin, UUID uuid) {
         return plugin.getServer().getWorld(uuid);
     }
 
@@ -39,7 +61,7 @@ public class WorldUtils {
      * @param world The Bukkit World instance.
      * @return The name of the world.
      */
-    public static String getName(World world) {
+    public static String worldName(World world) {
         return world.getName();
     }
 
@@ -50,8 +72,8 @@ public class WorldUtils {
      * @param uuid   The UUID of the world.
      * @return The name of the world.
      */
-    public static String getName(JavaPlugin plugin, UUID uuid) {
-        return plugin.getServer().getWorld(uuid).getName();
+    public static String worldName(JavaPlugin plugin, UUID uuid) {
+        return Objects.requireNonNull(plugin.getServer().getWorld(uuid)).getName();
     }
 
     /**

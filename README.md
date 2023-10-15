@@ -1,6 +1,9 @@
-# YAML
+# YAMU
 Yet Another Manered Utility
-> You thought it was related to YML Files? ~~well you're right because this contains a class named 'CustomFileUtils" but nah thats a lucky guess.~~
 
-# Installation Guide
-[Click Here](https://github.com/Manered/YetAnotherManeredUtility/wiki)
+> [!WARNING]
+> This library is not stable. It's recommended to use `v2.2.0` of this library.
+
+
+## Tutorials/Documentation
+[Documentation](https://manered.gitbook.io/utils/)

@@ -123,7 +123,9 @@ public class LocationUtils {
         return Objects.requireNonNull(location.getWorld()).getName() + "," +
                 location.getX() + "," +
                 location.getY() + "," +
-                location.getZ();
+                location.getZ() + "," +
+                location.getPitch() + "," +
+                location.getYaw();
     }
 
     /**
@@ -134,13 +136,17 @@ public class LocationUtils {
      */
     public static Location deserializeLocation(String serialized) {
         String[] parts = serialized.split(",");
-        if (parts.length == 4) {
+
+        if (parts.length == 6) {
             World world = Bukkit.getWorld(parts[0]);
             double x = Double.parseDouble(parts[1]);
             double y = Double.parseDouble(parts[2]);
             double z = Double.parseDouble(parts[3]);
-            return new Location(world, x, y, z);
+            float pitch = Float.parseFloat(parts[4]);
+            float yaw = Float.parseFloat(parts[5]);
+            return new Location(world, x, y, z, yaw, pitch);
         }
+
         return null;
     }
 }

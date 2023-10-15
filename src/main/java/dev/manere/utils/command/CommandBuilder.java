@@ -2,7 +2,9 @@ package dev.manere.utils.command;
 
 import dev.manere.utils.command.arguments.CommandArgument;
 import dev.manere.utils.library.Utils;
-import dev.manere.utils.registration.RegistrationUtils;
+import dev.manere.utils.registration.Registrar;
+import dev.manere.utils.text.color.ColorUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
@@ -49,7 +51,7 @@ public class CommandBuilder {
      * @param permission The permission node.
      * @return This CommandBuilder for method chaining.
      */
-    public CommandBuilder setPermission(String permission) {
+    public CommandBuilder permission(String permission) {
         command.setPermission(permission);
         return this;
     }
@@ -68,7 +70,7 @@ public class CommandBuilder {
      *
      * @return This CommandBuilder for method chaining.
      */
-    public CommandBuilder setName(String name) {
+    public CommandBuilder name(String name) {
         this.name = name;
         return this;
     }
@@ -88,7 +90,7 @@ public class CommandBuilder {
      * @param arguments The command arguments.
      * @return This CommandBuilder for method chaining.
      */
-    public CommandBuilder setArguments(CommandArgument<?>... arguments) {
+    public CommandBuilder arguments(CommandArgument<?>... arguments) {
         this.arguments.addAll(Arrays.asList(arguments));
         return this;
     }
@@ -109,8 +111,8 @@ public class CommandBuilder {
      * @param usage The usage message.
      * @return This CommandBuilder for method chaining.
      */
-    public CommandBuilder setUsage(String usage) {
-        command.setUsage(usage);
+    public CommandBuilder usage(String usage) {
+        command.setUsage(ColorUtils.legacy(usage));
         return this;
     }
 
@@ -120,8 +122,8 @@ public class CommandBuilder {
      * @param description The description of the command.
      * @return This CommandBuilder for method chaining.
      */
-    public CommandBuilder setDescription(String description) {
-        command.setDescription(description);
+    public CommandBuilder description(String description) {
+        command.setDescription(ColorUtils.legacy(description));
         return this;
     }
 
@@ -131,7 +133,7 @@ public class CommandBuilder {
      * @param shortHelpDescription The short help description.
      * @return This CommandBuilder for method chaining.
      */
-    public CommandBuilder setShortHelpDescription(String shortHelpDescription) {
+    public CommandBuilder shortHelpDescription(String shortHelpDescription) {
         if (!(Objects.equals(this.shortHelpDescription, shortHelpDescription)))
             this.shortHelpDescription = shortHelpDescription;
 
@@ -144,8 +146,8 @@ public class CommandBuilder {
      * @param permissionMessage The permission message.
      * @return This CommandBuilder for method chaining.
      */
-    public CommandBuilder setPermissionMessage(String permissionMessage) {
-        command.setPermissionMessage(permissionMessage);
+    public CommandBuilder permissionMessage(Component permissionMessage) {
+        command.permissionMessage(permissionMessage);
         return this;
     }
 
@@ -155,7 +157,7 @@ public class CommandBuilder {
      * @param aliases The command aliases.
      * @return This CommandBuilder for method chaining.
      */
-    public CommandBuilder setAliases(String... aliases) {
+    public CommandBuilder aliases(String... aliases) {
         command.setAliases(Arrays.asList(aliases));
         return this;
     }
@@ -166,7 +168,7 @@ public class CommandBuilder {
      * @param tabCompleter The TabCompleter to be used.
      * @return This CommandBuilder for method chaining.
      */
-    public CommandBuilder setTabCompleter(TabCompleter tabCompleter) {
+    public CommandBuilder completer(TabCompleter tabCompleter) {
         command.setTabCompleter(tabCompleter);
         return this;
     }
@@ -188,7 +190,7 @@ public class CommandBuilder {
      * @param executor The CommandExecutor to be used.
      * @return This CommandBuilder for method chaining.
      */
-    public CommandBuilder setExecutor(CommandExecutor executor) {
+    public CommandBuilder executes(CommandExecutor executor) {
         command.setExecutor(executor);
         return this;
     }
@@ -197,12 +199,12 @@ public class CommandBuilder {
      * Builds and configures the command.
      */
     public void build(boolean useCommandMap, boolean shouldTabComplete) {
-        if (useCommandMap) RegistrationUtils.registerCommandMap(Utils.getPlugin(), this);
+        if (useCommandMap) Registrar.commandMap(Utils.getPlugin(), this);
 
-        else Utils.getPlugin().getCommand(command.getName()).setExecutor(command.getExecutor());
+        else Objects.requireNonNull(Utils.getPlugin().getCommand(command.getName())).setExecutor(command.getExecutor());
 
         if (shouldTabComplete) {
-            Utils.getPlugin().getCommand(command.getName()).setTabCompleter(command.getTabCompleter());
+            Objects.requireNonNull(Utils.getPlugin().getCommand(command.getName())).setTabCompleter(command.getTabCompleter());
         }
     }
 }

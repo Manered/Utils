@@ -3,6 +3,7 @@ package dev.manere.utils.scoreboard;
 /**
  * A utility class providing methods related to scoreboards.
  */
+@SuppressWarnings("SameReturnValue")
 public class ScoreboardUtils {
     /**
      * Returns an empty line for use in scoreboards.

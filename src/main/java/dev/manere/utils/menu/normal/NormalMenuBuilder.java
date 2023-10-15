@@ -3,10 +3,10 @@ package dev.manere.utils.menu.normal;
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.menu.MenuButton;
-import dev.manere.utils.scheduler.SchedulerBuilder;
-import dev.manere.utils.scheduler.TaskType;
+import dev.manere.utils.scheduler.builder.SchedulerBuilder;
+import dev.manere.utils.scheduler.builder.TaskType;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -22,11 +22,10 @@ import java.util.logging.Level;
  */
 public class NormalMenuBuilder implements InventoryHolder {
     private final Inventory inventory;
-    private final String title;
+    private final Component title;
     private final int size;
     private final Map<Integer, MenuButton> buttons;
     private final Map<Integer, ItemBuilder> items;
-    private InventoryClickEvent onClick;
 
     /**
      * Constructs a new NormalMenuBuilder with the specified title and size.
@@ -34,13 +33,12 @@ public class NormalMenuBuilder implements InventoryHolder {
      * @param title The title of the menu.
      * @param size  The size (number of slots) of the menu.
      */
-    public NormalMenuBuilder(String title, int size) {
+    public NormalMenuBuilder(Component title, int size) {
         this.inventory = Utils.getPlugin().getServer().createInventory(this, size, title);
         this.title = title;
         this.size = size;
         this.buttons = new HashMap<>();
         this.items = new HashMap<>();
-        this.onClick = null;
     }
 
     /**
@@ -50,7 +48,7 @@ public class NormalMenuBuilder implements InventoryHolder {
      * @param button The MenuButton to set at the slot.
      * @return The NormalMenuBuilder instance.
      */
-    public NormalMenuBuilder setButton(int slot, MenuButton button) {
+    public NormalMenuBuilder button(int slot, MenuButton button) {
         buttons.put(slot, button);
         this.inventory.setItem(slot, button.getItem().build());
 
@@ -64,7 +62,7 @@ public class NormalMenuBuilder implements InventoryHolder {
      * @param item The ItemBuilder to set at the slot.
      * @return The NormalMenuBuilder instance.
      */
-    public NormalMenuBuilder setItem(int slot, ItemBuilder item) {
+    public NormalMenuBuilder item(int slot, ItemBuilder item) {
         items.put(slot, item);
         this.inventory.setItem(slot, item.build());
 
@@ -76,7 +74,7 @@ public class NormalMenuBuilder implements InventoryHolder {
      *
      * @return A new NormalMenuBuilder instance.
      */
-    public static NormalMenuBuilder of(String title, int size) {
+    public static NormalMenuBuilder of(Component title, int size) {
         return new NormalMenuBuilder(title, size);
     }
 
@@ -85,7 +83,7 @@ public class NormalMenuBuilder implements InventoryHolder {
      *
      * @return A new NormalMenuBuilder instance.
      */
-    public static NormalMenuBuilder of(String title, int width, int height) {
+    public static NormalMenuBuilder of(Component title, int width, int height) {
         return of(title, width*height);
     }
 
@@ -103,27 +101,8 @@ public class NormalMenuBuilder implements InventoryHolder {
      *
      * @return The title of the menu.
      */
-    public String getTitle() {
+    public Component getTitle() {
         return title;
-    }
-
-    /**
-     * Allows you to define custom click actions when the menu is clicked.
-     *
-     * @param event The InventoryClickEvent associated with the click.
-     */
-    public NormalMenuBuilder onClick(InventoryClickEvent event) {
-        this.onClick = event;
-        return this;
-    }
-
-    /**
-     * Gets the custom click listener associated with this menu.
-     *
-     * @return The custom click listener associated with this menu.
-     */
-    public InventoryClickEvent getOnClick() {
-        return onClick;
     }
 
     /**
@@ -137,11 +116,11 @@ public class NormalMenuBuilder implements InventoryHolder {
         for (MenuButton button : buttons.values()) {
             if (button.isRefreshingButton()) {
                 SchedulerBuilder.of()
-                        .setType(TaskType.REPEATING)
-                        .setAsynchronous(button.isRefreshingAsync())
-                        .setDelay(button.getRefreshDelay())
-                        .setPeriod(button.getRefreshPeriod())
-                        .setTask(task -> {
+                        .type(TaskType.REPEATING)
+                        .async(button.isRefreshingAsync())
+                        .after(button.getRefreshDelay())
+                        .every(button.getRefreshPeriod())
+                        .task(task -> {
                             if (player.getOpenInventory().getTopInventory() != getInventory()) {
                                 task.cancel();
                                 return;
@@ -152,7 +131,9 @@ public class NormalMenuBuilder implements InventoryHolder {
                             getInventory().clear(slot);
                             getInventory().setItem(slot, button.getItem().build());
 
-                            player.updateInventory();
+                            /* player.updateInventory();
+                             * This probably shouldn't be used.
+                             */
                         })
                         .build();
             }
@@ -166,7 +147,7 @@ public class NormalMenuBuilder implements InventoryHolder {
      * @param borderPatterns The patterns for the border.
      * @return The NormalMenuBuilder instance.
      */
-    public NormalMenuBuilder setBorder(MenuButton borderItem, String... borderPatterns) {
+    public NormalMenuBuilder border(MenuButton borderItem, String... borderPatterns) {
         int row = 0;
         for (String borderPattern : borderPatterns) {
             if (row < this.size) {
@@ -208,9 +189,9 @@ public class NormalMenuBuilder implements InventoryHolder {
 
                     if (character.equals("X")) {
                         if (filler instanceof MenuButton) {
-                            setButton(slot, (MenuButton) filler);
+                            button(slot, (MenuButton) filler);
                         } else if (filler instanceof ItemBuilder) {
-                            setItem(slot, (ItemBuilder) filler);
+                            item(slot, (ItemBuilder) filler);
                         } else {
                             int callersLineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
                             Utils.getPlugin().getLogger().log(Level.WARNING, "You can not use NormalMenuBuilder.fill(Object filler, String... pattern) with a object different than an ItemBuilder or MenuButton!");
