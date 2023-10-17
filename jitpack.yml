@@ -1,8 +1,8 @@
 jdk:
   - openjdk18
 before-install:
-  - sdk install java 18.0.2+9-oracle
-  - sdk use java 18.0.2+9-oracle
+  - sdk install java 21.0.0-graal
+  - sdk use java 21.0.0-graal
   - sdk install maven
   - mvn -v
 install:
