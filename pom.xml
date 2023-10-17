@@ -6,7 +6,7 @@
 
     <groupId>dev.manere</groupId>
     <artifactId>utils</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
     <packaging>jar</packaging>
 
     <name>Utils</name>
@@ -87,14 +87,6 @@
             </exclusions>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub Manered Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/Manered/YetAnotherManeredUtility</url>
-        </repository>
-    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
