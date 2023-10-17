@@ -1,2 +1,5 @@
 jdk:
   - openjdk18
+before-install:
+  - sdk install java x.y.z-oracle
+  - sdk use java 18.0.2+9-oracle
