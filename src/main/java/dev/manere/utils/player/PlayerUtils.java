@@ -2,6 +2,10 @@ package dev.manere.utils.player;
 
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
+import dev.manere.utils.message.ActionBarMessager;
+import dev.manere.utils.message.ChatMessager;
+import dev.manere.utils.message.Messagers;
+import dev.manere.utils.text.color.ColorUtils;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -267,5 +271,65 @@ public class PlayerUtils {
     @Deprecated
     public static OfflinePlayer offline(String playerName) {
         return Utils.getPlugin().getServer().getOfflinePlayer(playerName);
+    }
+
+    /**
+     * Sends a message to a player.
+     *
+     * @param player The player that will receive a message.
+     * @param text The message to send.
+     */
+    public static void chat(Player player, String text) {
+        Messagers.chat(player).send(ColorUtils.component(text));
+    }
+
+    /**
+     * Sends a message to a player.
+     *
+     * @param player The player that will receive a message.
+     * @param text The message to send.
+     */
+    public static void chat(Player player, Component text) {
+        Messagers.chat(player).send(text);
+    }
+
+    /**
+     * Retrieves the ChatMessager of the given player.
+     *
+     * @param player The player of the ChatMessager that will be returned.
+     * @return The ChatMessager of the given player.
+     */
+    public static ChatMessager chatMessager(Player player) {
+        return Messagers.chat(player);
+    }
+
+    /**
+     * Sends an actionbar message to a player.
+     *
+     * @param player The player that will receive a message.
+     * @param text The message to send.
+     */
+    public static void actionBar(Player player, String text) {
+        Messagers.actionBar(player).send(ColorUtils.component(text));
+    }
+
+    /**
+     * Sends an actionbar message to a player.
+     *
+     * @param player The player that will receive a message.
+     * @param text The message to send.
+     */
+    public static void actionBar(Player player, Component text) {
+        Messagers.actionBar(player).send(text);
+    }
+
+    /**
+     * Retrieves the ActionBarMessager of the given player.
+     *
+     * @param player The player of the ActionBarMessager that will be returned.
+     * @return The ActionBarMessager of the given player.
+     */
+    public static ActionBarMessager actionBarMessager(Player player) {
+        return Messagers.actionBar(player);
     }
 }

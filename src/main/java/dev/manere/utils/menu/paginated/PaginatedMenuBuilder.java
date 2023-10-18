@@ -235,9 +235,10 @@ public class PaginatedMenuBuilder implements InventoryHolder {
         return this;
     }
 
-    public PaginatedMenuBuilder currentPageButton(ItemBuilder currentPageItem) {
+    public PaginatedMenuBuilder currentPageButton(int slot, ItemBuilder item) {
         this.currentPageItemEnabled = true;
-        this.currentPageItem = currentPageItem;
+        this.currentPageItem = item;
+        this.currentPageSlot = slot;
 
         return this;
     }
