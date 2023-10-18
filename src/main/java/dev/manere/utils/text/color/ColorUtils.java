@@ -1,6 +1,7 @@
 package dev.manere.utils.text.color;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ChatColor;
 
@@ -117,7 +118,7 @@ public class ColorUtils {
     public static Component component(String text) {
         MiniMessage miniMessage = MiniMessage.miniMessage();
 
-        return miniMessage.deserialize(text);
+        return miniMessage.deserialize(text).decoration(TextDecoration.ITALIC, false);
     }
 
     /**
