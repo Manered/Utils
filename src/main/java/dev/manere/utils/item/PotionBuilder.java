@@ -30,12 +30,12 @@ public class PotionBuilder {
         this.potionMeta = (PotionMeta) item.getItemMeta();
     }
 
-    public static PotionBuilder of(ItemStack item) {
+    public static PotionBuilder potion(ItemStack item) {
         return new PotionBuilder(item);
     }
 
-    public static PotionBuilder of(Material material) {
-        return of(new ItemStack(material));
+    public static PotionBuilder potion(Material material) {
+        return potion(new ItemStack(material));
     }
 
     /**
@@ -75,7 +75,7 @@ public class PotionBuilder {
      *
      * @return A PotionBuilder instance pre-configured for consumable potions.
      */
-    public static PotionBuilder getConsumablePotion() {
+    public static PotionBuilder consumablePotion() {
         return new PotionBuilder(Material.POTION);
     }
 

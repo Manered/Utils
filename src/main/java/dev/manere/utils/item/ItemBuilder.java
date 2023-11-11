@@ -26,8 +26,6 @@ import java.util.UUID;
  * Provides methods for setting display name, lore, enchantments, etc.
  */
 public class ItemBuilder {
-
-    /** The ItemStack being built */
     private final ItemStack itemStack;
 
     /**
@@ -63,7 +61,7 @@ public class ItemBuilder {
      *
      * @param itemStack The ItemStack to build upon
      */
-    public static ItemBuilder of(ItemStack itemStack) {
+    public static ItemBuilder item(ItemStack itemStack) {
         return new ItemBuilder(itemStack);
     }
 
@@ -72,7 +70,7 @@ public class ItemBuilder {
      *
      * @param material The material to create the ItemStack with
      */
-    public static ItemBuilder of(Material material) {
+    public static ItemBuilder item(Material material) {
         return new ItemBuilder(material);
     }
 
@@ -82,7 +80,7 @@ public class ItemBuilder {
      * @param material The material to create the ItemStack with
      * @param amount The amount of the material
      */
-    public static ItemBuilder of(Material material, int amount) {
+    public static ItemBuilder item(Material material, int amount) {
         return new ItemBuilder(material, amount);
     }
 
@@ -91,7 +89,7 @@ public class ItemBuilder {
      *
      * @return A cloned instance
      */
-    public ItemBuilder clone(){
+    public ItemBuilder clone() {
         try {
             ItemBuilder clone = (ItemBuilder) super.clone();
         } catch (CloneNotSupportedException e) {
@@ -107,7 +105,7 @@ public class ItemBuilder {
      * @param name The name to set
      * @return This builder, for chaining
      */
-    public ItemBuilder name(Component name){
+    public ItemBuilder name(Component name) {
         ItemMeta itemMeta = itemStack.getItemMeta();
 
         if (itemMeta != null) {
@@ -124,8 +122,7 @@ public class ItemBuilder {
      * @param name The name to set
      * @return This builder, for chaining
      */
-    @SuppressWarnings("DeprecatedIsStillUsed")
-    @Deprecated
+    @SuppressWarnings("deprecation")
     public ItemBuilder rawName(String name) {
         ItemMeta itemMeta = itemStack.getItemMeta();
 
@@ -143,7 +140,7 @@ public class ItemBuilder {
      * @param enchantment The enchantment to add
      * @param level       The level of the enchantment
      */
-    public ItemBuilder addUnsafeEnchantment(Enchantment enchantment, int level){
+    public ItemBuilder addUnsafeEnchantment(Enchantment enchantment, int level) {
         itemStack.addUnsafeEnchantment(enchantment, level);
         return this;
     }
@@ -153,7 +150,7 @@ public class ItemBuilder {
      *
      * @param enchantment The enchantment to remove
      */
-    public ItemBuilder removeEnchantment(Enchantment enchantment){
+    public ItemBuilder removeEnchantment(Enchantment enchantment) {
         itemStack.removeEnchantment(enchantment);
         return this;
     }
@@ -164,6 +161,7 @@ public class ItemBuilder {
      * @param playerName The name of the skull owner
      * @return This builder, for chaining
      */
+    @SuppressWarnings("deprecation")
     public ItemBuilder skullOwner(String playerName){
         SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
 
@@ -181,6 +179,7 @@ public class ItemBuilder {
      * @param player The player of the skull owner
      * @return This builder, for chaining
      */
+    @SuppressWarnings("deprecation")
     public ItemBuilder skullOwner(Player player) {
         SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
 
@@ -198,6 +197,7 @@ public class ItemBuilder {
      * @param player The offline player of the skull owner
      * @return This builder, for chaining
      */
+    @SuppressWarnings("deprecation")
     public ItemBuilder skullOwner(OfflinePlayer player) {
         SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
 
@@ -205,7 +205,7 @@ public class ItemBuilder {
             player.getPlayerProfile()
                     .update()
                     .thenAcceptAsync(itemMeta::setOwnerProfile,
-                            runnable -> Bukkit.getScheduler().runTask(Utils.getPlugin(), runnable));
+                            runnable -> Bukkit.getScheduler().runTask(Utils.plugin(), runnable));
         }
 
         itemStack.setItemMeta(itemMeta);
@@ -417,7 +417,7 @@ public class ItemBuilder {
      *
      * @return The ItemMeta
      */
-    public ItemMeta getMeta() {
+    public ItemMeta meta() {
         return itemStack.getItemMeta();
     }
 

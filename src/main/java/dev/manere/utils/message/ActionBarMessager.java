@@ -2,7 +2,7 @@ package dev.manere.utils.message;
 
 import dev.manere.utils.scheduler.Schedulers;
 import dev.manere.utils.server.ServerUtils;
-import dev.manere.utils.text.color.ColorUtils;
+import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
@@ -44,7 +44,7 @@ public class ActionBarMessager {
      * Clears the player's ActionBar by sending an empty message.
      */
     public void clear() {
-        send(ColorUtils.component(" "));
+        send(TextStyle.component(" "));
     }
 
     /**
@@ -55,8 +55,7 @@ public class ActionBarMessager {
      * @param every The interval between subsequent messages (in ticks).
      */
     public void send(Component text, long after, long every) {
-        Schedulers.async()
-                .repeating(task -> send(text), after, every);
+        Schedulers.async().repeating(task -> send(text), after, every);
     }
 
     /**
@@ -65,9 +64,6 @@ public class ActionBarMessager {
      * @param text The message to be broadcast.
      */
     public void broadcast(Component text) {
-        ServerUtils
-                .online()
-                .forEach(to -> to
-                        .sendActionBar(text));
+        ServerUtils.online().forEach(to -> to.sendActionBar(text));
     }
 }

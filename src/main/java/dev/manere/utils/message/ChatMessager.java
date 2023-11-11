@@ -44,9 +44,6 @@ public class ChatMessager {
      * @param text The message to be broadcast.
      */
     public void broadcast(Component text) {
-        ServerUtils
-                .online()
-                .forEach(to -> to
-                        .sendMessage(text));
+        ServerUtils.online().forEach(to -> to.sendMessage(text));
     }
 }

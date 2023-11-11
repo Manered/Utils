@@ -5,7 +5,7 @@ import dev.manere.utils.library.Utils;
 import dev.manere.utils.message.ActionBarMessager;
 import dev.manere.utils.message.ChatMessager;
 import dev.manere.utils.message.Messagers;
-import dev.manere.utils.text.color.ColorUtils;
+import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -63,11 +63,11 @@ public class PlayerUtils {
      * @param target The player to hide.
      */
     public static void hide(Player target) {
-        Utils.getPlugin()
+        Utils.plugin()
                 .getServer()
                 .getOnlinePlayers()
                 .forEach(player -> player.hidePlayer(
-                        Utils.getPlugin(),
+                        Utils.plugin(),
                         target));
     }
 
@@ -79,7 +79,7 @@ public class PlayerUtils {
     public static void show(Player target) {
         Bukkit.getOnlinePlayers()
                 .forEach(player -> player.showPlayer(
-                        Utils.getPlugin(),
+                        Utils.plugin(),
                         target));
     }
 
@@ -214,7 +214,7 @@ public class PlayerUtils {
      * @param gamemode  The game mode to be set.
      * @param players   The list of players whose game mode will be changed.
      */
-    public static void setGamemodeOfPlayers(GameMode gamemode, List<Player> players) {
+    public static void gamemodeOfPlayers(GameMode gamemode, List<Player> players) {
         players.forEach(player -> player.setGameMode(gamemode));
     }
 
@@ -235,7 +235,7 @@ public class PlayerUtils {
      * @return The online player with the specified UUID, or null if not found.
      */
     public static Player player(UUID uuid) {
-        return Utils.getPlugin().getServer().getPlayer(uuid);
+        return Utils.plugin().getServer().getPlayer(uuid);
     }
 
     /**
@@ -245,7 +245,7 @@ public class PlayerUtils {
      * @return The online player with the provided name, or null if not found.
      */
     public static Player player(String playerName) {
-        return Utils.getPlugin().getServer().getPlayer(playerName);
+        return Utils.plugin().getServer().getPlayer(playerName);
     }
 
     /**
@@ -255,22 +255,7 @@ public class PlayerUtils {
      * @return The offline player with the specified UUID.
      */
     public static OfflinePlayer offline(UUID uuid) {
-        return Utils.getPlugin().getServer().getOfflinePlayer(uuid);
-    }
-
-    /**
-     * Gets the offline player with the given player name.
-     *
-     * @apiNote This is a deprecated method.
-     * Please do not use this unless you need to.
-     * Never rely on {@link Bukkit#getOfflinePlayer(String playerName)}.
-     *
-     * @param playerName The name of the player.
-     * @return The offline player with the provided name.
-     */
-    @Deprecated
-    public static OfflinePlayer offline(String playerName) {
-        return Utils.getPlugin().getServer().getOfflinePlayer(playerName);
+        return Utils.plugin().getServer().getOfflinePlayer(uuid);
     }
 
     /**
@@ -280,7 +265,7 @@ public class PlayerUtils {
      * @param text The message to send.
      */
     public static void chat(Player player, String text) {
-        Messagers.chat(player).send(ColorUtils.component(text));
+        Messagers.chat(player).send(TextStyle.component(text));
     }
 
     /**
@@ -310,7 +295,7 @@ public class PlayerUtils {
      * @param text The message to send.
      */
     public static void actionBar(Player player, String text) {
-        Messagers.actionBar(player).send(ColorUtils.component(text));
+        Messagers.actionBar(player).send(TextStyle.component(text));
     }
 
     /**

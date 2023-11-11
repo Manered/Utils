@@ -18,7 +18,7 @@ public class AsyncScheduler {
      * @param task The task to be scheduled.
      */
     public void now(Consumer<BukkitTask> task) {
-        ServerUtils.scheduler().runTaskAsynchronously(Utils.getPlugin(), task);
+        ServerUtils.scheduler().runTaskAsynchronously(Utils.plugin(), task);
     }
 
     /**
@@ -27,7 +27,7 @@ public class AsyncScheduler {
      * @param runnable The runnable to be scheduled.
      */
     public void now(Runnable runnable) {
-        ServerUtils.scheduler().runTaskAsynchronously(Utils.getPlugin(), runnable);
+        ServerUtils.scheduler().runTaskAsynchronously(Utils.plugin(), runnable);
     }
 
     /**
@@ -37,7 +37,7 @@ public class AsyncScheduler {
      * @param after    The delay (in ticks) before the task runs.
      */
     public void later(Consumer<BukkitTask> runnable, long after) {
-        ServerUtils.scheduler().runTaskLaterAsynchronously(Utils.getPlugin(), runnable, after);
+        ServerUtils.scheduler().runTaskLaterAsynchronously(Utils.plugin(), runnable, after);
     }
 
     /**
@@ -47,7 +47,7 @@ public class AsyncScheduler {
      * @param after    The delay (in ticks) before the runnable runs.
      */
     public void later(Runnable runnable, long after) {
-        ServerUtils.scheduler().runTaskLaterAsynchronously(Utils.getPlugin(), runnable, after);
+        ServerUtils.scheduler().runTaskLaterAsynchronously(Utils.plugin(), runnable, after);
     }
 
     /**
@@ -58,7 +58,7 @@ public class AsyncScheduler {
      * @param every The interval (in ticks) between subsequent executions.
      */
     public void repeating(Consumer<BukkitTask> task, long after, long every) {
-        ServerUtils.scheduler().runTaskTimerAsynchronously(Utils.getPlugin(), task, after, every);
+        ServerUtils.scheduler().runTaskTimerAsynchronously(Utils.plugin(), task, after, every);
     }
 
     /**
@@ -69,6 +69,6 @@ public class AsyncScheduler {
      * @param every    The interval (in ticks) between subsequent executions.
      */
     public void repeating(Runnable runnable, long after, long every) {
-        ServerUtils.scheduler().runTaskTimerAsynchronously(Utils.getPlugin(), runnable, after, every);
+        ServerUtils.scheduler().runTaskTimerAsynchronously(Utils.plugin(), runnable, after, every);
     }
 }

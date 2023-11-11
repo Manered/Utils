@@ -1,4 +1,4 @@
 /**
- * Used for building commands and parsing arguments.
+ * Used for building commands.
  */
 package dev.manere.utils.command;

@@ -64,10 +64,10 @@ public class LocationUtils {
      * @param radius The radius in which to search for players.
      * @return A list of players within the specified radius of the center location.
      */
-    public static List<Player> getPlayersInRadius(Location center, double radius) {
+    public static List<Player> playersInRadius(Location center, double radius) {
         List<Player> nearbyPlayers = new ArrayList<>();
 
-        for (Player player : Utils.getPlugin().getServer().getOnlinePlayers()) {
+        for (Player player : Utils.plugin().getServer().getOnlinePlayers()) {
             Location playerLocation = player.getLocation();
             if (Objects.equals(center.getWorld(), playerLocation.getWorld()) &&
                     center.distance(playerLocation) <= radius) {
@@ -85,11 +85,11 @@ public class LocationUtils {
      * @param radius       The radius in which to search for players.
      * @return A list of players within the specified radius of the target player.
      */
-    public static List<Player> getPlayersNearPlayer(Player targetPlayer, double radius) {
+    public static List<Player> playersNearPlayer(Player targetPlayer, double radius) {
         List<Player> nearbyPlayers = new ArrayList<>();
         Location targetLocation = targetPlayer.getLocation();
 
-        for (Player player : Utils.getPlugin().getServer().getOnlinePlayers()) {
+        for (Player player : Utils.plugin().getServer().getOnlinePlayers()) {
             if (!player.equals(targetPlayer)) {
                 Location playerLocation = player.getLocation();
                 if (Objects.equals(targetLocation.getWorld(), playerLocation.getWorld()) &&
@@ -109,7 +109,7 @@ public class LocationUtils {
      * @param loc2 The second location.
      * @return The distance between the two locations.
      */
-    public static double getDistance(Location loc1, Location loc2) {
+    public static double distance(Location loc1, Location loc2) {
         return loc1.distance(loc2);
     }
 
@@ -119,7 +119,7 @@ public class LocationUtils {
      * @param location The location to serialize.
      * @return The serialized location string.
      */
-    public static String serializeLocation(Location location) {
+    public static String serialize(Location location) {
         return Objects.requireNonNull(location.getWorld()).getName() + "," +
                 location.getX() + "," +
                 location.getY() + "," +
@@ -134,7 +134,7 @@ public class LocationUtils {
      * @param serialized The serialized location string.
      * @return The deserialized Location object, or null if deserialization fails.
      */
-    public static Location deserializeLocation(String serialized) {
+    public static Location deserialize(String serialized) {
         String[] parts = serialized.split(",");
 
         if (parts.length == 6) {

@@ -1,14 +1,21 @@
 package dev.manere.utils.registration;
 
-import dev.manere.utils.command.CommandBuilder;
+import dev.manere.utils.command.CommandType;
+import dev.manere.utils.command.Commander;
+import dev.manere.utils.command.builder.CommandBuilder;
+import dev.manere.utils.command.builder.alias.CommandAliasBuilder;
+import dev.manere.utils.command.builder.dispatcher.CommandContext;
+import dev.manere.utils.command.builder.permission.CommandPermission;
 import dev.manere.utils.library.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -22,7 +29,7 @@ public class Registrar {
      * @param plugin   The JavaPlugin instance.
      * @param listener The listener to register.
      */
-    public static void listener(JavaPlugin plugin, Listener listener) {
+    public static void events(JavaPlugin plugin, Listener listener) {
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
     }
 
@@ -47,7 +54,7 @@ public class Registrar {
      * @param plugin The JavaPlugin instance.
      * @return The CommandMap object, or null if it couldn't be retrieved.
      */
-    public static CommandMap getCommandMap(JavaPlugin plugin) {
+    public static CommandMap commandMap(JavaPlugin plugin) {
         try {
             Field bukkitCommandMap = plugin.getServer().getClass().getDeclaredField("commandMap");
             bukkitCommandMap.setAccessible(true);
@@ -68,17 +75,7 @@ public class Registrar {
      * @param command     The Command object to register.
      */
     public static void commandMap(JavaPlugin plugin, String commandName, Command command) {
-        Objects.requireNonNull(getCommandMap(plugin)).register(commandName, command);
-    }
-
-    /**
-     * Registers a custom command using a CommandBuilder with the CommandMap associated with the provided plugin.
-     *
-     * @param plugin  The JavaPlugin instance.
-     * @param command The CommandBuilder containing the command details.
-     */
-    public static void commandMap(JavaPlugin plugin, CommandBuilder command) {
-        Objects.requireNonNull(getCommandMap(plugin)).register(command.getName(), command.getCommand());
+        Objects.requireNonNull(commandMap(plugin)).register(plugin.getName(), command);
     }
 
     /**
@@ -86,8 +83,8 @@ public class Registrar {
      *
      * @param listener The listener to register.
      */
-    public static void listener(Listener listener) {
-        listener(Utils.getPlugin(), listener);
+    public static void events(Listener listener) {
+        events(Utils.plugin(), listener);
     }
 
     /**
@@ -98,7 +95,7 @@ public class Registrar {
      * @throws NullPointerException if executor is null.
      */
     public static void command(String commandName, CommandExecutor executor) {
-        command(Utils.getPlugin(), commandName, executor);
+        command(Utils.plugin(), commandName, executor);
     }
 
     /**
@@ -106,8 +103,8 @@ public class Registrar {
      *
      * @return The CommandMap object, or null if unable to retrieve.
      */
-    public static CommandMap getCommandMap() {
-        return getCommandMap(Utils.getPlugin());
+    public static CommandMap commandMap() {
+        return commandMap(Utils.plugin());
     }
 
     /**
@@ -117,16 +114,84 @@ public class Registrar {
      * @param command The Command object to register.
      */
     public static void commandMap(String commandName, Command command) {
-        commandMap(Utils.getPlugin(), commandName, command);
+        commandMap(Utils.plugin(), commandName, command);
     }
 
     /**
-     * Registers a custom command built with a CommandBuilder with the CommandMap
-     * of the plugin obtained from Utils.
+     * Registers a custom command that extends {@link Commander}.
      *
-     * @param command The CommandBuilder containing the command details.
+     * @apiNote This should only be used for Commanders that use the CommandType of PLUGIN_YML.
+     * @param commander The commander instance to register.
+     * @see Commander
+     * @see CommandType#PLUGIN_YML
      */
-    public static void commandMap(CommandBuilder command) {
-        commandMap(Utils.getPlugin(), command);
+    @SuppressWarnings("DataFlowIssue")
+    public static void command(Commander commander) {
+        if (commander.settings().type() == CommandType.COMMAND_MAP) {
+            throw new UnsupportedOperationException("You can only use dev.manere.utils.command.CommandType.PLUGIN_YML" +
+                    " in this method." +
+                    " Please use dev.manere.utils.registration.Registrar#command(" +
+                    "Commander commander, List<String> aliases, String description, String permission, String usage) instead.");
+        }
+
+        if (commander.settings().type() == CommandType.PLUGIN_YML && Utils.plugin().getCommand(commander.name()) == null) {
+            throw new NullPointerException("You seem to have forgotten to provide the command '" + commander.name() + "' " +
+                    "in the plugin.yml file inside of your project.");
+        }
+
+        Utils.plugin().getCommand(commander.name()).setExecutor((sender, command, label, args) -> commander.settings()
+                .executes().run(new CommandContext(sender, command, label, args)));
+
+        if (commander.settings().completes() != null) {
+            Utils.plugin().getCommand(commander.name()).setTabCompleter((sender, command, label, args) -> {
+                if (commander.settings().completes().suggest(new CommandContext(sender, command, label, args)) == null) {
+                    return List.of();
+                } else {
+                    return commander.settings().completes().suggest(new CommandContext(sender, command, label, args));
+                }
+            });
+        }
+    }
+
+    /**
+     * Registers a custom command that extends {@link Commander}.
+     *
+     * @param commander The commander instance to register.
+     * @see Commander
+     * @see CommandType#COMMAND_MAP
+     * @apiNote This should only be used for Commanders that use the CommandType of COMMAND_MAP.
+     */
+    public static void command(Commander commander, @Nullable List<String> aliases, @Nullable String description, @Nullable String permission, @Nullable String usage) {
+        CommandBuilder builder = CommandBuilder.command(commander.name(), commander.settings().type());
+
+        if (aliases != null && !aliases.isEmpty()) {
+            CommandAliasBuilder builderAliases = builder.aliases();
+
+            for (String alias : aliases) {
+                builderAliases.add(alias);
+            }
+
+            builder.aliases(builderAliases);
+        }
+
+        builder.executes(commander.settings().executes());
+        builder.completes(commander.settings().completes());
+
+        if (description != null) {
+            builder.description(description);
+        }
+
+        if (permission != null) {
+            builder.permission()
+                    .type(CommandPermission.CUSTOM)
+                    .custom(permission)
+                    .build();
+        }
+
+        if (usage != null) {
+            builder.usage(usage);
+        }
+
+        builder.build().register();
     }
 }

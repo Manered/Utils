@@ -1,8 +1,7 @@
 package dev.manere.utils.hologram;
 
 import dev.manere.utils.location.LocationUtils;
-import dev.manere.utils.text.color.ColorUtils;
-import dev.manere.utils.world.WorldUtils;
+import dev.manere.utils.world.Worlds;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -27,14 +26,14 @@ public class HologramBuilder {
     private boolean deleted;
 
     /**
-     * Constructs a new HologramBuilder with default settings.
+     * Creates a new instance of HologramBuilder with default settings.
      */
     public HologramBuilder() {
         this.deleted = false;
         this.visible = true;
         this.lineHeight = 0.25;
 
-        World world = WorldUtils.world("world");
+        World world = Worlds.world("world");
 
         double y = world
                 .getHighestBlockAt(0, 0)
@@ -48,9 +47,7 @@ public class HologramBuilder {
     }
 
     /**
-     * Constructs a new HologramBuilder with a specified location.
-     *
-     * @param location The location where the hologram will be created.
+     * Creates a new instance of HologramBuilder.
      */
     public HologramBuilder(Location location) {
         this.deleted = false;
@@ -65,7 +62,7 @@ public class HologramBuilder {
      *
      * @return A new instance of HologramBuilder.
      */
-    public static HologramBuilder of() {
+    public static HologramBuilder hologram() {
         return new HologramBuilder();
     }
 
@@ -75,7 +72,7 @@ public class HologramBuilder {
      * @param location The location where the hologram will be created.
      * @return A new instance of HologramBuilder.
      */
-    public static HologramBuilder of(Location location) {
+    public static HologramBuilder hologram(Location location) {
         return new HologramBuilder(location);
     }
 
@@ -85,7 +82,7 @@ public class HologramBuilder {
      * @param lines The lines of text to be displayed in the hologram.
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder setLines(Component... lines) {
+    public HologramBuilder lines(Component... lines) {
         this.lines = Arrays.asList(lines);
         return this;
     }
@@ -96,7 +93,7 @@ public class HologramBuilder {
      * @param lines The list of lines to be displayed in the hologram.
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder setLines(List<Component> lines) {
+    public HologramBuilder lines(List<Component> lines) {
         this.lines = lines;
         return this;
     }
@@ -107,7 +104,7 @@ public class HologramBuilder {
      * @param location The location where the hologram will be created.
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder setLocation(Location location) {
+    public HologramBuilder location(Location location) {
         this.location = location;
         return this;
     }
@@ -118,7 +115,7 @@ public class HologramBuilder {
      * @param lineHeight The height between lines.
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder setLineHeight(double lineHeight) {
+    public HologramBuilder lineHeight(double lineHeight) {
         this.lineHeight = lineHeight;
         return this;
     }
@@ -129,7 +126,7 @@ public class HologramBuilder {
      * @param visible true to make the hologram visible, false to make it invisible.
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder setVisible(boolean visible) {
+    public HologramBuilder visible(boolean visible) {
         this.visible = visible;
         return this;
     }
@@ -156,7 +153,7 @@ public class HologramBuilder {
         }
 
         Objects.requireNonNull(toDelete, "No hologram found at <location>. Seems to be a NPE"
-                .replaceAll("<location>", LocationUtils.serializeLocation(location)));
+                .replaceAll("<location>", LocationUtils.serialize(location)));
 
         toDelete.remove();
         this.deleted = true;

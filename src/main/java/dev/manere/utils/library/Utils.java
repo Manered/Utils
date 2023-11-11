@@ -1,18 +1,13 @@
 package dev.manere.utils.library;
 
-import dev.manere.utils.listener.PlayerDeathByPlayerWithCrystalEvent;
-import dev.manere.utils.listener.SpigotEventListener;
-import dev.manere.utils.menu.normal.listeners.NormalMenuListener;
-import dev.manere.utils.menu.paginated.listeners.PaginatedMenuListener;
+import dev.manere.utils.command.annotation.AutoRegisterHandler;
+import dev.manere.utils.event.crystal.SpigotEventListener;
+import dev.manere.utils.menu.MenuListener;
 import dev.manere.utils.registration.Registrar;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * The {@code Utils} class provides utility methods and event registration for the Utils library.
- * If you intend to use the {@link PlayerDeathByPlayerWithCrystalEvent} listener or menu builderS you should instantiate an object of this class.
- * <p></p>
- * To use this utility class, you need to add a {@code public static Utils Utils} variable to your class.
- * In your plugin's {@code onEnable()} method, create an instance of this class using {@code Utils = new Utils(this)}.
  */
 public class Utils {
 
@@ -26,9 +21,14 @@ public class Utils {
     private Utils(JavaPlugin plugin) {
         Utils.plugin = plugin;
 
-        Registrar.listener(new SpigotEventListener());
-        Registrar.listener(new NormalMenuListener());
-        Registrar.listener(new PaginatedMenuListener());
+        if (Utils.plugin() != null) {
+            Registrar.events(new SpigotEventListener());
+            Registrar.events(new MenuListener());
+        } else {
+            throw new NullPointerException("Did you seriously just make the most important part of a library NULL?");
+        }
+
+        AutoRegisterHandler.scanAndRegister();
     }
 
     /**
@@ -36,7 +36,7 @@ public class Utils {
      *
      * @param plugin The JavaPlugin instance that will be used.
      */
-    public static Utils of(JavaPlugin plugin) {
+    public static Utils init(JavaPlugin plugin) {
         return new Utils(plugin);
     }
 
@@ -45,7 +45,7 @@ public class Utils {
      *
      * @return The JavaPlugin instance that will be used for event registration and more.
      */
-    public static JavaPlugin getPlugin() {
+    public static JavaPlugin plugin() {
         return plugin;
     }
 
@@ -57,7 +57,7 @@ public class Utils {
      *
      * @param plugin The JavaPlugin instance that will be used.
      */
-    public void setPlugin(JavaPlugin plugin) {
+    public void plugin(JavaPlugin plugin) {
         Utils.plugin = plugin;
     }
 }

@@ -1,6 +1,6 @@
 package dev.manere.utils.location;
 
-import dev.manere.utils.world.WorldUtils;
+import dev.manere.utils.world.Worlds;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -23,7 +23,7 @@ public class LocationBuilder {
         this.x = 0.0;
         this.y = 64.0;
         this.z = 0.0;
-        this.world = WorldUtils.world("world");
+        this.world = Worlds.world("world");
         this.pitch = 0.0f;
         this.yaw = 0.0f;
     }
@@ -68,7 +68,7 @@ public class LocationBuilder {
      *
      * @return a new LocationBuilder
      */
-    public static LocationBuilder of() {
+    public static LocationBuilder location() {
         return new LocationBuilder();
     }
 
@@ -82,7 +82,7 @@ public class LocationBuilder {
      * @param world The world
      * @return a new LocationBuilder
      */
-    public static LocationBuilder of(double x, double y, double z, World world) {
+    public static LocationBuilder location(double x, double y, double z, World world) {
         return new LocationBuilder(x, y, z, world);
     }
 
@@ -97,7 +97,7 @@ public class LocationBuilder {
      * @param yaw The yaw
      * @return a new LocationBuilder
      */
-    public static LocationBuilder of(double x, double y, double z, World world, float pitch, float yaw) {
+    public static LocationBuilder location(double x, double y, double z, World world, float pitch, float yaw) {
         return new LocationBuilder(x, y, z, world, pitch, yaw);
     }
 

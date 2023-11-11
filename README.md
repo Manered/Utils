@@ -1,9 +1,12 @@
-# Utils
-Library
+![banner.png](banner.png)
+# Welcome to Utils!
+Utils is a Paper/Bukkit Library for simplifying everything you use on a daily basis.
 
-> [!WARNING]
-> This library is not stable. It's recommended to use `v2.2.1` of this library.
-
-
-## Tutorials/Documentation
-[Documentation](https://manered.gitbook.io/utils/)
+**Some features include:**
+- GUI Menus
+- Very advanced commands using Commander or CommandBuilder
+- Easy to use SQL
+- An ItemBuilder so you can shorten your ItemStack code
+- and more...
+## <img src='docs.png' alt="Docs Icon"> Documentation:
+#### https://manered.gitbook.io/utils/getting-started

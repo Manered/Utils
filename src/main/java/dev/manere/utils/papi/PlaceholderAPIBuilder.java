@@ -24,12 +24,12 @@ public class PlaceholderAPIBuilder {
      */
     /* I hate you paper (why would you deprecate JavaPlugin#getDescription() and then make the alternative (PluginMeta) "unstable" */
     @SuppressWarnings("UnstableApiUsage")
-    private PlaceholderAPIBuilder(String identifier) {
+    public PlaceholderAPIBuilder(String identifier) {
         this.identifier = identifier;
-        this.version = Utils.getPlugin().getPluginMeta().getVersion();
+        this.version = Utils.plugin().getPluginMeta().getVersion();
         this.playerResult = null;
         this.offlinePlayerResult = null;
-        this.author = ListPrettify.strings(Utils.getPlugin()
+        this.author = ListPrettify.strings(Utils.plugin()
                 .getPluginMeta()
                 .getAuthors());
     }
@@ -128,6 +128,7 @@ public class PlaceholderAPIBuilder {
                 if (playerResult != null) {
                     return playerResult.apply(player, params);
                 }
+
                 return null;
             }
 
@@ -139,6 +140,7 @@ public class PlaceholderAPIBuilder {
                 if (offlinePlayerResult != null) {
                     return offlinePlayerResult.apply(offlinePlayer, params);
                 }
+
                 return null;
             }
         };

@@ -40,7 +40,7 @@ public record PlayerInfo(
      * @param uuid   The UUID of the player.
      * @return A CompletableFuture that resolves to the retrieved PlayerInfo.
      */
-    public static CompletableFuture<PlayerInfo> get(HttpClient client, UUID uuid) {
+    public static CompletableFuture<PlayerInfo> playerInfo(HttpClient client, UUID uuid) {
         URI formattedEndpoint = URI.create(ENDPOINT.formatted(uuidStr(uuid)));
         final HttpRequest request = HttpRequest.newBuilder(formattedEndpoint).GET().build();
 

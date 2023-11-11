@@ -49,6 +49,7 @@ public class PlaceholderBuilder {
         for (Map.Entry<String, String> entry : placeholders.entrySet()) {
             text = text.replace("{" + entry.getKey() + "}", entry.getValue());
         }
+
         return text;
     }
 

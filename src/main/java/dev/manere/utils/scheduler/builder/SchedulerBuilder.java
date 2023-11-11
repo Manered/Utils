@@ -32,7 +32,7 @@ public class SchedulerBuilder {
      *
      * @return A new instance of SchedulerBuilder.
      */
-    public static SchedulerBuilder of() {
+    public static SchedulerBuilder scheduler() {
         return new SchedulerBuilder();
     }
 
@@ -112,21 +112,21 @@ public class SchedulerBuilder {
         if (task == null) return;
 
         if (type == TaskType.NORMAL) {
-            if (asynchronous) Utils.getPlugin().getServer().getScheduler().runTaskAsynchronously(Utils.getPlugin(), task);
+            if (asynchronous) Utils.plugin().getServer().getScheduler().runTaskAsynchronously(Utils.plugin(), task);
 
-            else Utils.getPlugin().getServer().getScheduler().runTask(Utils.getPlugin(), task);
+            else Utils.plugin().getServer().getScheduler().runTask(Utils.plugin(), task);
         }
 
         if (type == TaskType.LATER) {
-            if (asynchronous) Utils.getPlugin().getServer().getScheduler().runTaskLaterAsynchronously(Utils.getPlugin(), task, delay);
+            if (asynchronous) Utils.plugin().getServer().getScheduler().runTaskLaterAsynchronously(Utils.plugin(), task, delay);
 
-            else Utils.getPlugin().getServer().getScheduler().runTaskLater(Utils.getPlugin(), task, delay);
+            else Utils.plugin().getServer().getScheduler().runTaskLater(Utils.plugin(), task, delay);
         }
 
         if (type == TaskType.REPEATING) {
-            if (asynchronous) Utils.getPlugin().getServer().getScheduler().runTaskTimerAsynchronously(Utils.getPlugin(), task, delay, period);
+            if (asynchronous) Utils.plugin().getServer().getScheduler().runTaskTimerAsynchronously(Utils.plugin(), task, delay, period);
 
-            else Utils.getPlugin().getServer().getScheduler().runTaskTimer(Utils.getPlugin(), task, delay, period);
+            else Utils.plugin().getServer().getScheduler().runTaskTimer(Utils.plugin(), task, delay, period);
         }
     }
 
@@ -144,7 +144,7 @@ public class SchedulerBuilder {
      *
      * @return The delay (in ticks).
      */
-    public long getDelay() {
+    public long delay() {
         return delay;
     }
 
@@ -153,7 +153,7 @@ public class SchedulerBuilder {
      *
      * @return The period (in ticks).
      */
-    public long getPeriod() {
+    public long period() {
         return period;
     }
 
@@ -162,7 +162,7 @@ public class SchedulerBuilder {
      *
      * @return The task to be executed.
      */
-    public Consumer<BukkitTask> getTask() {
+    public Consumer<BukkitTask> task() {
         return task;
     }
 
@@ -171,7 +171,7 @@ public class SchedulerBuilder {
      *
      * @return The type of the task.
      */
-    public TaskType getType() {
+    public TaskType type() {
         return type;
     }
 }

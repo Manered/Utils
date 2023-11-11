@@ -15,6 +15,7 @@ public class PlaceholderUtils {
         for (int i = 0; i < replacements.length; i++) {
             text = text.replace("{" + i + "}", replacements[i]);
         }
+
         return text;
     }
 

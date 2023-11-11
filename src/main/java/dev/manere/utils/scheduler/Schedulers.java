@@ -49,6 +49,6 @@ public class Schedulers {
      * @return A new instance of SchedulerBuilder.
      */
     public static SchedulerBuilder builder() {
-        return SchedulerBuilder.of();
+        return SchedulerBuilder.scheduler();
     }
 }

@@ -36,7 +36,7 @@ public record TierList(
      * @param mode   The mode or category for which to retrieve tier list data.
      * @return A CompletableFuture that resolves to the retrieved TierList.
      */
-    public static CompletableFuture<TierList> get(HttpClient client, String mode) {
+    public static CompletableFuture<TierList> tierList(HttpClient client, String mode) {
         URI formattedEndpoint = URI.create(ENDPOINT.formatted(mode));
         final HttpRequest request = HttpRequest.newBuilder(formattedEndpoint).GET().build();
 
@@ -50,7 +50,7 @@ public record TierList(
      *
      * @return A map where UUIDs are keys and their respective tiers are values.
      */
-    public Map<UUID, String> getTiers() {
+    public Map<UUID, String> tiers() {
         HashMap<UUID, String> map = new HashMap<>();
 
         for (int tier = 0; tier < rankings.size(); tier++) {

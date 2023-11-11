@@ -6,10 +6,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.structure.StructureManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class ServerUtils {
      * @return The PluginManager of the server.
      */
     public static PluginManager manager() {
-        return Utils.getPlugin().getServer().getPluginManager();
+        return Utils.plugin().getServer().getPluginManager();
     }
 
     /**
@@ -33,7 +35,7 @@ public class ServerUtils {
      * @return The StructureManager of the server.
      */
     public static StructureManager structures() {
-        return Utils.getPlugin().getServer().getStructureManager();
+        return Utils.plugin().getServer().getStructureManager();
     }
 
     /**
@@ -42,7 +44,7 @@ public class ServerUtils {
      * @return The ScoreboardManager of the server.
      */
     public static ScoreboardManager scoreboards() {
-        return Utils.getPlugin().getServer().getScoreboardManager();
+        return Utils.plugin().getServer().getScoreboardManager();
     }
 
     /**
@@ -51,7 +53,7 @@ public class ServerUtils {
      * @return The BukkitScheduler of the server.
      */
     public static BukkitScheduler scheduler() {
-        return Utils.getPlugin().getServer().getScheduler();
+        return Utils.plugin().getServer().getScheduler();
     }
 
     /**
@@ -60,7 +62,7 @@ public class ServerUtils {
      * @return The ServicesManager of the server.
      */
     public static ServicesManager services() {
-        return Utils.getPlugin().getServer().getServicesManager();
+        return Utils.plugin().getServer().getServicesManager();
     }
 
     /**
@@ -69,7 +71,7 @@ public class ServerUtils {
      * @return List of online Player objects.
      */
     public static List<Player> online() {
-        return new ArrayList<>(Utils.getPlugin().getServer().getOnlinePlayers());
+        return new ArrayList<>(Utils.plugin().getServer().getOnlinePlayers());
     }
 
     /**
@@ -88,7 +90,7 @@ public class ServerUtils {
      * @return The plugin that is registered under {@code name}
      */
     public static Plugin plugin(String name) {
-        return Utils.getPlugin().getServer().getPluginManager().getPlugin(name);
+        return Utils.plugin().getServer().getPluginManager().getPlugin(name);
     }
 
     /**
@@ -99,5 +101,42 @@ public class ServerUtils {
      */
     public static Server server(String name) {
         return plugin(name).getServer();
+    }
+
+    /**
+     * Gets a Server instance of the default plugin.
+     * @return The {@link org.bukkit.Server} instance of the default plugin.
+     */
+    public static Server server() {
+        return Utils.plugin().getServer();
+    }
+
+    /**
+     * Gets the data folder associated with the default plugin.
+     *
+     * @return The data folder associated with the default plugin.
+     */
+    public static File dataFolder() {
+        return Utils.plugin().getDataFolder();
+    }
+
+    /**
+     * Gets the data folder associated with a specific plugin.
+     *
+     * @param plugin The plugin to retrieve the data folder from.
+     * @return The data folder associated with a specific plugin.
+     */
+    public static File dataFolder(JavaPlugin plugin) {
+        return plugin.getDataFolder();
+    }
+
+    /**
+     * Gets the data folder associated with a specific plugin.
+     *
+     * @param plugin The plugin to retrieve the data folder from.
+     * @return The data folder associated with a specific plugin.
+     */
+    public static File dataFolder(Plugin plugin) {
+        return plugin.getDataFolder();
     }
 }
