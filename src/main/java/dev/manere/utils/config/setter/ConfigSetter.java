@@ -55,7 +55,7 @@ public class ConfigSetter {
      * @return The ConfigSetter instance for method chaining.
      */
     public ConfigSetter val(Text val) {
-        this.val = val;
+        this.val = val.toString();
         return this;
     }
 

@@ -2,11 +2,26 @@ package dev.manere.utils.text;
 
 import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.text.Component;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents a simple text utility with formatting options.
  */
-public record Text(String string) {
+public class Text {
+    private final String string;
+
+    /**
+     * Constructs a new Text instance
+     * @param string the string to use.
+     */
+    public Text(String string) {
+        this.string = string;
+    }
 
     /**
      * Creates a new Text instance with the specified string.
@@ -42,6 +57,15 @@ public record Text(String string) {
      * @return A normal string that isn't colored, etc.
      */
     public String string() {
+        return string;
+    }
+
+    /**
+     * Used whenever you store a Text object in a configuration file.
+     * @return The unformatted string.
+     */
+    @Override
+    public String toString() {
         return string;
     }
 }

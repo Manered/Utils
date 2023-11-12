@@ -15,32 +15,6 @@ public class SmallFont {
 
     // Initializing the character mapping
     static {
-        smallFontMap.put('A' , 'ᴀ');
-        smallFontMap.put('B' , 'ʙ');
-        smallFontMap.put('C' , 'ᴄ');
-        smallFontMap.put('D' , 'ᴅ');
-        smallFontMap.put('E' , 'ᴇ');
-        smallFontMap.put('F' , 'ꜰ');
-        smallFontMap.put('G' , 'ɢ');
-        smallFontMap.put('H' , 'ʜ');
-        smallFontMap.put('I' , 'ɪ');
-        smallFontMap.put('J' , 'ᴊ');
-        smallFontMap.put('K' , 'ᴋ');
-        smallFontMap.put('L' , 'ʟ');
-        smallFontMap.put('M' , 'ᴍ');
-        smallFontMap.put('N' , 'ɴ');
-        smallFontMap.put('O' , 'ᴏ');
-        smallFontMap.put('P' , 'ᴘ');
-        smallFontMap.put('Q' , 'q');
-        smallFontMap.put('R' , 'ʀ');
-        smallFontMap.put('S' , 'ꜱ');
-        smallFontMap.put('T' , 'ᴛ');
-        smallFontMap.put('U' , 'ᴜ');
-        smallFontMap.put('V' , 'ᴠ');
-        smallFontMap.put('W' , 'ᴡ');
-        smallFontMap.put('X' , 'x');
-        smallFontMap.put('Y' , 'ʏ');
-        smallFontMap.put('Z' , 'ᴢ');
         smallFontMap.put('a' , 'ᴀ');
         smallFontMap.put('b' , 'ʙ');
         smallFontMap.put('c' , 'ᴄ');

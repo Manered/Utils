@@ -59,7 +59,7 @@ public class ConfigSectionSetter {
      * @return The ConfigSectionSetter instance for method chaining.
      */
     public ConfigSectionSetter val(Text val) {
-        this.val = val;
+        this.val = val.toString();
         return this;
     }
 

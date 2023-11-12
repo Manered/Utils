@@ -41,7 +41,7 @@ public class Duo<K, V> {
      */
     @Override
     public String toString() {
-        return "([<key>]:[<val>])"
+        return "[<key> : <val>]"
                 .replaceAll("<key>", this.key.toString())
                 .replaceAll("<val>", this.val.toString());
     }
