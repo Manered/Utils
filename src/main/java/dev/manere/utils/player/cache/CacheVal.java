@@ -20,6 +20,15 @@ public record CacheVal(Object val) {
     }
 
     /**
+     * Returns the value stored as an Object.
+     *
+     * @return the value stored as an Object.
+     */
+    public Object asObject() {
+        return val;
+    }
+
+    /**
      * Converts the cached value to a Text.
      *
      * @return A Text instance representing the cached value.

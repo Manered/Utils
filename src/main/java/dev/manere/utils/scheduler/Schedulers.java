@@ -1,6 +1,7 @@
 package dev.manere.utils.scheduler;
 
 import dev.manere.utils.scheduler.builder.SchedulerBuilder;
+import dev.manere.utils.scheduler.stacker.SchedulerStacker;
 
 /**
  * This class provides methods for retrieving scheduler types.
@@ -50,5 +51,14 @@ public class Schedulers {
      */
     public static SchedulerBuilder builder() {
         return SchedulerBuilder.scheduler();
+    }
+
+    /**
+     * Creates a new instance of SchedulerStacker.
+     *
+     * @return A new instance of SchedulerStacker.
+     */
+    public static SchedulerStacker stacker() {
+        return SchedulerStacker.stacker();
     }
 }

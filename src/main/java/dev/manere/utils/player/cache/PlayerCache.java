@@ -118,4 +118,23 @@ public record PlayerCache(Player target) {
     public boolean has(CacheKey identifier, Object val) {
         return target.getMetadata(identifier.identifier()).contains(new FixedMetadataValue(Utils.plugin(), val));
     }
+
+    /**
+     * Deletes a cached value for the specified player and identifier.
+     *
+     * @param target The player to delete the cached value for.
+     * @param identifier The identifier for the cached value to delete.
+     */
+    public static void delete(Player target, CacheKey identifier) {
+        target.removeMetadata(identifier.identifier(), Utils.plugin());
+    }
+
+    /**
+     * Deletes a cached value for the current instance's player and identifier.
+     *
+     * @param identifier The identifier for the cached value to delete.
+     */
+    public void delete(CacheKey identifier) {
+        target.removeMetadata(identifier.identifier(), Utils.plugin());
+    }
 }

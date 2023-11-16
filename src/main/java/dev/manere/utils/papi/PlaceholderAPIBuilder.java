@@ -89,6 +89,19 @@ public class PlaceholderAPIBuilder {
     }
 
     /**
+     * Sets the function to handle placeholder requests for both online and offline players.
+     *
+     * @param onlineResult The function to handle placeholder requests for online players.
+     * @param offlineResult The function to handle placeholder requests for offline players.
+     * @return The updated PlaceholderAPIBuilder instance.
+     */
+    public PlaceholderAPIBuilder request(BiFunction<Player, String, String> onlineResult, BiFunction<OfflinePlayer, String, String> offlineResult) {
+        this.playerResult = onlineResult;
+        this.offlinePlayerResult = offlineResult;
+        return this;
+    }
+
+    /**
      * Builds and registers the PlaceholderAPI expansion.
      *
      * @return The PlaceholderExpansion instance if registration is successful, otherwise null.

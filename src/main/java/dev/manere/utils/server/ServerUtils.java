@@ -2,6 +2,7 @@ package dev.manere.utils.server;
 
 import dev.manere.utils.library.Utils;
 import org.bukkit.Server;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -138,5 +139,14 @@ public class ServerUtils {
      */
     public static File dataFolder(Plugin plugin) {
         return plugin.getDataFolder();
+    }
+
+    /**
+     * Gets the configuration file associated with the default plugin.
+     *
+     * @return The configuration file associated with the default plugin
+     */
+    public static FileConfiguration config() {
+        return Utils.plugin().getConfig();
     }
 }
