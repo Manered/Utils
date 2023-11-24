@@ -6,7 +6,7 @@
 
     <groupId>dev.manere</groupId>
     <artifactId>utils</artifactId>
-    <version>3.0.2</version>
+    <version>3.1.0</version>
     <packaging>jar</packaging>
 
     <name>Utils</name>

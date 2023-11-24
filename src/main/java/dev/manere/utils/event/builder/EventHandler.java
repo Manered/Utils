@@ -5,6 +5,7 @@ import dev.manere.utils.library.Utils;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class EventHandler<T extends Event> {
      *
      * @param builder The EventBuilder containing information about the event.
      */
-    EventHandler(EventBuilder<T> builder) {
+    EventHandler(@NotNull EventBuilder<T> builder) {
         if (builder.actionList.isEmpty()) {
             throw new UnsupportedOperationException("No actions defined");
         }
@@ -40,7 +41,7 @@ public class EventHandler<T extends Event> {
      * @param plugin The JavaPlugin instance to register with.
      * @return The registered EventCallback.
      */
-    public EventCallback<T> register(JavaPlugin plugin) {
+    public @NotNull EventCallback<T> register(@NotNull JavaPlugin plugin) {
         return new EventCallback<>(plugin, this);
     }
 
@@ -49,7 +50,7 @@ public class EventHandler<T extends Event> {
      *
      * @return The registered EventCallback.
      */
-    public EventCallback<T> register() {
+    public @NotNull EventCallback<T> register() {
         return new EventCallback<>(Utils.plugin(), this);
     }
 
@@ -59,7 +60,7 @@ public class EventHandler<T extends Event> {
      * @param ignoreCancelled True to ignore cancelled events, false otherwise.
      * @return The modified EventHandler instance.
      */
-    public EventHandler<T> ignoreCancelled(boolean ignoreCancelled) {
+    public @NotNull EventHandler<T> ignoreCancelled(boolean ignoreCancelled) {
         this.ignoreCancelled = ignoreCancelled;
         return this;
     }
@@ -70,7 +71,7 @@ public class EventHandler<T extends Event> {
      * @param eventPriority The EventPriority to set.
      * @return The modified EventHandler instance.
      */
-    public EventHandler<T> eventPriority(EventPriority eventPriority) {
+    public @NotNull EventHandler<T> eventPriority(@NotNull EventPriority eventPriority) {
         this.eventPriority = eventPriority;
         return this;
     }

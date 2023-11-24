@@ -1,15 +1,21 @@
 package dev.manere.utils.command.builder;
 
 import dev.manere.utils.command.CommandType;
+import dev.manere.utils.command.args.Argument;
 import dev.manere.utils.command.builder.alias.CommandAliasBuilder;
+import dev.manere.utils.command.builder.dispatcher.CommandContext;
 import dev.manere.utils.command.builder.dispatcher.CommandDispatcher;
 import dev.manere.utils.command.builder.dispatcher.SuggestionDispatcher;
 import dev.manere.utils.command.builder.permission.CommandPermissionBuilder;
 import dev.manere.utils.text.color.TextStyle;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * A utility class for building and configuring Bukkit plugin commands.
@@ -20,6 +26,8 @@ public class CommandBuilder {
     private CommandDispatcher dispatcher;
     private SuggestionDispatcher suggestionDispatcher;
     private final Command command;
+    private final List<Predicate<CommandContext>> requirements;
+    private final List<Argument<?>> args;
 
     /**
      * Constructs a new CommandBuilder with the specified name and type.
@@ -27,9 +35,11 @@ public class CommandBuilder {
      * @param name The name of the command.
      * @param type The type of the command.
      */
-    public CommandBuilder(String name, CommandType type) {
+    public CommandBuilder(@NotNull String name, @NotNull CommandType type) {
         this.name = name;
         this.type = type;
+        this.requirements = new ArrayList<>();
+        this.args = new ArrayList<>();
         this.command = new Command(name) {
             @Override
             public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
@@ -45,8 +55,40 @@ public class CommandBuilder {
      * @param type The type of the command.
      * @return A new CommandBuilder instance.
      */
-    public static CommandBuilder command(String name, CommandType type) {
+    public static @NotNull CommandBuilder command(@NotNull String name, @NotNull CommandType type) {
         return new CommandBuilder(name, type);
+    }
+
+    /**
+     * Create a new CommandBuilder with the specified name and default (PLUGIN_YML) type.
+     *
+     * @param name The name of the command.
+     * @return A new CommandBuilder instance.
+     */
+    public static @NotNull CommandBuilder command(@NotNull String name) {
+        return CommandBuilder.command(name, CommandType.PLUGIN_YML);
+    }
+
+    /**
+     * Adds a predicate/filter to the command.
+     * Return true if you want to stop the execution
+     * of the command.
+     *
+     * @param predicate What to run.
+     * @return This CommandBuilder instance for method chaining.
+     */
+    public @NotNull CommandBuilder requirement(@NotNull Predicate<CommandContext> predicate) {
+        requirements().add(predicate);
+        return this;
+    }
+
+    /**
+     * Returns the list of filters.
+     *
+     * @return The list of filters.
+     */
+    public @NotNull List<Predicate<CommandContext>> requirements() {
+        return this.requirements;
     }
 
     /**
@@ -54,7 +96,7 @@ public class CommandBuilder {
      *
      * @return The Bukkit Command object.
      */
-    public Command command() {
+    public @NotNull Command command() {
         return command;
     }
 
@@ -63,7 +105,7 @@ public class CommandBuilder {
      *
      * @return The description of the command.
      */
-    public String description() {
+    public @NotNull String description() {
         return command.getDescription();
     }
 
@@ -73,19 +115,9 @@ public class CommandBuilder {
      * @param description The new description for the command.
      * @return This CommandBuilder instance for method chaining.
      */
-    public CommandBuilder description(String description) {
+    public @NotNull CommandBuilder description(@NotNull String description) {
         this.command.setDescription(description);
         return this;
-    }
-
-    /**
-     * Sets the description of the command.
-     *
-     * @param info The new description for the command.
-     * @return This CommandBuilder instance for method chaining.
-     */
-    public CommandBuilder info(String info) {
-        return description(info);
     }
 
     /**
@@ -93,32 +125,28 @@ public class CommandBuilder {
      *
      * @return A CommandPermissionBuilder instance.
      */
-    public CommandPermissionBuilder permission() {
+    public @NotNull CommandPermissionBuilder permission() {
         return new CommandPermissionBuilder(this);
-    }
-
-    /**
-     * Sets the custom permission for the command using a CommandPermissionBuilder.
-     *
-     * @param builder The CommandPermissionBuilder containing custom permission information.
-     * @return This CommandBuilder instance for method chaining.
-     */
-    public CommandBuilder permission(CommandPermissionBuilder builder) {
-        this.command.setPermission(builder.custom());
-        this.command.permissionMessage(builder.message());
-        return this;
     }
 
     /**
      * Sets the usage description for the command.
      *
-     * @param description The usage description for the command.
+     * @param usage The usage description for the command.
      * @return This CommandBuilder instance for method chaining.
      */
-    public CommandBuilder usage(String description) {
-        this.command.setUsage(TextStyle.legacy(description));
-
+    public @NotNull CommandBuilder usage(@NotNull String usage) {
+        this.command.setUsage(TextStyle.legacy(usage));
         return this;
+    }
+
+    /**
+     * Returns the usage message associated with this CommandBuilder.
+     *
+     * @return The usage message associated with this CommandBuilder.
+     */
+    public @NotNull String usage() {
+        return this.command.getUsage();
     }
 
     /**
@@ -126,30 +154,8 @@ public class CommandBuilder {
      *
      * @return A CommandAliasBuilder instance.
      */
-    public CommandAliasBuilder aliases() {
+    public @NotNull CommandAliasBuilder aliases() {
         return new CommandAliasBuilder(this);
-    }
-
-    /**
-     * Sets the aliases for the command using a CommandAliasBuilder.
-     *
-     * @param builder The CommandAliasBuilder containing aliases.
-     * @return This CommandBuilder instance for method chaining.
-     */
-    public CommandBuilder aliases(CommandAliasBuilder builder) {
-        this.command.setAliases(builder.aliases());
-        return this;
-    }
-
-    /**
-     * Sets the usage description for the command using a Component object.
-     *
-     * @param description The usage description as a Component object.
-     * @return This CommandBuilder instance for method chaining.
-     */
-    public CommandBuilder usage(Component description) {
-        this.command.setUsage(TextStyle.legacy(TextStyle.text(description)));
-        return this;
     }
 
     /**
@@ -158,7 +164,7 @@ public class CommandBuilder {
      * @param dispatcher The CommandDispatcher for executing the command.
      * @return This CommandBuilder instance for method chaining.
      */
-    public CommandBuilder executes(CommandDispatcher dispatcher) {
+    public @NotNull CommandBuilder executes(@NotNull CommandDispatcher dispatcher) {
         this.dispatcher = dispatcher;
         return this;
     }
@@ -168,7 +174,7 @@ public class CommandBuilder {
      *
      * @return The CommandDispatcher for executing the command.
      */
-    public CommandDispatcher executes() {
+    public @Nullable CommandDispatcher executes() {
         return dispatcher;
     }
 
@@ -178,7 +184,7 @@ public class CommandBuilder {
      * @param suggestionDispatcher The SuggestionDispatcher for handling command suggestions.
      * @return This CommandBuilder instance for method chaining.
      */
-    public CommandBuilder completes(SuggestionDispatcher suggestionDispatcher) {
+    public @NotNull CommandBuilder completes(@Nullable SuggestionDispatcher suggestionDispatcher) {
         this.suggestionDispatcher = suggestionDispatcher;
         return this;
     }
@@ -188,7 +194,7 @@ public class CommandBuilder {
      *
      * @return The SuggestionDispatcher for handling command suggestions.
      */
-    public SuggestionDispatcher completes() {
+    public @Nullable SuggestionDispatcher completes() {
         return suggestionDispatcher;
     }
 
@@ -197,7 +203,7 @@ public class CommandBuilder {
      *
      * @return The name of the command.
      */
-    public String name() {
+    public @NotNull String name() {
         return name;
     }
 
@@ -206,8 +212,18 @@ public class CommandBuilder {
      *
      * @return The type of the command
      */
-    public CommandType type() {
+    public @NotNull CommandType type() {
         return type;
+    }
+
+
+    public @NotNull CommandBuilder argument(@NotNull Argument<?> arg) {
+        this.args.add(arg);
+        return this;
+    }
+
+    public @NotNull List<Argument<?>> args() {
+        return args;
     }
 
     /**
@@ -215,7 +231,7 @@ public class CommandBuilder {
      *
      * @return A CommandBuilderHandler for handling the command.
      */
-    public CommandBuilderHandler build() {
+    public @NotNull CommandBuilderHandler build() {
         return new CommandBuilderHandler(this);
     }
 }

@@ -1,5 +1,7 @@
 package dev.manere.utils.serializers;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Provides easy access to all serializers/deserializers in one class.
  */
@@ -10,7 +12,7 @@ public class Serializers {
      *
      * @return An instance of Base64Serializer.
      */
-    public static Base64Serializer base64() {
+    public static @NotNull Base64Serializer base64() {
         return new Base64Serializer();
     }
 }

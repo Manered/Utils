@@ -1,5 +1,8 @@
 package dev.manere.utils.model;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * A generic tuple class to represent a key-value pair.
  *
@@ -16,7 +19,7 @@ public class Duo<K, V> {
      * @param key The key
      * @param val The value
      */
-    public Duo(K key, V val) {
+    public Duo(@Nullable K key, @Nullable V val) {
         this.key = key;
         this.val = val;
     }
@@ -30,7 +33,7 @@ public class Duo<K, V> {
      * @param val The value
      * @return A new tuple with the specified key and value
      */
-    public static <K, V> Duo<K, V> of(K key, V val) {
+    public static @NotNull <K, V> Duo<K, V> of(@Nullable K key, @Nullable V val) {
         return new Duo<>(key, val);
     }
 
@@ -40,7 +43,7 @@ public class Duo<K, V> {
      * @return The string representation
      */
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "[<key> : <val>]"
                 .replaceAll("<key>", this.key.toString())
                 .replaceAll("<val>", this.val.toString());
@@ -52,7 +55,7 @@ public class Duo<K, V> {
      * @param key The new key
      * @return This tuple instance
      */
-    public Duo<K, V> key(K key) {
+    public @NotNull Duo<K, V> key(@Nullable K key) {
         this.key = key;
         return this;
     }
@@ -63,7 +66,7 @@ public class Duo<K, V> {
      * @param val The new value
      * @return This tuple instance
      */
-    public Duo<K, V> val(V val) {
+    public @NotNull Duo<K, V> val(@Nullable V val) {
         this.val = val;
         return this;
     }
@@ -73,7 +76,7 @@ public class Duo<K, V> {
      *
      * @return The key
      */
-    public K key() {
+    public @Nullable K key() {
         return key;
     }
 
@@ -82,7 +85,7 @@ public class Duo<K, V> {
      *
      * @return The value
      */
-    public V val() {
+    public @Nullable V val() {
         return val;
     }
 }

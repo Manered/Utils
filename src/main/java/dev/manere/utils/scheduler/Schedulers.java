@@ -2,6 +2,7 @@ package dev.manere.utils.scheduler;
 
 import dev.manere.utils.scheduler.builder.SchedulerBuilder;
 import dev.manere.utils.scheduler.stacker.SchedulerStacker;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class provides methods for retrieving scheduler types.
@@ -13,7 +14,7 @@ public class Schedulers {
      *
      * @return A new instance of a synchronous scheduler.
      */
-    public static SyncScheduler sync() {
+    public static @NotNull SyncScheduler sync() {
         return new SyncScheduler();
     }
 
@@ -22,7 +23,7 @@ public class Schedulers {
      *
      * @return A new instance of an asynchronous scheduler.
      */
-    public static AsyncScheduler async() {
+    public static @NotNull AsyncScheduler async() {
         return new AsyncScheduler();
     }
 
@@ -31,7 +32,7 @@ public class Schedulers {
      *
      * @return A new instance of a synchronous scheduler.
      */
-    public static SyncScheduler synchronous() {
+    public static @NotNull SyncScheduler synchronous() {
         return sync();
     }
 
@@ -40,7 +41,7 @@ public class Schedulers {
      *
      * @return A new instance of an asynchronous scheduler.
      */
-    public static AsyncScheduler asynchronous() {
+    public static @NotNull AsyncScheduler asynchronous() {
         return async();
     }
 
@@ -49,7 +50,7 @@ public class Schedulers {
      *
      * @return A new instance of SchedulerBuilder.
      */
-    public static SchedulerBuilder builder() {
+    public static @NotNull SchedulerBuilder builder() {
         return SchedulerBuilder.scheduler();
     }
 
@@ -58,7 +59,7 @@ public class Schedulers {
      *
      * @return A new instance of SchedulerStacker.
      */
-    public static SchedulerStacker stacker() {
+    public static @NotNull SchedulerStacker stacker() {
         return SchedulerStacker.stacker();
     }
 }

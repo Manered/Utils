@@ -2,6 +2,7 @@ package dev.manere.utils.update;
 
 import dev.manere.utils.library.Utils;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,8 +22,10 @@ public class Updater {
      * @param resourceId The resource ID of the plugin on SpigotMC.
      * @return The latest version of the plugin, or null if an error occurred.
      */
-    public static String latestVersion(JavaPlugin plugin, int resourceId) {
-        try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
+    public static String latestVersion(@NotNull JavaPlugin plugin, int resourceId) {
+        try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId).openStream();
+             Scanner scanner = new Scanner(inputStream))
+        {
             if (scanner.hasNext()) return scanner.next();
         } catch (IOException e) {
             plugin.getLogger().severe("Failed to fetch latest version: " + e.getMessage());
@@ -39,7 +42,7 @@ public class Updater {
      * @param resourceId The resource ID of the plugin on SpigotMC.
      * @return True if the plugin is outdated, false otherwise.
      */
-    public static boolean isOutdated(JavaPlugin plugin, int resourceId) {
+    public static boolean isOutdated(@NotNull JavaPlugin plugin, int resourceId) {
         String latestVersion = latestVersion(plugin, resourceId);
 
         if (latestVersion != null) {
@@ -59,7 +62,7 @@ public class Updater {
      * @param every                the interval in ticks to check for updates
      * @param callback             the callback function to execute when an update is found
      */
-    public static void scheduledUpdateChecker(JavaPlugin plugin, int resourceId, long every, UpdateCallback callback) {
+    public static void scheduledUpdateChecker(@NotNull JavaPlugin plugin, int resourceId, long every, @NotNull UpdateCallback callback) {
         plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
             if (isOutdated(plugin, resourceId)) {
                 callback.onUpdate();
@@ -74,9 +77,11 @@ public class Updater {
      * @return The latest version of the plugin, or null if an error occurred.
      */
     public static String latestVersion(int resourceId) {
-        JavaPlugin plugin = Utils.plugin();
+        @NotNull JavaPlugin plugin = Utils.plugin();
 
-        try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId).openStream(); Scanner scanner = new Scanner(inputStream)) {
+        try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId).openStream();
+             Scanner scanner = new Scanner(inputStream))
+        {
             if (scanner.hasNext()) return scanner.next();
         } catch (IOException e) {
             plugin.getLogger().severe("Failed to fetch latest version: " + e.getMessage());
@@ -93,7 +98,7 @@ public class Updater {
      * @return True if the plugin is outdated, false otherwise.
      */
     public static boolean isOutdated(int resourceId) {
-        JavaPlugin plugin = Utils.plugin();
+        @NotNull JavaPlugin plugin = Utils.plugin();
         String latestVersion = latestVersion(resourceId);
 
         if (latestVersion != null) {
@@ -112,8 +117,8 @@ public class Updater {
      * @param every      the interval in ticks to check for updates
      * @param callback   the callback function to execute when an update is found
      */
-    public static void scheduledUpdateChecker(int resourceId, long every, UpdateCallback callback) {
-        JavaPlugin plugin = Utils.plugin();
+    public static void scheduledUpdateChecker(int resourceId, long every, @NotNull UpdateCallback callback) {
+        @NotNull JavaPlugin plugin = Utils.plugin();
 
         plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
             if (isOutdated(resourceId)) {

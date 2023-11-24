@@ -130,6 +130,16 @@ public class TextStyle {
     }
 
     /**
+     * Converts a text string to a Component using MiniMessage.
+     *
+     * @param text the text to convert
+     * @return the Component
+     */
+    public static Component style(String text) {
+        return component(text);
+    }
+
+    /**
      * Converts a Component to a text string using MiniMessage.
      *
      * @param component the Component to convert

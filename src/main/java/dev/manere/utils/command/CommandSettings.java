@@ -2,6 +2,11 @@ package dev.manere.utils.command;
 
 import dev.manere.utils.command.builder.dispatcher.CommandDispatcher;
 import dev.manere.utils.command.builder.dispatcher.SuggestionDispatcher;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
 /**
  * Class representing settings for a {@link Commander} command.
  */
@@ -16,7 +21,7 @@ public class CommandSettings {
     public CommandSettings() {
         this.type = CommandType.PLUGIN_YML;
         this.executes = context -> true;
-        this.completes = context -> null;
+        this.completes = context -> List.of();
     }
 
     /**
@@ -49,7 +54,7 @@ public class CommandSettings {
      *
      * @return The default settings
      */
-    public static CommandSettings settings() {
+    public static @NotNull CommandSettings settings() {
         return new CommandSettings();
     }
 
@@ -60,7 +65,7 @@ public class CommandSettings {
      * @param completes The complete dispatcher
      * @return The settings
      */
-    public static CommandSettings settings(CommandDispatcher executes, SuggestionDispatcher completes) {
+    public static @NotNull CommandSettings settings(@Nullable CommandDispatcher executes, @Nullable SuggestionDispatcher completes) {
         return new CommandSettings(executes, completes);
     }
 
@@ -72,7 +77,7 @@ public class CommandSettings {
      * @param completes The complete dispatcher
      * @return The settings
      */
-    public static CommandSettings settings(CommandType type, CommandDispatcher executes, SuggestionDispatcher completes) {
+    public static @NotNull CommandSettings settings(@NotNull CommandType type, @Nullable CommandDispatcher executes, @Nullable SuggestionDispatcher completes) {
         return new CommandSettings(type, executes, completes);
     }
 
@@ -81,7 +86,7 @@ public class CommandSettings {
      *
      * @return The dispatcher
      */
-    public CommandDispatcher executes() {
+    public @NotNull CommandDispatcher executes() {
         return executes;
     }
 
@@ -91,7 +96,7 @@ public class CommandSettings {
      * @param executes The new dispatcher
      * @return This settings instance
      */
-    public CommandSettings executes(CommandDispatcher executes) {
+    public @NotNull CommandSettings executes(@Nullable CommandDispatcher executes) {
         this.executes = executes;
         return this;
     }
@@ -101,7 +106,7 @@ public class CommandSettings {
      *
      * @return The dispatcher
      */
-    public SuggestionDispatcher completes() {
+    public @Nullable SuggestionDispatcher completes() {
         return completes;
     }
 
@@ -111,7 +116,7 @@ public class CommandSettings {
      * @param completes The new dispatcher
      * @return This settings instance  
      */
-    public CommandSettings completes(SuggestionDispatcher completes) {
+    public @NotNull CommandSettings completes(@Nullable SuggestionDispatcher completes) {
         this.completes = completes;
         return this;
     }
@@ -121,7 +126,7 @@ public class CommandSettings {
      *
      * @return The type
      */
-    public CommandType type() {
+    public @NotNull CommandType type() {
         return type;
     }
 
@@ -131,9 +136,8 @@ public class CommandSettings {
      * @param type The new type
      * @return This settings instance
      */
-    public CommandSettings type(CommandType type) {
+    public @NotNull CommandSettings type(@NotNull CommandType type) {
         this.type = type;
         return this;
     }
-
 }

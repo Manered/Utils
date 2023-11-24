@@ -1,6 +1,7 @@
 package dev.manere.utils.menu;
 
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Interface for listening to inventory drag events.
@@ -12,6 +13,6 @@ public interface DragListener {
      *
      * @param event The inventory drag event.
      */
-    void onDrag(InventoryDragEvent event);
+    void onDrag(@NotNull InventoryDragEvent event);
 
 }

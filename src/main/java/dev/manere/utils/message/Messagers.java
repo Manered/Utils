@@ -1,6 +1,7 @@
 package dev.manere.utils.message;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Utility class for obtaining instances of message senders.
@@ -13,7 +14,7 @@ public class Messagers {
      * @param player The player to send messages to.
      * @return An instance of ActionBarMessager.
      */
-    public static ActionBarMessager actionBar(Player player) {
+    public static @NotNull ActionBarMessager actionBar(@NotNull Player player) {
         return new ActionBarMessager(player);
     }
 
@@ -23,7 +24,7 @@ public class Messagers {
      * @param player The player to send messages to.
      * @return An instance of ChatMessager.
      */
-    public static ChatMessager chat(Player player) {
+    public static @NotNull ChatMessager chat(@NotNull Player player) {
         return new ChatMessager(player);
     }
 }

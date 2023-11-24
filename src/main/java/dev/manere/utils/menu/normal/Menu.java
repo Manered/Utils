@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @param title The title of the menu.
      * @param size  The size (number of slots) of the menu.
      */
-    public Menu(Component title, int size) {
+    public Menu(@NotNull Component title, int size) {
         this.inventory = Utils.plugin().getServer().createInventory(this, size, title);
         this.title = title;
         this.size = size;
@@ -54,7 +55,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @return The Menu instance.
      */
     @Override
-    public Menu button(int slot, Button button) {
+    public @NotNull Menu button(int slot, @NotNull Button button) {
         buttons.put(slot, button);
         this.inventory.setItem(slot, button.item().build());
 
@@ -69,7 +70,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @return The Menu instance.
      */
     @Override
-    public Menu item(int slot, ItemBuilder item) {
+    public @NotNull Menu item(int slot, @NotNull ItemBuilder item) {
         items.put(slot, item);
         this.inventory.setItem(slot, item.build());
 
@@ -81,7 +82,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      *
      * @return A new Menu instance.
      */
-    public static Menu menu(Component title, int size) {
+    public static @NotNull Menu menu(@NotNull Component title, int size) {
         return new Menu(title, size);
     }
 
@@ -90,7 +91,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      *
      * @return A new Menu instance.
      */
-    public static Menu menu(Component title, int width, int height) {
+    public static @NotNull Menu menu(@NotNull Component title, int width, int height) {
         return menu(title, width*height);
     }
 
@@ -110,7 +111,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @return The title of the menu.
      */
     @Override
-    public Component title() {
+    public @NotNull Component title() {
         return title;
     }
 
@@ -120,7 +121,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @param player The player to open the menu for.
      */
     @Override
-    public void open(Player player) {
+    public void open(@NotNull Player player) {
         player.openInventory(this.inventory);
 
         for (Button button : buttons.values()) {
@@ -158,7 +159,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @return The Menu instance.
      */
     @Override
-    public Menu border(Button borderItem, String... borderPatterns) {
+    public @NotNull Menu border(@NotNull Button borderItem, @NotNull String... borderPatterns) {
         int row = 0;
         for (String borderPattern : borderPatterns) {
             if (row < this.size) {
@@ -188,7 +189,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @return The Menu instance.
      */
     @Override
-    public Menu fill(Object filler, String... pattern) {
+    public @NotNull Menu fill(@NotNull Object filler, @NotNull String... pattern) {
         int row = 0;
 
         for (String rowPattern : pattern) {
@@ -227,7 +228,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @param slot The slot to get the ItemBuilder from.
      * @return The ItemBuilder at the specified slot.
      */
-    public ItemBuilder item(int slot) {
+    public @Nullable ItemBuilder item(int slot) {
         return items.get(slot);
     }
 
@@ -237,7 +238,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @param slot The slot to get the Button from.
      * @return The Button at the specified slot.
      */
-    public Button button(int slot) {
+    public @Nullable Button button(int slot) {
         return buttons.get(slot);
     }
 
@@ -247,12 +248,13 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @param button The Button to find the slot for.
      * @return The slot of the Button, or -1 if not found.
      */
-    public int slotByButton(Button button) {
+    public int slotByButton(@NotNull Button button) {
         for (Map.Entry<Integer, Button> entry : buttons.entrySet()) {
             if (entry.getValue() == button) {
                 return entry.getKey();
             }
         }
+
         return -1;
     }
 
@@ -262,7 +264,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
      * @param item The ItemBuilder to find the slot for.
      * @return The slot of the ItemBuilder, or -1 if not found.
      */
-    public int slotByItem(ItemBuilder item) {
+    public int slotByItem(@NotNull ItemBuilder item) {
         for (Map.Entry<Integer, ItemBuilder> entry : items.entrySet()) {
             if (entry.getValue() == item) {
                 return entry.getKey();
@@ -293,19 +295,28 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
         return getInventory();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Menu type() {
+    public @NotNull Menu type() {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Menu onClose(CloseListener onClose) {
+    public @NotNull Menu onClose(@Nullable CloseListener onClose) {
         this.onClose = onClose;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Menu onDrag(DragListener onDrag) {
+    public @NotNull Menu onDrag(@Nullable DragListener onDrag) {
         this.onDrag = onDrag;
         return this;
     }

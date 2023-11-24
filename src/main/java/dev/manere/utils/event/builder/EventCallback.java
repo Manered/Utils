@@ -35,7 +35,7 @@ public class EventCallback<T extends Event> implements EventExecutor, Listener {
      * @param plugin       The JavaPlugin instance associated with this event callback.
      * @param eventHandler The EventHandler containing information about the event.
      */
-    public EventCallback(JavaPlugin plugin, EventHandler<T> eventHandler) {
+    public EventCallback(@NotNull JavaPlugin plugin, @NotNull EventHandler<T> eventHandler) {
         this.plugin = plugin;
         this.eventType = eventHandler.eventType;
         this.eventPriority = eventHandler.eventPriority;
@@ -64,7 +64,7 @@ public class EventCallback<T extends Event> implements EventExecutor, Listener {
      *
      * @return The EventPriority.
      */
-    public EventPriority priority() {
+    public @NotNull EventPriority priority() {
         return eventPriority;
     }
 
@@ -82,7 +82,7 @@ public class EventCallback<T extends Event> implements EventExecutor, Listener {
      *
      * @return The Class representing the event type.
      */
-    public Class<T> eventType() {
+    public @NotNull Class<T> eventType() {
         return eventType;
     }
 
@@ -91,7 +91,7 @@ public class EventCallback<T extends Event> implements EventExecutor, Listener {
      *
      * @return The JavaPlugin instance.
      */
-    public JavaPlugin plugin() {
+    public @NotNull JavaPlugin plugin() {
         return plugin;
     }
 
@@ -136,7 +136,7 @@ public class EventCallback<T extends Event> implements EventExecutor, Listener {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void execute(@NotNull Listener listener, Event event) throws EventException {
+    public void execute(@NotNull Listener listener, @NotNull Event event) throws EventException {
         if (eventType != event.getClass()) {
             return;
         }

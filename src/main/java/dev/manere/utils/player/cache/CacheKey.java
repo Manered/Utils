@@ -1,6 +1,7 @@
 package dev.manere.utils.player.cache;
 
 import dev.manere.utils.library.Utils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a key used for identifying cached values in the player cache.
@@ -13,7 +14,7 @@ public class CacheKey {
      *
      * @param name The name used to create the identifier for the cache key.
      */
-    public CacheKey(String name) {
+    public CacheKey(@NotNull String name) {
         this.name = Utils.plugin().getName() + name.replaceAll(" ", "_").toUpperCase();
     }
 
@@ -23,7 +24,7 @@ public class CacheKey {
      * @param name The name used to create the identifier for the cache key.
      * @return A new CacheKey instance.
      */
-    public static CacheKey key(String name) {
+    public static @NotNull CacheKey key(@NotNull String name) {
         return new CacheKey(name);
     }
 
@@ -32,7 +33,7 @@ public class CacheKey {
      *
      * @return The identifier for the cache key.
      */
-    public String identifier() {
+    public @NotNull String identifier() {
         return this.name;
     }
 }

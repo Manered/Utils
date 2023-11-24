@@ -2,27 +2,12 @@ package dev.manere.utils.text;
 
 import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.text.Component;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Represents a simple text utility with formatting options.
+ * @param string The text string to be encapsulated.
  */
-public class Text {
-    private final String string;
-
-    /**
-     * Constructs a new Text instance
-     * @param string the string to use.
-     */
-    public Text(String string) {
-        this.string = string;
-    }
-
+public record Text(String string) {
     /**
      * Creates a new Text instance with the specified string.
      *
@@ -47,7 +32,7 @@ public class Text {
      *
      * @return A legacy string representing the text with applied style.
      */
-    public String styledString() {
+    public String colored() {
         return TextStyle.legacy(string);
     }
 
@@ -62,6 +47,7 @@ public class Text {
 
     /**
      * Used whenever you store a Text object in a configuration file.
+     *
      * @return The unformatted string.
      */
     @Override

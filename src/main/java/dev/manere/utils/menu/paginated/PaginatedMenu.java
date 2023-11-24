@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +35,10 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
     public final Map<PaginatedSlot, ItemBuilder> items;
     public int totalPages;
     public int currentPage;
-    public final HashMap<Integer, ItemBuilder> previousButton;
-    public final HashMap<Integer, ItemBuilder> nextButton;
-    public final HashMap<Button, String[]> borderMap;
-    public final HashMap<Integer, Button> stickyButtons;
+    public final Map<Integer, ItemBuilder> previousButton;
+    public final Map<Integer, ItemBuilder> nextButton;
+    public final Map<Button, String[]> borderMap;
+    public final Map<Integer, Button> stickyButtons;
     public boolean currentPageItemEnabled;
     public ItemBuilder currentPageItem;
     public int currentPageSlot;
@@ -50,7 +51,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param title The title of the paginated menu.
      * @param size  The size of the paginated menu (number of slots).
      */
-    public PaginatedMenu(Component title, int size) {
+    public PaginatedMenu(@NotNull Component title, int size) {
         this.inventory = Bukkit.createInventory(this, size, title);
         this.title = title;
         this.size = size;
@@ -69,7 +70,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @return The title of the menu.
      */
     @Override
-    public Component title() {
+    public @NotNull Component title() {
         return title;
     }
 
@@ -88,7 +89,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @return A map of buttons and their positions.
      */
-    public Map<PaginatedSlot, Button> buttons() {
+    public @NotNull Map<PaginatedSlot, Button> buttons() {
         return buttons;
     }
 
@@ -97,7 +98,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @return A map of previous buttons and their positions.
      */
-    public HashMap<Integer, ItemBuilder> previousButton() {
+    public @NotNull Map<Integer, ItemBuilder> previousButton() {
         return previousButton;
     }
 
@@ -106,7 +107,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @return A map of next buttons and their positions.
      */
-    public HashMap<Integer, ItemBuilder> nextButton() {
+    public @NotNull Map<Integer, ItemBuilder> nextButton() {
         return nextButton;
     }
 
@@ -115,7 +116,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @return A map of border items and their patterns.
      */
-    public HashMap<Button, String[]> borderMap() {
+    public @NotNull Map<Button, String[]> borderMap() {
         return borderMap;
     }
 
@@ -124,7 +125,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @return A map of sticky buttons and their positions.
      */
-    public HashMap<Integer, Button> stickyButtons() {
+    public @NotNull Map<Integer, Button> stickyButtons() {
         return stickyButtons;
     }
 
@@ -133,7 +134,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @return A map of items and their positions.
      */
-    public Map<PaginatedSlot, ItemBuilder> items() {
+    public @NotNull Map<PaginatedSlot, ItemBuilder> items() {
         return items;
     }
 
@@ -152,7 +153,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param totalPages The total number of pages.
      * @return This PaginatedMenu instance.
      */
-    public PaginatedMenu totalPages(int totalPages) {
+    public @NotNull PaginatedMenu totalPages(int totalPages) {
         this.totalPages = totalPages;
         return this;
     }
@@ -174,7 +175,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @return This PaginatedMenu instance.
      */
     @Override
-    public PaginatedMenu button(PaginatedSlot where, Button button) {
+    public @NotNull PaginatedMenu button(@NotNull PaginatedSlot where, @NotNull Button button) {
         buttons.put(where, button);
 
         return this;
@@ -188,7 +189,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @return This PaginatedMenu instance.
      */
     @Override
-    public PaginatedMenu item(PaginatedSlot where, ItemBuilder item) {
+    public @NotNull PaginatedMenu item(@NotNull PaginatedSlot where, @Nullable ItemBuilder item) {
         items.put(where, item);
 
         return this;
@@ -199,7 +200,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @return A new PaginatedMenu instance.
      */
-    public static PaginatedMenu menu(Component title, int size) {
+    public static @NotNull PaginatedMenu menu(@NotNull Component title, int size) {
         return new PaginatedMenu(title, size);
     }
 
@@ -208,7 +209,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @return A new PaginatedMenu instance.
      */
-    public static PaginatedMenu menu(Component title, int width, int height) {
+    public static @NotNull PaginatedMenu menu(@NotNull Component title, int width, int height) {
         return menu(title, width*height);
     }
 
@@ -219,7 +220,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param button The sticky button to set.
      * @return This PaginatedMenu instance.
      */
-    public PaginatedMenu stickyButton(int where, Button button) {
+    public @NotNull PaginatedMenu stickyButton(int where, @NotNull Button button) {
         stickyButtons.put(where, button);
 
         return this;
@@ -234,7 +235,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param nextItem         The item for the next page button.
      * @return This PaginatedMenu instance.
      */
-    public PaginatedMenu paginationButtons(int previousItemSlot, ItemBuilder previousItem, int nextItemSlot, ItemBuilder nextItem) {
+    public @NotNull PaginatedMenu paginationButtons(int previousItemSlot, @NotNull ItemBuilder previousItem, int nextItemSlot, @NotNull ItemBuilder nextItem) {
         this.inventory.setItem(previousItemSlot, previousItem.build());
         previousButton.put(previousItemSlot, previousItem);
 
@@ -244,7 +245,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
         return this;
     }
 
-    public PaginatedMenu currentPageButton(int slot, ItemBuilder item) {
+    public @NotNull PaginatedMenu currentPageButton(int slot, @NotNull ItemBuilder item) {
         this.currentPageItemEnabled = true;
         this.currentPageItem = item;
         this.currentPageSlot = slot;
@@ -260,7 +261,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @return This PaginatedMenu instance.
      */
     @Override
-    public PaginatedMenu border(Button borderItem, String... borderPatterns) {
+    public @NotNull PaginatedMenu border(@NotNull Button borderItem, @NotNull String... borderPatterns) {
         int row = 0;
         for (String borderPattern : borderPatterns) {
             if (row < this.size) {
@@ -291,7 +292,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @return This PaginatedMenu instance.
      */
     @Override
-    public PaginatedMenu fill(Object filler, String... pattern) {
+    public @NotNull PaginatedMenu fill(@NotNull Object filler, @NotNull String... pattern) {
         int row = 0;
 
         for (String rowPattern : pattern) {
@@ -327,7 +328,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @return The border mapping.
      */
-    public HashMap<Button, String[]> border() {
+    public @NotNull Map<Button, String[]> border() {
         return borderMap;
     }
 
@@ -337,7 +338,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param player The player to open the menu for.
      */
     @Override
-    public void open(Player player) {
+    public void open(@NotNull Player player) {
         open(player, 1);
     }
 
@@ -349,7 +350,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      */
     @SuppressWarnings("UnstableApiUsage")
     @Override
-    public void open(Player player, int page) {
+    public void open(@NotNull Player player, int page) {
         this.inventory.clear();
 
         player.openInventory(this.inventory);
@@ -394,7 +395,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
                                 int slot = pageSlotHolderByButton(button).slot();
 
                                 getInventory().clear(slot);
-                                getInventory().setItem(slot, button.item().build());
+                                getInventory().setItem(slot, button.item().name(button.item().build().displayName()).build());
 
                                 player.updateInventory();
                             })
@@ -452,7 +453,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @param player The player to open the menu for.
      */
-    public void nextPage(Player player) {
+    public void nextPage(@NotNull Player player) {
         open(player, currentPage() + 1);
     }
 
@@ -461,7 +462,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      *
      * @param player The player to open the menu for.
      */
-    public void previousPage(Player player) {
+    public void previousPage(@NotNull Player player) {
         open(player, currentPage() - 1);
     }
 
@@ -471,7 +472,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param where The position to get the item from.
      * @return The item at the specified position.
      */
-    public ItemBuilder item(PaginatedSlot where) {
+    public @Nullable ItemBuilder item(@NotNull PaginatedSlot where) {
         return items.get(where);
     }
 
@@ -481,7 +482,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param where The position to get the button from.
      * @return The button at the specified position.
      */
-    public Button button(PaginatedSlot where) {
+    public @Nullable Button button(@NotNull PaginatedSlot where) {
         return buttons.get(where);
     }
 
@@ -491,7 +492,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param where The position to get the sticky button from.
      * @return The sticky button at the specified position.
      */
-    public Button stickyButton(int where) {
+    public @Nullable Button stickyButton(int where) {
         return stickyButtons.get(where);
     }
 
@@ -501,7 +502,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param button The button to find the position of.
      * @return The position of the button.
      */
-    public PaginatedSlot pageSlotHolderByButton(Button button) {
+    public PaginatedSlot pageSlotHolderByButton(@NotNull Button button) {
         for (Map.Entry<PaginatedSlot, Button> entry : buttons.entrySet()) {
             if (entry.getValue() == button) {
                 return entry.getKey();
@@ -517,7 +518,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param item The item to find the position of.
      * @return The position of the item.
      */
-    public PaginatedSlot pageSlotHolderByItem(ItemBuilder item) {
+    public PaginatedSlot pageSlotHolderByItem(@NotNull ItemBuilder item) {
         for (Map.Entry<PaginatedSlot, ItemBuilder> entry : items.entrySet()) {
             if (entry.getValue() == item) {
                 return entry.getKey();
@@ -533,7 +534,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param button The sticky button to find the slot of.
      * @return The slot of the sticky button.
      */
-    public int slotByStickyButton(Button button) {
+    public int slotByStickyButton(@NotNull Button button) {
         for (Map.Entry<Integer, Button> entry : stickyButtons.entrySet()) {
             if (entry.getValue() == button) {
                 return entry.getKey();
@@ -549,7 +550,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param item The "Next Page" button item to find the slot of.
      * @return The slot of the "Next Page" button.
      */
-    public int slotByNextPageButton(ItemBuilder item) {
+    public int slotByNextPageButton(@NotNull ItemBuilder item) {
         for (Map.Entry<Integer, ItemBuilder> entry : nextButton.entrySet()) {
             if (entry.getValue() == item) {
                 return entry.getKey();
@@ -565,7 +566,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
      * @param item The "Previous Page" button item to find the slot of.
      * @return The slot of the "Previous Page" button.
      */
-    public int slotByPreviousPageButton(ItemBuilder item) {
+    public int slotByPreviousPageButton(@NotNull ItemBuilder item) {
         for (Map.Entry<Integer, ItemBuilder> entry : previousButton.entrySet()) {
             if (entry.getValue() == item) {
                 return entry.getKey();
@@ -597,19 +598,28 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
         return getInventory();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public PaginatedMenu type() {
+    public @NotNull PaginatedMenu type() {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public PaginatedMenu onClose(CloseListener onClose) {
+    public @NotNull PaginatedMenu onClose(@Nullable CloseListener onClose) {
         this.onClose = onClose;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public PaginatedMenu onDrag(DragListener onDrag) {
+    public @NotNull PaginatedMenu onDrag(@Nullable DragListener onDrag) {
         this.onDrag = onDrag;
         return this;
     }

@@ -3,6 +3,7 @@ package dev.manere.utils.scheduler;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.server.ServerUtils;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -17,7 +18,7 @@ public class AsyncScheduler {
      *
      * @param task The task to be scheduled.
      */
-    public void now(Consumer<BukkitTask> task) {
+    public void now(@NotNull Consumer<BukkitTask> task) {
         ServerUtils.scheduler().runTaskAsynchronously(Utils.plugin(), task);
     }
 
@@ -26,7 +27,7 @@ public class AsyncScheduler {
      *
      * @param runnable The runnable to be scheduled.
      */
-    public void now(Runnable runnable) {
+    public void now(@NotNull Runnable runnable) {
         ServerUtils.scheduler().runTaskAsynchronously(Utils.plugin(), runnable);
     }
 
@@ -36,7 +37,7 @@ public class AsyncScheduler {
      * @param runnable The task to be scheduled.
      * @param after    The delay (in ticks) before the task runs.
      */
-    public void later(Consumer<BukkitTask> runnable, long after) {
+    public void later(@NotNull Consumer<BukkitTask> runnable, long after) {
         ServerUtils.scheduler().runTaskLaterAsynchronously(Utils.plugin(), runnable, after);
     }
 
@@ -46,7 +47,7 @@ public class AsyncScheduler {
      * @param runnable The runnable to be scheduled.
      * @param after    The delay (in ticks) before the runnable runs.
      */
-    public void later(Runnable runnable, long after) {
+    public void later(@NotNull Runnable runnable, long after) {
         ServerUtils.scheduler().runTaskLaterAsynchronously(Utils.plugin(), runnable, after);
     }
 
@@ -57,7 +58,7 @@ public class AsyncScheduler {
      * @param after The delay (in ticks) before the first execution.
      * @param every The interval (in ticks) between subsequent executions.
      */
-    public void repeating(Consumer<BukkitTask> task, long after, long every) {
+    public void repeating(@NotNull Consumer<BukkitTask> task, long after, long every) {
         ServerUtils.scheduler().runTaskTimerAsynchronously(Utils.plugin(), task, after, every);
     }
 
@@ -68,7 +69,7 @@ public class AsyncScheduler {
      * @param after    The delay (in ticks) before the first execution.
      * @param every    The interval (in ticks) between subsequent executions.
      */
-    public void repeating(Runnable runnable, long after, long every) {
+    public void repeating(@NotNull Runnable runnable, long after, long every) {
         ServerUtils.scheduler().runTaskTimerAsynchronously(Utils.plugin(), runnable, after, every);
     }
 }

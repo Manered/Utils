@@ -1,9 +1,16 @@
 package dev.manere.utils.command.builder.dispatcher;
 
+import dev.manere.utils.command.args.Argument;
+import dev.manere.utils.command.args.custom.CustomArgument;
+import dev.manere.utils.command.args.custom.CustomListArgument;
+import dev.manere.utils.command.args.exception.ArgumentParseException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,7 +18,8 @@ public class CommandContext {
     private final CommandSender sender;
     private final Command command;
     private final String name;
-    private final List<String> args;
+    private final List<String> rawArgs;
+    private final List<Argument<?>> args;
 
     /**
      * Constructs a new CommandContext with the specified sender, command, name, and arguments.
@@ -19,13 +27,14 @@ public class CommandContext {
      * @param sender  The CommandSender who executed the command.
      * @param command The Command object associated with this context.
      * @param name    The name of the command.
-     * @param args    A list of arguments provided with the command.
+     * @param rawArgs    A list of arguments provided with the command.
      */
-    public CommandContext(CommandSender sender, Command command, String name, String[] args) {
+    public CommandContext(@NotNull CommandSender sender, @NotNull Command command, @NotNull String name, @NotNull String[] rawArgs) {
         this.sender = sender;
         this.command = command;
         this.name = name;
-        this.args = Arrays.stream(args).toList();
+        this.rawArgs = Arrays.stream(rawArgs).toList();
+        this.args = new ArrayList<>();
     }
 
     /**
@@ -34,13 +43,10 @@ public class CommandContext {
      * @param sender  The CommandSender who executed the command.
      * @param command The Command object associated with this context.
      * @param name    The name of the command.
-     * @param args    An array of arguments provided with the command.
+     * @param rawArgs    A list of arguments provided with the command.
      */
-    public CommandContext(CommandSender sender, Command command,  String name, List<String> args) {
-        this.sender = sender;
-        this.command = command;
-        this.name = name;
-        this.args = args;
+    public static @NotNull CommandContext context(@NotNull CommandSender sender, @NotNull Command command, @NotNull String name, @NotNull String[] rawArgs) {
+        return new CommandContext(sender, command, name, rawArgs);
     }
 
     /**
@@ -48,7 +54,7 @@ public class CommandContext {
      *
      * @return The CommandSender associated with this context.
      */
-    public CommandSender sender() {
+    public @NotNull CommandSender sender() {
         return sender;
     }
 
@@ -57,7 +63,7 @@ public class CommandContext {
      *
      * @return The Player associated with this context.
      */
-    public Player player() {
+    public @NotNull Player player() {
         return (Player) sender;
     }
 
@@ -71,11 +77,29 @@ public class CommandContext {
     }
 
     /**
+     * Returns true if the CommandSender is an instanceof a Player, else false.
+     *
+     * @return if the CommandSender is an instanceof a Player.
+     */
+    public boolean senderIsPlayer() {
+        return senderInstanceOfPlayer();
+    }
+
+    /**
      * Returns the Command object associated with this context.
      *
      * @return The Command object.
      */
-    public Command command() {
+    public @NotNull Command command() {
+        return command;
+    }
+
+    /**
+     * Returns the Command object associated with this context.
+     *
+     * @return The Command object.
+     */
+    public @NotNull Command cmd() {
         return command;
     }
 
@@ -84,7 +108,7 @@ public class CommandContext {
      *
      * @return The name of the command.
      */
-    public String name() {
+    public @NotNull String name() {
         return name;
     }
 
@@ -93,7 +117,7 @@ public class CommandContext {
      *
      * @return The alias of the command.
      */
-    public String alias() {
+    public @NotNull String alias() {
         return name();
     }
 
@@ -102,7 +126,7 @@ public class CommandContext {
      *
      * @return The name of the command that was executed.
      */
-    public String commandRan() {
+    public @NotNull String commandRan() {
         return alias();
     }
 
@@ -111,8 +135,8 @@ public class CommandContext {
      *
      * @return A list of arguments.
      */
-    public List<String> args() {
-        return args;
+    public @NotNull List<String> rawArgs() {
+        return rawArgs;
     }
 
     /**
@@ -121,7 +145,103 @@ public class CommandContext {
      * @param index The index of the argument.
      * @return The argument at the specified index.
      */
-    public String argAt(int index) {
-        return args.get(index);
+    public @Nullable String rawArgAt(int index) {
+        return rawArgs.get(index);
+    }
+
+    /**
+     * Returns the argument type at the specified index.
+     *
+     * @param index The index of the argument.
+     * @return The argument type at the specified index.
+     */
+    public @Nullable CustomArgument<?> argTypeAt(int index) {
+        return args.get(index).type();
+    }
+
+    /**
+     * Returns the argument type of the identifier.
+     *
+     * @param identifier The identifier of the argument.
+     * @return The argument type of the identifier.
+     */
+    public @Nullable CustomArgument<?> argTypeAt(@NotNull String identifier) {
+        for (Argument<?> arg : args) {
+            if (arg.identifier().equalsIgnoreCase(identifier)) {
+                return args.get(args.indexOf(arg)).type();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the argument of the identifier.
+     *
+     * @param identifier The identifier of the argument.
+     * @return The argument at the specified index.
+     */
+    public @Nullable Object argAt(@NotNull String identifier) {
+        for (Argument<?> arg : args) {
+            if (arg.identifier().equalsIgnoreCase(identifier)) {
+                return argAt(args.indexOf(arg));
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the argument at the specified index.
+     *
+     * @param index The index of the argument.
+     * @return The argument at the specified index.
+     */
+    public @Nullable Object argAt(int index) {
+        Argument<?> argument = args.get(index);
+
+        if (argument == null || rawArgs == null || rawArgs.isEmpty()) return null;
+
+        if (rawArgs.size() <= index || rawArgAt(index) == null) {
+            try {
+                if (argument.type() instanceof CustomListArgument arg) return arg.parse(this, 0);
+                if (argument.defaultVal() == null) return null;
+
+                return argument.type().parse(this, argument.defaultVal());
+            } catch (ArgumentParseException err) {
+                if (argument.onError() != null) argument.onError().apply(this, err.type());
+                else throw new RuntimeException(err.getMessage());
+            }
+        } else if (rawArgAt(index) != null) {
+            try {
+                if (argument.type() instanceof CustomListArgument arg) return arg.parse(this, index);
+
+                return argument.type().parse(this, rawArgAt(index));
+            } catch (ArgumentParseException e) {
+                if (argument.onError() != null) argument.onError().apply(this, e.type());
+                else throw new RuntimeException(e.getMessage());
+            }
+        }
+
+        return null;
+    }
+
+    public int argPos(String identifier) {
+        for (Argument<?> arg : args) {
+            if (arg.identifier().equalsIgnoreCase(identifier)) {
+                return args.indexOf(arg);
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * Returns a list of arguments.
+     *
+     * @return A list of arguments.
+     */
+    public @NotNull List<Argument<?>> args() {
+        return args;
     }
 }

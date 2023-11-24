@@ -2,6 +2,7 @@ package dev.manere.utils.scheduler.builder;
 
 import dev.manere.utils.library.Utils;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -9,7 +10,6 @@ import java.util.function.Consumer;
  * Utility class for building Bukkit scheduler tasks.
  */
 public class SchedulerBuilder {
-
     private boolean asynchronous;
     private long delay;
     private long period;
@@ -17,7 +17,7 @@ public class SchedulerBuilder {
     private TaskType type;
 
     /**
-     * Constructs a new SchedulerBuilder with default settings.
+     * Constructs a new @NotNull SchedulerBuilder with default settings.
      */
     public SchedulerBuilder() {
         this.asynchronous = false;
@@ -32,7 +32,7 @@ public class SchedulerBuilder {
      *
      * @return A new instance of SchedulerBuilder.
      */
-    public static SchedulerBuilder scheduler() {
+    public static @NotNull SchedulerBuilder scheduler() {
         return new SchedulerBuilder();
     }
 
@@ -40,9 +40,9 @@ public class SchedulerBuilder {
      * Sets whether the task should be executed asynchronously.
      *
      * @param async true if the task should be asynchronous, false otherwise.
-     * @return This SchedulerBuilder for method chaining.
+     * @return This @NotNull SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder async(boolean async) {
+    public @NotNull SchedulerBuilder async(boolean async) {
         this.asynchronous = async;
         return this;
     }
@@ -52,9 +52,9 @@ public class SchedulerBuilder {
      *
      * @param delay The delay (in ticks).
      * @param period The period (in ticks).
-     * @return This SchedulerBuilder for method chaining.
+     * @return This @NotNull SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder time(long delay, long period) {
+    public @NotNull SchedulerBuilder time(long delay, long period) {
         this.delay = delay;
         this.period = period;
         return this;
@@ -64,9 +64,9 @@ public class SchedulerBuilder {
      * Sets the delay (in ticks) before the task starts.
      *
      * @param delay The delay (in ticks).
-     * @return This SchedulerBuilder for method chaining.
+     * @return This @NotNull SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder after(long delay) {
+    public @NotNull SchedulerBuilder after(long delay) {
         this.delay = delay;
         return this;
     }
@@ -75,9 +75,9 @@ public class SchedulerBuilder {
      * Sets the type of the task.
      *
      * @param type The type of the task.
-     * @return This SchedulerBuilder for method chaining.
+     * @return This @NotNull SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder type(TaskType type) {
+    public @NotNull SchedulerBuilder type(TaskType type) {
         this.type = type;
         return this;
     }
@@ -86,9 +86,9 @@ public class SchedulerBuilder {
      * Sets the period (in ticks) between task executions for repeating tasks.
      *
      * @param period The period (in ticks).
-     * @return This SchedulerBuilder for method chaining.
+     * @return This @NotNull SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder every(long period) {
+    public @NotNull SchedulerBuilder every(long period) {
         this.period = period;
         return this;
     }
@@ -97,9 +97,9 @@ public class SchedulerBuilder {
      * Sets the task to be executed.
      *
      * @param task The task to be executed.
-     * @return This SchedulerBuilder for method chaining.
+     * @return This @NotNull SchedulerBuilder for method chaining.
      */
-    public SchedulerBuilder task(Consumer<BukkitTask> task) {
+    public @NotNull SchedulerBuilder task(Consumer<BukkitTask> task) {
         this.task = task;
         return this;
     }

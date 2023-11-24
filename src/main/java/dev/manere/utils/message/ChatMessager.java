@@ -3,6 +3,7 @@ package dev.manere.utils.message;
 import dev.manere.utils.server.ServerUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Utility class for sending messages to players in the chat.
@@ -15,7 +16,7 @@ public class ChatMessager {
      *
      * @param player The player to send messages to.
      */
-    public ChatMessager(Player player) {
+    public ChatMessager(@NotNull Player player) {
         this.player = player;
     }
 
@@ -25,7 +26,7 @@ public class ChatMessager {
      * @param player The player to send messages to.
      * @return An instance of ChatMessager.
      */
-    public static ChatMessager of(Player player) {
+    public static @NotNull ChatMessager of(@NotNull Player player) {
         return new ChatMessager(player);
     }
 
@@ -34,7 +35,7 @@ public class ChatMessager {
      *
      * @param text The message to be sent.
      */
-    public void send(Component text) {
+    public void send(@NotNull Component text) {
         player.sendMessage(text);
     }
 
@@ -43,7 +44,7 @@ public class ChatMessager {
      *
      * @param text The message to be broadcast.
      */
-    public void broadcast(Component text) {
+    public void broadcast(@NotNull Component text) {
         ServerUtils.online().forEach(to -> to.sendMessage(text));
     }
 }

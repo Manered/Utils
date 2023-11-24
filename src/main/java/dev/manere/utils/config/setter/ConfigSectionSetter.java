@@ -7,6 +7,8 @@ import dev.manere.utils.library.Utils;
 import dev.manere.utils.text.Text;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class ConfigSectionSetter {
      *
      * @param configSection The ConfigSection for which values will be set.
      */
-    public ConfigSectionSetter(ConfigSection configSection) {
+    public ConfigSectionSetter(@NotNull ConfigSection configSection) {
         this.configSection = configSection;
         this.defaultVal = true;
     }
@@ -36,7 +38,7 @@ public class ConfigSectionSetter {
      * @param key The key for the configuration value within the section.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter key(String key) {
+    public @NotNull ConfigSectionSetter key(@NotNull String key) {
         this.key = configSection.sectionPath + "." + key;
         return this;
     }
@@ -47,7 +49,7 @@ public class ConfigSectionSetter {
      * @param val The value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(Object val) {
+    public @NotNull ConfigSectionSetter val(@Nullable Object val) {
         this.val = val;
         return this;
     }
@@ -58,8 +60,11 @@ public class ConfigSectionSetter {
      * @param val The Text value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(Text val) {
-        this.val = val.toString();
+    public @NotNull ConfigSectionSetter val(@Nullable Text val) {
+        if (val != null) {
+            this.val = val.toString();
+        }
+
         return this;
     }
 
@@ -69,7 +74,7 @@ public class ConfigSectionSetter {
      * @param val The Location value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(Location val) {
+    public @NotNull ConfigSectionSetter val(@Nullable Location val) {
         this.val = val;
         return this;
     }
@@ -80,7 +85,7 @@ public class ConfigSectionSetter {
      * @param val The ItemStack value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(ItemStack val) {
+    public @NotNull ConfigSectionSetter val(@Nullable ItemStack val) {
         this.val = val;
         return this;
     }
@@ -91,7 +96,7 @@ public class ConfigSectionSetter {
      * @param val The ItemBuilder value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(ItemBuilder val) {
+    public @NotNull ConfigSectionSetter val(@Nullable ItemBuilder val) {
         this.val = val;
         return this;
     }
@@ -102,7 +107,7 @@ public class ConfigSectionSetter {
      * @param val The List value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(List<?> val) {
+    public @NotNull ConfigSectionSetter val(@Nullable List<?> val) {
         this.val = val;
         return this;
     }
@@ -113,7 +118,7 @@ public class ConfigSectionSetter {
      * @param val The integer value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(int val) {
+    public @NotNull ConfigSectionSetter val(int val) {
         this.val = val;
         return this;
     }
@@ -124,7 +129,7 @@ public class ConfigSectionSetter {
      * @param val The double value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(double val) {
+    public @NotNull ConfigSectionSetter val(double val) {
         this.val = val;
         return this;
     }
@@ -135,7 +140,7 @@ public class ConfigSectionSetter {
      * @param val The long value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(long val) {
+    public @NotNull ConfigSectionSetter val(long val) {
         this.val = val;
         return this;
     }
@@ -146,7 +151,7 @@ public class ConfigSectionSetter {
      * @param val The float value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(float val) {
+    public @NotNull ConfigSectionSetter val(float val) {
         this.val = val;
         return this;
     }
@@ -157,7 +162,7 @@ public class ConfigSectionSetter {
      * @param val The boolean value to set for the configuration key.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter val(boolean val) {
+    public @NotNull ConfigSectionSetter val(boolean val) {
         this.val = val;
         return this;
     }
@@ -168,7 +173,7 @@ public class ConfigSectionSetter {
      * @param defaultVal A boolean flag indicating whether the value is the default value.
      * @return The ConfigSectionSetter instance for method chaining.
      */
-    public ConfigSectionSetter defaultVal(boolean defaultVal) {
+    public @NotNull ConfigSectionSetter defaultVal(boolean defaultVal) {
         this.defaultVal = defaultVal;
         return this;
     }
@@ -179,7 +184,7 @@ public class ConfigSectionSetter {
      * @return The Config instance for further configuration or interaction.
      * @throws IllegalArgumentException If key or val is null.
      */
-    public Config build() {
+    public @NotNull Config build() {
         if (key == null || val == null) {
             throw new IllegalArgumentException("key or val must not be null");
         }

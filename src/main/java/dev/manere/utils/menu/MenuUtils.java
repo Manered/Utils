@@ -3,6 +3,7 @@ package dev.manere.utils.menu;
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.menu.paginated.PaginatedSlot;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class MenuUtils {
      * @param slot the paginated slot
      * @return the slot index
      */
-    public static int paginatedSlotToSlot(PaginatedSlot slot) {
+    public static int paginatedSlotToSlot(@NotNull PaginatedSlot slot) {
         return slot.slot();
     }
 
@@ -48,7 +49,7 @@ public class MenuUtils {
      * @param slot the slot index
      * @return the paginated slot
      */
-    public static PaginatedSlot slotToPaginatedSlot(int slot) {
+    public static @NotNull PaginatedSlot slotToPaginatedSlot(int slot) {
         return PaginatedSlot.paginatedSlot(slot, 1);
     }
 
@@ -58,7 +59,7 @@ public class MenuUtils {
      * @param slot the paginated slot
      * @return an array with the slot index and page
      */
-    public static int[] paginatedSlotToArray(PaginatedSlot slot) {
+    public static int[] paginatedSlotToArray(@NotNull PaginatedSlot slot) {
         return new int[]{slot.slot(), slot.page()};
     }
 
@@ -68,7 +69,7 @@ public class MenuUtils {
      * @param menu the menu
      * @return the menu contents
      */
-    public static List<ItemBuilder> contents(MenuBase<?> menu) {
+    public static @NotNull List<ItemBuilder> contents(@NotNull MenuBase<?> menu) {
         List<ItemBuilder> result = new ArrayList<>();
         for (ItemStack stack : menu.inventory().getContents()) {
             ItemBuilder item = ItemBuilder.item(stack);
@@ -84,7 +85,7 @@ public class MenuUtils {
      *
      * @param menu the menu
      */
-    public static void clear(MenuBase<?> menu) {
+    public static void clear(@NotNull MenuBase<?> menu) {
         menu.inventory().clear();
     }
 }

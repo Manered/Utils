@@ -1,6 +1,7 @@
 package dev.manere.utils.prettify;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class ListPrettify {
      * @param input A List of Strings to be prettified.
      * @return A String containing the elements of the input List separated by commas.
      */
-    public static String strings(List<String> input) {
+    public static @NotNull String strings(List<String> input) {
         return input.toString()
                 .replaceAll("\\[", "")
                 .replaceAll("]", "");
@@ -33,7 +34,7 @@ public class ListPrettify {
      * @param input A List of Player objects to be prettified.
      * @return A String containing the names of the players in the input List separated by commas.
      */
-    public static String players(List<Player> input) {
+    public static @NotNull String players(List<Player> input) {
         List<String> inputToString = input.stream()
                 .map(Player::getName)
                 .collect(Collectors.toList());

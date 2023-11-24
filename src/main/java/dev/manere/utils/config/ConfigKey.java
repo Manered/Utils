@@ -2,6 +2,7 @@ package dev.manere.utils.config;
 
 import dev.manere.utils.config.val.ConfigVal;
 import dev.manere.utils.library.Utils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a configuration key with its corresponding value and path.
@@ -15,7 +16,7 @@ public class ConfigKey {
      *
      * @param key The key used to identify the configuration value.
      */
-    public ConfigKey(String key) {
+    public ConfigKey(@NotNull String key) {
         this.val = Utils.plugin().getConfig().get(key);
         this.path = key;
     }
@@ -26,7 +27,7 @@ public class ConfigKey {
      * @param key The key used to identify the configuration value.
      * @return A new ConfigKey instance.
      */
-    public static ConfigKey key(String key) {
+    public static ConfigKey key(@NotNull String key) {
         return new ConfigKey(key);
     }
 
@@ -35,7 +36,7 @@ public class ConfigKey {
      *
      * @return A ConfigVal instance representing the value of this ConfigKey.
      */
-    public ConfigVal val() {
+    public @NotNull ConfigVal val() {
         return ConfigVal.val(this);
     }
 }

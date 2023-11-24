@@ -4,6 +4,7 @@ import dev.manere.utils.library.Utils;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Consumer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class EventBuilder<T extends Event> {
      *
      * @param eventType The event type to listen to
      */
-    EventBuilder(Class<T> eventType) {
+    EventBuilder(@NotNull Class<T> eventType) {
         this.actionList = new ArrayList<>();
         this.eventType = eventType;
     }
@@ -35,7 +36,7 @@ public class EventBuilder<T extends Event> {
      * @param consumer The event consumer.
      * @return This EventBuilder instance, for chaining methods.
      */
-    public EventBuilder<T> listener(Consumer<T> consumer) {
+    public @NotNull EventBuilder<T> listener(@NotNull Consumer<T> consumer) {
         actionList.add(consumer);
         return this;
     }
@@ -47,7 +48,7 @@ public class EventBuilder<T extends Event> {
      * @param <T> Any subclass of {@link Event}
      * @return A new EventBuilder instance with the specified event type.
      */
-    public static <T extends Event> EventBuilder<T> event(Class<T> eventType) {
+    public static @NotNull <T extends Event> EventBuilder<T> event(@NotNull Class<T> eventType) {
         return new EventBuilder<>(eventType);
     }
 
@@ -56,7 +57,7 @@ public class EventBuilder<T extends Event> {
      *
      * @return A new EventHandler instance for this
      */
-    public EventHandler<T> build() {
+    public @NotNull EventHandler<T> build() {
         return new EventHandler<>(this);
     }
 
@@ -66,7 +67,7 @@ public class EventBuilder<T extends Event> {
      * @param plugin The plugin to use for the listener registration.
      * @return an EventCallback.
      */
-    public EventCallback<T> register(JavaPlugin plugin) {
+    public @NotNull EventCallback<T> register(@NotNull JavaPlugin plugin) {
         return build().register(plugin);
     }
 
@@ -76,7 +77,7 @@ public class EventBuilder<T extends Event> {
      *
      * @return an EventCallback.
      */
-    public EventCallback<T> register() {
+    public @NotNull EventCallback<T> register() {
         return build().register(Utils.plugin());
     }
 }

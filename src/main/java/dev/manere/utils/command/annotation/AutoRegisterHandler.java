@@ -8,6 +8,7 @@ import dev.manere.utils.logger.Loggers;
 import dev.manere.utils.model.Duo;
 import dev.manere.utils.registration.Registrar;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.reflect.*;
@@ -58,7 +59,7 @@ public class AutoRegisterHandler {
         }
     }
 
-    private static Duo<FindInstance, Object> findInstance(Class<?> clazz) {
+    private static @NotNull Duo<FindInstance, Object> findInstance(@NotNull Class<?> clazz) {
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
 
         Object instance = null;
@@ -103,11 +104,15 @@ public class AutoRegisterHandler {
         return new Duo<>(mode, instance);
     }
 
-    private static void autoRegister(Class<?> clazz) {
+    private static void autoRegister(@NotNull Class<?> clazz) {
         JavaPlugin plugin = Utils.plugin();
         Duo<FindInstance, Object> tuple = findInstance(clazz);
 
         Object instance = tuple.val();
+
+        if (instance == null) {
+            return;
+        }
 
         if (EventListener.class.isAssignableFrom(clazz)) {
             EventListener<?> inst = (EventListener<?>) instance;
@@ -139,7 +144,7 @@ public class AutoRegisterHandler {
         }
     }
 
-    private static List<Class<?>> findValidClasses() {
+    private static @NotNull List<Class<?>> findValidClasses() {
         List<Class<?>> classes = new ArrayList<>();
 
         // Ignore anonymous inner classes
@@ -178,7 +183,7 @@ public class AutoRegisterHandler {
         return classes;
     }
 
-    private static File src() {
+    private static @NotNull File src() {
         try {
             JavaPlugin plugin = (JavaPlugin) Utils.plugin().getServer().getPluginManager().getPlugin(Utils.plugin().getName());
             Method getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");
@@ -195,23 +200,19 @@ public class AutoRegisterHandler {
         SINGLETON
     }
 
-    private static Object fieldContent(Field field) {
+    private static @NotNull Object fieldContent(@NotNull Field field) {
         try {
             field.setAccessible(true);
-
             return field.get(null);
-
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException("Could not get field " + field.getName() + " in instance " + field.getClass().getSimpleName());
         }
     }
 
-    private static <T> T instantiate(Constructor<T> constructor, Object... params) {
+    private static @NotNull <T> T instantiate(@NotNull Constructor<T> constructor, @NotNull Object... params) {
         try {
             constructor.setAccessible(true);
-
             return constructor.newInstance(params);
-
         } catch (ReflectiveOperationException ex) {
             throw new RuntimeException("Could not make new instance of " + constructor + " with params: " + Arrays.toString(params));
         }

@@ -17,6 +17,8 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.List;
@@ -33,7 +35,7 @@ public class PlayerUtils {
      *
      * @param player The player to reset.
      */
-    public static void reset(Player player) {
+    public static void reset(@NotNull Player player) {
         player.setFlying(false);
         player.setAllowFlight(false);
         player.setGameMode(GameMode.SURVIVAL);
@@ -51,7 +53,7 @@ public class PlayerUtils {
      * @param player The player whose chat will be cleared.
      * @param count  The number of empty messages to send.
      */
-    public static void clearChat(Player player, int count) {
+    public static void clearChat(@NotNull Player player, int count) {
         IntStream.range(0, count)
                 .mapToObj(i -> "")
                 .forEach(player::sendMessage);
@@ -62,7 +64,7 @@ public class PlayerUtils {
      *
      * @param target The player to hide.
      */
-    public static void hide(Player target) {
+    public static void hide(@NotNull Player target) {
         Utils.plugin()
                 .getServer()
                 .getOnlinePlayers()
@@ -76,7 +78,7 @@ public class PlayerUtils {
      *
      * @param target The player to show.
      */
-    public static void show(Player target) {
+    public static void show(@NotNull Player target) {
         Bukkit.getOnlinePlayers()
                 .forEach(player -> player.showPlayer(
                         Utils.plugin(),
@@ -88,7 +90,7 @@ public class PlayerUtils {
      *
      * @param player The player to heal.
      */
-    public static void heal(Player player) {
+    public static void heal(@NotNull Player player) {
         player.setSaturation(20.0f);
         player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
         player.setArrowsInBody(0);
@@ -105,7 +107,7 @@ public class PlayerUtils {
      * @param stay      Time in ticks for title to stay.
      * @param fadeOut   Time in ticks for title fade-out.
      */
-    public static void title(Player player, Component title, Component subtitle, Duration fadeIn, Duration stay, Duration fadeOut) {
+    public static void title(@NotNull Player player, @NotNull Component title, @NotNull Component subtitle, @NotNull Duration fadeIn, @NotNull Duration stay, @NotNull Duration fadeOut) {
         Audience audience = Audience.audience(player);
 
         audience.showTitle(Title.title(title, subtitle, Title.Times.times(fadeIn, stay, fadeOut)));
@@ -120,7 +122,7 @@ public class PlayerUtils {
      * @param stay      Time in ticks for title to stay.
      * @param fadeOut   Time in ticks for title fade-out.
      */
-    public static void broadcastTitle(Component title, Component subtitle, Duration fadeIn, Duration stay, Duration fadeOut) {
+    public static void broadcastTitle(@NotNull Component title, @NotNull Component subtitle, @NotNull Duration fadeIn, @NotNull Duration stay, @NotNull Duration fadeOut) {
         Bukkit.getOnlinePlayers()
                 .forEach(player -> title(player, title, subtitle, fadeIn, stay, fadeOut));
     }
@@ -131,7 +133,7 @@ public class PlayerUtils {
      * @param player    The player to teleport.
      * @param location  The target location.
      */
-    public static void teleport(Player player, Location location) {
+    public static void teleport(@NotNull Player player, @NotNull Location location) {
         player.teleport(location);
     }
 
@@ -141,7 +143,7 @@ public class PlayerUtils {
      * @param player    The player to teleport.
      * @param target    The target player.
      */
-    public static void teleport(Player player, Player target) {
+    public static void teleport(@NotNull Player player, @NotNull Player target) {
         player.teleport(target.getLocation());
     }
 
@@ -151,7 +153,7 @@ public class PlayerUtils {
      * @param player    The player to give the item to.
      * @param item      The item to give.
      */
-    public static void giveItem(Player player, ItemBuilder item) {
+    public static void giveItem(@NotNull Player player, @NotNull ItemBuilder item) {
         player.getInventory().addItem(item.build());
     }
 
@@ -160,7 +162,7 @@ public class PlayerUtils {
      *
      * @param player    The player whose inventory will be cleared.
      */
-    public static void clearInventory(Player player) {
+    public static void clearInventory(@NotNull Player player) {
         player.getInventory().clear();
     }
 
@@ -172,7 +174,7 @@ public class PlayerUtils {
      * @param duration  The duration of the potion effect in ticks.
      * @param amplifier The amplifier of the potion effect.
      */
-    public static void applyPotionEffect(Player player, PotionEffectType type, int duration, int amplifier) {
+    public static void applyPotionEffect(@NotNull Player player, @NotNull PotionEffectType type, int duration, int amplifier) {
         player.addPotionEffect(new PotionEffect(type, duration, amplifier));
     }
 
@@ -182,7 +184,7 @@ public class PlayerUtils {
      * @param player    The player to remove the potion effect from.
      * @param type      The type of potion effect to remove.
      */
-    public static void removePotionEffect(Player player, PotionEffectType type) {
+    public static void removePotionEffect(@NotNull Player player, @NotNull PotionEffectType type) {
         player.removePotionEffect(type);
     }
 
@@ -191,7 +193,7 @@ public class PlayerUtils {
      *
      * @param player    The player whose potion effects will be cleared.
      */
-    public static void clearPotionEffects(Player player) {
+    public static void clearPotionEffects(@NotNull Player player) {
         player.getActivePotionEffects()
                 .stream()
                 .map(PotionEffect::getType)
@@ -204,7 +206,7 @@ public class PlayerUtils {
      * @param player    The player from whose inventory the item will be removed.
      * @param item      The item to be removed.
      */
-    public static void removeItem(Player player, ItemBuilder item) {
+    public static void removeItem(@NotNull Player player, @NotNull ItemBuilder item) {
         player.getInventory().removeItem(item.build());
     }
 
@@ -214,7 +216,7 @@ public class PlayerUtils {
      * @param gamemode  The game mode to be set.
      * @param players   The list of players whose game mode will be changed.
      */
-    public static void gamemodeOfPlayers(GameMode gamemode, List<Player> players) {
+    public static void gamemodeOfPlayers(@NotNull GameMode gamemode, @NotNull List<Player> players) {
         players.forEach(player -> player.setGameMode(gamemode));
     }
 
@@ -224,7 +226,7 @@ public class PlayerUtils {
      * @param player The Player object representing the online player.
      * @return The online player associated with the provided Player object.
      */
-    public static Player player(Player player) {
+    public static @NotNull Player player(@NotNull Player player) {
         return player;
     }
 
@@ -234,7 +236,7 @@ public class PlayerUtils {
      * @param uuid The UUID of the player.
      * @return The online player with the specified UUID, or null if not found.
      */
-    public static Player player(UUID uuid) {
+    public static @Nullable Player player(@NotNull UUID uuid) {
         return Utils.plugin().getServer().getPlayer(uuid);
     }
 
@@ -244,7 +246,7 @@ public class PlayerUtils {
      * @param playerName The name of the player.
      * @return The online player with the provided name, or null if not found.
      */
-    public static Player player(String playerName) {
+    public static @Nullable Player player(@NotNull String playerName) {
         return Utils.plugin().getServer().getPlayer(playerName);
     }
 
@@ -254,7 +256,7 @@ public class PlayerUtils {
      * @param uuid The UUID of the player.
      * @return The offline player with the specified UUID.
      */
-    public static OfflinePlayer offline(UUID uuid) {
+    public static @NotNull OfflinePlayer offline(@NotNull UUID uuid) {
         return Utils.plugin().getServer().getOfflinePlayer(uuid);
     }
 
@@ -264,7 +266,7 @@ public class PlayerUtils {
      * @param player The player that will receive a message.
      * @param text The message to send.
      */
-    public static void chat(Player player, String text) {
+    public static void chat(@NotNull Player player, @NotNull String text) {
         Messagers.chat(player).send(TextStyle.component(text));
     }
 
@@ -274,7 +276,7 @@ public class PlayerUtils {
      * @param player The player that will receive a message.
      * @param text The message to send.
      */
-    public static void chat(Player player, Component text) {
+    public static void chat(@NotNull Player player, @NotNull Component text) {
         Messagers.chat(player).send(text);
     }
 
@@ -284,7 +286,7 @@ public class PlayerUtils {
      * @param player The player of the ChatMessager that will be returned.
      * @return The ChatMessager of the given player.
      */
-    public static ChatMessager chatMessager(Player player) {
+    public static @NotNull ChatMessager chatMessager(@NotNull Player player) {
         return Messagers.chat(player);
     }
 
@@ -294,7 +296,7 @@ public class PlayerUtils {
      * @param player The player that will receive a message.
      * @param text The message to send.
      */
-    public static void actionBar(Player player, String text) {
+    public static void actionBar(@NotNull Player player, @NotNull String text) {
         Messagers.actionBar(player).send(TextStyle.component(text));
     }
 
@@ -304,7 +306,7 @@ public class PlayerUtils {
      * @param player The player that will receive a message.
      * @param text The message to send.
      */
-    public static void actionBar(Player player, Component text) {
+    public static void actionBar(@NotNull Player player, @NotNull Component text) {
         Messagers.actionBar(player).send(text);
     }
 
@@ -314,7 +316,7 @@ public class PlayerUtils {
      * @param player The player of the ActionBarMessager that will be returned.
      * @return The ActionBarMessager of the given player.
      */
-    public static ActionBarMessager actionBarMessager(Player player) {
+    public static @NotNull ActionBarMessager actionBarMessager(@NotNull Player player) {
         return Messagers.actionBar(player);
     }
 }

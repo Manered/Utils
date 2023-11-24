@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.structure.StructureManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class ServerUtils {
      *
      * @return The PluginManager of the server.
      */
-    public static PluginManager manager() {
+    public static @NotNull PluginManager manager() {
         return Utils.plugin().getServer().getPluginManager();
     }
 
@@ -35,7 +36,7 @@ public class ServerUtils {
      *
      * @return The StructureManager of the server.
      */
-    public static StructureManager structures() {
+    public static @NotNull StructureManager structures() {
         return Utils.plugin().getServer().getStructureManager();
     }
 
@@ -44,7 +45,7 @@ public class ServerUtils {
      *
      * @return The ScoreboardManager of the server.
      */
-    public static ScoreboardManager scoreboards() {
+    public static @NotNull ScoreboardManager scoreboards() {
         return Utils.plugin().getServer().getScoreboardManager();
     }
 
@@ -53,7 +54,7 @@ public class ServerUtils {
      *
      * @return The BukkitScheduler of the server.
      */
-    public static BukkitScheduler scheduler() {
+    public static @NotNull BukkitScheduler scheduler() {
         return Utils.plugin().getServer().getScheduler();
     }
 
@@ -62,7 +63,7 @@ public class ServerUtils {
      *
      * @return The ServicesManager of the server.
      */
-    public static ServicesManager services() {
+    public static @NotNull ServicesManager services() {
         return Utils.plugin().getServer().getServicesManager();
     }
 
@@ -71,7 +72,7 @@ public class ServerUtils {
      *
      * @return List of online Player objects.
      */
-    public static List<Player> online() {
+    public static @NotNull List<Player> online() {
         return new ArrayList<>(Utils.plugin().getServer().getOnlinePlayers());
     }
 
@@ -90,7 +91,7 @@ public class ServerUtils {
      * @param name Name of any plugin
      * @return The plugin that is registered under {@code name}
      */
-    public static Plugin plugin(String name) {
+    public static Plugin plugin(@NotNull String name) {
         return Utils.plugin().getServer().getPluginManager().getPlugin(name);
     }
 
@@ -100,7 +101,7 @@ public class ServerUtils {
      * @param name Name of any plugin
      * @return The {@link org.bukkit.Server} of the plugin registered under {@code name}
      */
-    public static Server server(String name) {
+    public static Server server(@NotNull String name) {
         return plugin(name).getServer();
     }
 
@@ -108,7 +109,7 @@ public class ServerUtils {
      * Gets a Server instance of the default plugin.
      * @return The {@link org.bukkit.Server} instance of the default plugin.
      */
-    public static Server server() {
+    public static @NotNull Server server() {
         return Utils.plugin().getServer();
     }
 
@@ -117,7 +118,7 @@ public class ServerUtils {
      *
      * @return The data folder associated with the default plugin.
      */
-    public static File dataFolder() {
+    public static @NotNull File dataFolder() {
         return Utils.plugin().getDataFolder();
     }
 
@@ -127,7 +128,7 @@ public class ServerUtils {
      * @param plugin The plugin to retrieve the data folder from.
      * @return The data folder associated with a specific plugin.
      */
-    public static File dataFolder(JavaPlugin plugin) {
+    public static @NotNull File dataFolder(@NotNull JavaPlugin plugin) {
         return plugin.getDataFolder();
     }
 
@@ -137,7 +138,7 @@ public class ServerUtils {
      * @param plugin The plugin to retrieve the data folder from.
      * @return The data folder associated with a specific plugin.
      */
-    public static File dataFolder(Plugin plugin) {
+    public static @NotNull File dataFolder(@NotNull Plugin plugin) {
         return plugin.getDataFolder();
     }
 
@@ -146,7 +147,7 @@ public class ServerUtils {
      *
      * @return The configuration file associated with the default plugin
      */
-    public static FileConfiguration config() {
+    public static @NotNull FileConfiguration config() {
         return Utils.plugin().getConfig();
     }
 }

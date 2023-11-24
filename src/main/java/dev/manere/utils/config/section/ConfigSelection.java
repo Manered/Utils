@@ -3,6 +3,7 @@ package dev.manere.utils.config.section;
 import dev.manere.utils.config.ConfigKey;
 import dev.manere.utils.config.val.ConfigVal;
 import dev.manere.utils.model.Duo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -18,7 +19,7 @@ public class ConfigSelection {
      *
      * @param section The ConfigSection for which keys and values will be selected.
      */
-    public ConfigSelection(ConfigSection section) {
+    public ConfigSelection(@NotNull ConfigSection section) {
         this.section = section;
     }
 
@@ -28,7 +29,7 @@ public class ConfigSelection {
      * @param section The ConfigSection for which keys and values will be selected.
      * @return A new ConfigSelection instance.
      */
-    public static ConfigSelection selection(ConfigSection section) {
+    public static @NotNull ConfigSelection selection(@NotNull ConfigSection section) {
         return new ConfigSelection(section);
     }
 
@@ -37,7 +38,7 @@ public class ConfigSelection {
      *
      * @param consumer The consumer to apply to each key-value pair.
      */
-    public void forEach(Consumer<Duo<ConfigKey, ConfigVal>> consumer) {
+    public void forEach(@NotNull Consumer<Duo<ConfigKey, ConfigVal>> consumer) {
         if (this.section.section != null) {
             for (String key : this.section.section.getKeys(false)) {
                 consumer.accept(new Duo<>(ConfigKey.key(key), ConfigKey.key(key).val()));

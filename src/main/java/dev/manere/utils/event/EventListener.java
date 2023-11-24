@@ -25,7 +25,7 @@ public abstract class EventListener<T extends Event> implements Listener, EventE
      *
      * @param clazz The class of the event to listen for, which should extend Bukkit's Event class.
      */
-    public EventListener(Class<T> clazz) {
+    public EventListener(@NotNull Class<T> clazz) {
         this(clazz, EventPriority.NORMAL);
     }
 
@@ -35,7 +35,7 @@ public abstract class EventListener<T extends Event> implements Listener, EventE
      * @param clazz    The class of the event to listen for, which should extend Bukkit's Event class.
      * @param priority The priority at which to listen for the event.
      */
-    public EventListener(Class<T> clazz, EventPriority priority) {
+    public EventListener(@NotNull Class<T> clazz, @NotNull EventPriority priority) {
         this(clazz, priority, true);
     }
 
@@ -46,7 +46,7 @@ public abstract class EventListener<T extends Event> implements Listener, EventE
      * @param priority       The priority at which to listen for the event.
      * @param ignoreCancelled Whether to ignore cancelled events.
      */
-    public EventListener(Class<T> clazz, EventPriority priority, boolean ignoreCancelled) {
+    public EventListener(@NotNull Class<T> clazz, @NotNull EventPriority priority, boolean ignoreCancelled) {
         this.clazz = clazz;
         this.priority = priority;
         this.ignoreCancelled = ignoreCancelled;
@@ -74,7 +74,7 @@ public abstract class EventListener<T extends Event> implements Listener, EventE
      *
      * @param event The event object to be processed.
      */
-    protected abstract void execute(T event);
+    protected abstract void execute(@NotNull T event);
 
     /**
      * Register this event listener with the default plugin.
@@ -88,7 +88,7 @@ public abstract class EventListener<T extends Event> implements Listener, EventE
      *
      * @param plugin The JavaPlugin to register this listener with.
      */
-    public final void register(JavaPlugin plugin) {
+    public final void register(@NotNull JavaPlugin plugin) {
         plugin.getServer().getPluginManager().registerEvent(this.clazz, this, this.priority, this, plugin, this.ignoreCancelled);
     }
 
@@ -97,7 +97,7 @@ public abstract class EventListener<T extends Event> implements Listener, EventE
      *
      * @return The class of the event.
      */
-    public Class<T> clazz() {
+    public @NotNull Class<T> clazz() {
         return clazz;
     }
 
@@ -106,7 +106,7 @@ public abstract class EventListener<T extends Event> implements Listener, EventE
      *
      * @return The event priority.
      */
-    public EventPriority priority() {
+    public @NotNull EventPriority priority() {
         return priority;
     }
 
@@ -124,7 +124,7 @@ public abstract class EventListener<T extends Event> implements Listener, EventE
      *
      * @return The event object.
      */
-    public T event() {
+    public @NotNull T event() {
         return event;
     }
 }

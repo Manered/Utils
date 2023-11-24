@@ -5,6 +5,8 @@ import dev.manere.utils.menu.paginated.PaginatedSlot;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface MenuBase<T> {
 
@@ -16,21 +18,21 @@ public interface MenuBase<T> {
      *
      * @return The class that implements this.
      */
-    T type();
+    @NotNull T type();
 
     /**
      * Sets an action to run whenever the menu inventory gets closed.
      *
      * @param onClose Determines what to do when a menu InventoryCloseEvent is fired.
      */
-    T onClose(CloseListener onClose);
+    @NotNull T onClose(@Nullable CloseListener onClose);
 
     /**
      * Sets an action to run whenever a player drags an item in an inventory.
      *
      * @param onDrag Determines what to do when a menu InventoryDragEvent is fired.
      */
-    T onDrag(DragListener onDrag);
+    @NotNull T onDrag(@Nullable DragListener onDrag);
 
     /**
      * Sets a button at the specified slot in the menu.
@@ -39,7 +41,7 @@ public interface MenuBase<T> {
      * @param button The Button to set at the slot.
      * @return The class that implements this.
      */
-    default T button(int slot, Button button) {
+    default @NotNull T button(int slot, Button button) {
         return type();
     }
 
@@ -50,7 +52,7 @@ public interface MenuBase<T> {
      * @param item The ItemBuilder to set at the slot.
      * @return The class that implements this.
      */
-    default T item(int slot, ItemBuilder item) {
+    default @NotNull T item(int slot, ItemBuilder item) {
         return type();
     }
 
@@ -82,7 +84,7 @@ public interface MenuBase<T> {
      * @param borderPatterns The patterns for the border.
      * @return The class that implements this.
      */
-    T border(Button borderItem, String... borderPatterns);
+    @NotNull T border(Button borderItem, String... borderPatterns);
 
     /**
      * Fills the menu slots with a specified filler object based on a pattern.
@@ -91,7 +93,7 @@ public interface MenuBase<T> {
      * @param pattern The pattern to use for filling.
      * @return The class that implements this.
      */
-    T fill(Object filler, String... pattern);
+    @NotNull T fill(Object filler, String... pattern);
 
     /**
      * Get the inventory associated with a menu.
@@ -107,7 +109,7 @@ public interface MenuBase<T> {
      * @param button The button to set.
      * @return The class that implements this.
      */
-    default T button(PaginatedSlot where, Button button) {
+    default @NotNull T button(PaginatedSlot where, Button button) {
         return type();
     }
 
@@ -118,7 +120,7 @@ public interface MenuBase<T> {
      * @param item  The item to set.
      * @return The class that implements this.
      */
-    default T item(PaginatedSlot where, ItemBuilder item) {
+    default @NotNull T item(PaginatedSlot where, ItemBuilder item) {
         return type();
     }
 

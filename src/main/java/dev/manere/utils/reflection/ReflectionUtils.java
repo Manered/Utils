@@ -22,10 +22,6 @@ public class ReflectionUtils {
     private static final boolean NMS_REPACKAGED = optionalClass(NM_PACKAGE + ".network.protocol.Packet").isPresent();
     private static volatile Object theUnsafe;
 
-    private ReflectionUtils() {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * Checks if the net.minecraft server package has been repackaged.
      *

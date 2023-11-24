@@ -3,6 +3,8 @@ package dev.manere.utils.menu;
 import dev.manere.utils.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The Button class represents a button in a menu with an associated ItemBuilder and listener.
@@ -31,7 +33,7 @@ public class Button {
      *
      * @return A new Button instance.
      */
-    public static Button button() {
+    public static @NotNull Button button() {
         return new Button();
     }
 
@@ -41,7 +43,7 @@ public class Button {
      * @param item The ItemBuilder to use for the Button.
      * @return A new Button instance.
      */
-    public static Button button(ItemBuilder item) {
+    public static @NotNull Button button(@Nullable ItemBuilder item) {
         return new Button()
                 .item(item);
     }
@@ -53,7 +55,7 @@ public class Button {
      * @param listener The ButtonListener to use for the Button.
      * @return A new Button instance.
      */
-    public static Button button(ItemBuilder item, ButtonListener listener) {
+    public static @NotNull Button button(@Nullable ItemBuilder item, @Nullable ButtonListener listener) {
         return new Button()
                 .item(item)
                 .onClick(listener);
@@ -65,7 +67,7 @@ public class Button {
      * @param refreshAsync true if the button should refresh asynchronously, false otherwise
      * @return The Button instance for method chaining
      */
-    public Button refreshAsync(boolean refreshAsync) {
+    public @NotNull Button refreshAsync(boolean refreshAsync) {
         this.isRefreshingAsync = refreshAsync;
         return this;
     }
@@ -76,7 +78,7 @@ public class Button {
      * @param refresh true if the button should be refreshing, false otherwise
      * @return The Button instance for method chaining
      */
-    public Button refresh(boolean refresh) {
+    public @NotNull Button refresh(boolean refresh) {
         this.isRefreshingButton = refresh;
         return this;
     }
@@ -87,7 +89,7 @@ public class Button {
      * @param refreshDelay The delay in server ticks before the button refreshes
      * @return The Button instance for method chaining
      */
-    public Button refreshDelay(long refreshDelay) {
+    public @NotNull Button refreshDelay(long refreshDelay) {
         this.refreshDelay = refreshDelay;
         return this;
     }
@@ -98,7 +100,7 @@ public class Button {
      * @param refreshPeriod The period in server ticks at which the button should refresh
      * @return The Button instance for method chaining
      */
-    public Button refreshPeriod(long refreshPeriod) {
+    public @NotNull Button refreshPeriod(long refreshPeriod) {
         this.refreshPeriod = refreshPeriod;
         return this;
     }
@@ -110,7 +112,7 @@ public class Button {
      * @param refreshPeriod The period in server ticks at which the button should refresh
      * @return The Button instance for method chaining
      */
-    public Button refreshTime(long refreshDelay, long refreshPeriod) {
+    public @NotNull Button refreshTime(long refreshDelay, long refreshPeriod) {
         this.refreshDelay = refreshDelay;
         this.refreshPeriod = refreshPeriod;
         return this;
@@ -122,7 +124,7 @@ public class Button {
      * @param listener The ButtonListener to set as the listener.
      * @return The Button instance.
      */
-    public Button onClick(ButtonListener listener) {
+    public @NotNull Button onClick(@Nullable ButtonListener listener) {
         this.listener = listener;
         return this;
     }
@@ -133,7 +135,7 @@ public class Button {
      * @param item The ItemBuilder to set as the item.
      * @return The Button instance.
      */
-    public Button item(ItemBuilder item) {
+    public @NotNull Button item(@Nullable ItemBuilder item) {
         this.item = item;
         return this;
     }
@@ -201,6 +203,6 @@ public class Button {
          *
          * @param event The InventoryClickEvent associated with the button click.
          */
-        void onClick(InventoryClickEvent event);
+        void onClick(@NotNull InventoryClickEvent event);
     }
 }

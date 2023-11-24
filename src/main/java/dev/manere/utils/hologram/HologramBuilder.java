@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +50,7 @@ public class HologramBuilder {
     /**
      * Creates a new instance of HologramBuilder.
      */
-    public HologramBuilder(Location location) {
+    public HologramBuilder(@NotNull Location location) {
         this.deleted = false;
         this.visible = true;
         this.lineHeight = 0.25;
@@ -62,7 +63,7 @@ public class HologramBuilder {
      *
      * @return A new instance of HologramBuilder.
      */
-    public static HologramBuilder hologram() {
+    public static @NotNull HologramBuilder hologram() {
         return new HologramBuilder();
     }
 
@@ -72,7 +73,7 @@ public class HologramBuilder {
      * @param location The location where the hologram will be created.
      * @return A new instance of HologramBuilder.
      */
-    public static HologramBuilder hologram(Location location) {
+    public static @NotNull HologramBuilder hologram(@NotNull Location location) {
         return new HologramBuilder(location);
     }
 
@@ -82,7 +83,7 @@ public class HologramBuilder {
      * @param lines The lines of text to be displayed in the hologram.
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder lines(Component... lines) {
+    public @NotNull HologramBuilder lines(@NotNull Component... lines) {
         this.lines = Arrays.asList(lines);
         return this;
     }
@@ -93,7 +94,7 @@ public class HologramBuilder {
      * @param lines The list of lines to be displayed in the hologram.
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder lines(List<Component> lines) {
+    public @NotNull HologramBuilder lines(@NotNull List<Component> lines) {
         this.lines = lines;
         return this;
     }
@@ -104,7 +105,7 @@ public class HologramBuilder {
      * @param location The location where the hologram will be created.
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder location(Location location) {
+    public @NotNull HologramBuilder location(@NotNull Location location) {
         this.location = location;
         return this;
     }
@@ -115,7 +116,7 @@ public class HologramBuilder {
      * @param lineHeight The height between lines.
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder lineHeight(double lineHeight) {
+    public @NotNull HologramBuilder lineHeight(double lineHeight) {
         this.lineHeight = lineHeight;
         return this;
     }
@@ -126,7 +127,7 @@ public class HologramBuilder {
      * @param visible true to make the hologram visible, false to make it invisible.
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder visible(boolean visible) {
+    public @NotNull HologramBuilder visible(boolean visible) {
         this.visible = visible;
         return this;
     }
@@ -136,7 +137,7 @@ public class HologramBuilder {
      *
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder delete() {
+    public @NotNull HologramBuilder delete() {
         Objects.requireNonNull(location, "Location for hologram cannot be null");
         Objects.requireNonNull(lines, "Lines of hologram cannot be null");
         Objects.requireNonNull(location.getWorld(), "World of hologram's location cannot be null");
@@ -166,7 +167,7 @@ public class HologramBuilder {
      *
      * @return This HologramBuilder instance.
      */
-    public HologramBuilder build() {
+    public @NotNull HologramBuilder build() {
         Objects.requireNonNull(location, "Location for hologram cannot be null");
         Objects.requireNonNull(lines, "Lines of hologram cannot be null");
 

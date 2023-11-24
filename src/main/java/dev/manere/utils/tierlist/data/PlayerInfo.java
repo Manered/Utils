@@ -15,9 +15,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Represents player information obtained from an external API for tier list data.
  */
-public record PlayerInfo(
-        String uuid, String name, Map<String, Ranking> rankings, String region, int points, int overall, List<Badge> badges
-) {
+public record PlayerInfo(String uuid, String name, Map<String, Ranking> rankings, String region, int points, int overall, List<Badge> badges) {
 
     /**
      * Represents a player's ranking details.

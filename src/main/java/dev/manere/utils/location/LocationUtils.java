@@ -5,6 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,7 @@ public class LocationUtils {
      * @param locToCheck   The Location to check.
      * @return True if locToCheck is within the bounding box defined by a and b.
      */
-    public static boolean locIsBetween(Location a, Location b, Location locToCheck) {
+    public static boolean locIsBetween(@NotNull Location a, @NotNull Location b, @NotNull Location locToCheck) {
         return isBetween(a.getBlockX(), b.getBlockX(), locToCheck.getBlockX())
                 && isBetween(a.getBlockY(), b.getBlockY(), locToCheck.getBlockY())
                 && isBetween(a.getBlockZ(), b.getBlockZ(), locToCheck.getBlockZ());
@@ -64,7 +66,7 @@ public class LocationUtils {
      * @param radius The radius in which to search for players.
      * @return A list of players within the specified radius of the center location.
      */
-    public static List<Player> playersInRadius(Location center, double radius) {
+    public static @NotNull List<Player> playersInRadius(@NotNull Location center, double radius) {
         List<Player> nearbyPlayers = new ArrayList<>();
 
         for (Player player : Utils.plugin().getServer().getOnlinePlayers()) {
@@ -85,7 +87,7 @@ public class LocationUtils {
      * @param radius       The radius in which to search for players.
      * @return A list of players within the specified radius of the target player.
      */
-    public static List<Player> playersNearPlayer(Player targetPlayer, double radius) {
+    public static @NotNull List<Player> playersNearPlayer(@NotNull Player targetPlayer, double radius) {
         List<Player> nearbyPlayers = new ArrayList<>();
         Location targetLocation = targetPlayer.getLocation();
 
@@ -109,7 +111,7 @@ public class LocationUtils {
      * @param loc2 The second location.
      * @return The distance between the two locations.
      */
-    public static double distance(Location loc1, Location loc2) {
+    public static double distance(@NotNull Location loc1, @NotNull Location loc2) {
         return loc1.distance(loc2);
     }
 
@@ -119,7 +121,7 @@ public class LocationUtils {
      * @param location The location to serialize.
      * @return The serialized location string.
      */
-    public static String serialize(Location location) {
+    public static @NotNull String serialize(@NotNull Location location) {
         return Objects.requireNonNull(location.getWorld()).getName() + "," +
                 location.getX() + "," +
                 location.getY() + "," +
@@ -134,7 +136,7 @@ public class LocationUtils {
      * @param serialized The serialized location string.
      * @return The deserialized Location object, or null if deserialization fails.
      */
-    public static Location deserialize(String serialized) {
+    public static @Nullable Location deserialize(@NotNull String serialized) {
         String[] parts = serialized.split(",");
 
         if (parts.length == 6) {

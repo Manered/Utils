@@ -6,12 +6,13 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
 public class PlaceholderAPIBuilder {
 
-    private final String identifier;
+    private final String prefix;
     private String author;
     private String version;
     private BiFunction<Player, String, String> playerResult;
@@ -20,12 +21,12 @@ public class PlaceholderAPIBuilder {
     /**
      * Private constructor to create a PlaceholderAPIBuilder with the specified identifier.
      *
-     * @param identifier The identifier for the PlaceholderAPI expansion.
+     * @param prefix The identifier for the PlaceholderAPI expansion.
      */
     /* I hate you paper (why would you deprecate JavaPlugin#getDescription() and then make the alternative (PluginMeta) "unstable" */
     @SuppressWarnings("UnstableApiUsage")
-    public PlaceholderAPIBuilder(String identifier) {
-        this.identifier = identifier;
+    public PlaceholderAPIBuilder(@NotNull String prefix) {
+        this.prefix = prefix;
         this.version = Utils.plugin().getPluginMeta().getVersion();
         this.playerResult = null;
         this.offlinePlayerResult = null;
@@ -40,7 +41,7 @@ public class PlaceholderAPIBuilder {
      * @param identifier The identifier for the PlaceholderAPI expansion.
      * @return A new PlaceholderAPIBuilder instance.
      */
-    public static PlaceholderAPIBuilder of(String identifier) {
+    public static @NotNull PlaceholderAPIBuilder of(@NotNull String identifier) {
         return new PlaceholderAPIBuilder(identifier);
     }
 
@@ -50,7 +51,7 @@ public class PlaceholderAPIBuilder {
      * @param author The author of the PlaceholderAPI expansion.
      * @return The updated PlaceholderAPIBuilder instance.
      */
-    public PlaceholderAPIBuilder author(String author) {
+    public @NotNull PlaceholderAPIBuilder author(@NotNull String author) {
         this.author = author;
         return this;
     }
@@ -61,7 +62,7 @@ public class PlaceholderAPIBuilder {
      * @param version The version of the PlaceholderAPI expansion.
      * @return The updated PlaceholderAPIBuilder instance.
      */
-    public PlaceholderAPIBuilder version(String version) {
+    public @NotNull PlaceholderAPIBuilder version(@NotNull String version) {
         this.version = version;
         return this;
     }
@@ -72,7 +73,7 @@ public class PlaceholderAPIBuilder {
      * @param result The function to handle placeholder requests for online players.
      * @return The updated PlaceholderAPIBuilder instance.
      */
-    public PlaceholderAPIBuilder onlineRequest(BiFunction<Player, String, String> result) {
+    public @NotNull PlaceholderAPIBuilder onlineRequest(@Nullable BiFunction<Player, String, String> result) {
         this.playerResult = result;
         return this;
     }
@@ -83,7 +84,7 @@ public class PlaceholderAPIBuilder {
      * @param result The function to handle placeholder requests for offline players.
      * @return The updated PlaceholderAPIBuilder instance.
      */
-    public PlaceholderAPIBuilder offlineRequest(BiFunction<OfflinePlayer, String, String> result) {
+    public @NotNull PlaceholderAPIBuilder offlineRequest(@Nullable BiFunction<OfflinePlayer, String, String> result) {
         this.offlinePlayerResult = result;
         return this;
     }
@@ -95,7 +96,7 @@ public class PlaceholderAPIBuilder {
      * @param offlineResult The function to handle placeholder requests for offline players.
      * @return The updated PlaceholderAPIBuilder instance.
      */
-    public PlaceholderAPIBuilder request(BiFunction<Player, String, String> onlineResult, BiFunction<OfflinePlayer, String, String> offlineResult) {
+    public @NotNull PlaceholderAPIBuilder request(@Nullable BiFunction<Player, String, String> onlineResult, @Nullable BiFunction<OfflinePlayer, String, String> offlineResult) {
         this.playerResult = onlineResult;
         this.offlinePlayerResult = offlineResult;
         return this;
@@ -106,7 +107,7 @@ public class PlaceholderAPIBuilder {
      *
      * @return The PlaceholderExpansion instance if registration is successful, otherwise null.
      */
-    public PlaceholderExpansion build() {
+    public @Nullable PlaceholderExpansion build() {
         PlaceholderExpansion expansion = new PlaceholderExpansion() {
 
             /**
@@ -114,7 +115,7 @@ public class PlaceholderAPIBuilder {
              */
             @Override
             public @NotNull String getIdentifier() {
-                return identifier;
+                return prefix;
             }
 
             /**

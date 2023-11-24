@@ -3,6 +3,7 @@ package dev.manere.utils.location;
 import dev.manere.utils.world.Worlds;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Utility class for building {@link Location} objects.
@@ -37,7 +38,7 @@ public class LocationBuilder {
      * @param z The Z coordinate
      * @param world The world
      */
-    public LocationBuilder(double x, double y, double z, World world) {
+    public LocationBuilder(double x, double y, double z, @NotNull World world) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -54,7 +55,7 @@ public class LocationBuilder {
      * @param pitch The pitch
      * @param yaw The yaw
      */
-    public LocationBuilder(double x, double y, double z, World world, float pitch, float yaw) {
+    public LocationBuilder(double x, double y, double z, @NotNull World world, float pitch, float yaw) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -68,7 +69,7 @@ public class LocationBuilder {
      *
      * @return a new LocationBuilder
      */
-    public static LocationBuilder location() {
+    public static @NotNull LocationBuilder location() {
         return new LocationBuilder();
     }
 
@@ -82,7 +83,7 @@ public class LocationBuilder {
      * @param world The world
      * @return a new LocationBuilder
      */
-    public static LocationBuilder location(double x, double y, double z, World world) {
+    public static @NotNull LocationBuilder location(double x, double y, double z, @NotNull World world) {
         return new LocationBuilder(x, y, z, world);
     }
 
@@ -97,7 +98,7 @@ public class LocationBuilder {
      * @param yaw The yaw
      * @return a new LocationBuilder
      */
-    public static LocationBuilder location(double x, double y, double z, World world, float pitch, float yaw) {
+    public static @NotNull LocationBuilder location(double x, double y, double z, @NotNull World world, float pitch, float yaw) {
         return new LocationBuilder(x, y, z, world, pitch, yaw);
     }
 
@@ -107,7 +108,7 @@ public class LocationBuilder {
      * @param x The X coordinate
      * @return this builder
      */
-    public LocationBuilder x(double x) {
+    public @NotNull LocationBuilder x(double x) {
         this.x = x;
         return this;
     }
@@ -118,7 +119,7 @@ public class LocationBuilder {
      * @param y The Y coordinate
      * @return this builder
      */
-    public LocationBuilder y(double y) {
+    public @NotNull LocationBuilder y(double y) {
         this.y = y;
         return this;
     }
@@ -129,7 +130,7 @@ public class LocationBuilder {
      * @param z The Z coordinate
      * @return this builder
      */
-    public LocationBuilder z(double z) {
+    public @NotNull LocationBuilder z(double z) {
         this.z = z;
         return this;
     }
@@ -140,7 +141,7 @@ public class LocationBuilder {
      * @param world The world
      * @return this builder
      */
-    public LocationBuilder world(World world) {
+    public @NotNull LocationBuilder world(@NotNull World world) {
         this.world = world;
         return this;
     }
@@ -151,7 +152,7 @@ public class LocationBuilder {
      * @param pitch The pitch
      * @return this builder
      */
-    public LocationBuilder pitch(float pitch) {
+    public @NotNull LocationBuilder pitch(float pitch) {
         this.pitch = pitch;
         return this;
     }
@@ -162,7 +163,7 @@ public class LocationBuilder {
      * @param yaw The yaw
      * @return this builder
      */
-    public LocationBuilder yaw(float yaw) {
+    public @NotNull LocationBuilder yaw(float yaw) {
         this.yaw = yaw;
         return this;
     }
@@ -172,7 +173,7 @@ public class LocationBuilder {
      *
      * @return The built Location
      */
-    public Location build() {
+    public @NotNull Location build() {
         return new Location(world, x, y, z, yaw, pitch);
     }
 }

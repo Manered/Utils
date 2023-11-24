@@ -5,6 +5,7 @@ import dev.manere.utils.library.Utils;
 import dev.manere.utils.text.Text;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Represents a list of values in the configuration associated with a specific ConfigVal.
  */
-public record ConfigList(ConfigVal val) {
+public record ConfigList(@NotNull ConfigVal val) {
 
     /**
      * Creates a new ConfigList instance with the specified ConfigVal.
@@ -20,7 +21,7 @@ public record ConfigList(ConfigVal val) {
      * @param value The ConfigVal associated with this ConfigList.
      * @return A new ConfigList instance.
      */
-    public static ConfigList list(ConfigVal value) {
+    public static @NotNull ConfigList list(@NotNull ConfigVal value) {
         return new ConfigList(value);
     }
 

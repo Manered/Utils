@@ -1,5 +1,7 @@
 package dev.manere.utils.elo;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ public class ELO {
      * @param kFactor   The K-factor, which determines the sensitivity of the ELO change.
      * @return          A List containing the new ELO ratings for the two players.
      */
-    public static List<Integer> elo(Ratings<Integer, Integer> ratings, Winner winner, int kFactor) {
+    public static @NotNull List<Integer> elo(@NotNull Ratings<Integer, Integer> ratings, @NotNull Winner winner, int kFactor) {
         int rating1 = ratings.player(1);
         int rating2 = ratings.player(2);
 

@@ -21,9 +21,8 @@ public class Sidebar extends SidebarHandler<Component> {
     private static final boolean ADVENTURE_SUPPORT;
 
     static {
-        ADVENTURE_SUPPORT = ReflectionUtils
-                .optionalClass("io.papermc.paper.adventure.PaperAdventure")
-                .isPresent();
+        ADVENTURE_SUPPORT = ReflectionUtils.optionalClass("io.papermc.paper.adventure.PaperAdventure").isPresent();
+
         MethodHandles.Lookup lookup = MethodHandles.lookup();
 
         try {

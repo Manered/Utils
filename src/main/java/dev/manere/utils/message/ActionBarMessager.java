@@ -5,6 +5,7 @@ import dev.manere.utils.server.ServerUtils;
 import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Utility class for sending messages to players in the ActionBar.
@@ -17,7 +18,7 @@ public class ActionBarMessager {
      *
      * @param player The player to send messages to.
      */
-    public ActionBarMessager(Player player) {
+    public ActionBarMessager(@NotNull Player player) {
         this.player = player;
     }
 
@@ -27,7 +28,7 @@ public class ActionBarMessager {
      * @param player The player to send messages to.
      * @return An instance of ActionBarMessager.
      */
-    public static ActionBarMessager of(Player player) {
+    public static @NotNull ActionBarMessager of(@NotNull Player player) {
         return new ActionBarMessager(player);
     }
 
@@ -36,7 +37,7 @@ public class ActionBarMessager {
      *
      * @param message The message to be sent.
      */
-    public void send(Component message) {
+    public void send(@NotNull Component message) {
         player.sendActionBar(message);
     }
 
@@ -54,7 +55,7 @@ public class ActionBarMessager {
      * @param after The delay before the first message is sent (in ticks).
      * @param every The interval between subsequent messages (in ticks).
      */
-    public void send(Component text, long after, long every) {
+    public void send(@NotNull Component text, long after, long every) {
         Schedulers.async().repeating(task -> send(text), after, every);
     }
 
@@ -63,7 +64,7 @@ public class ActionBarMessager {
      *
      * @param text The message to be broadcast.
      */
-    public void broadcast(Component text) {
+    public void broadcast(@NotNull Component text) {
         ServerUtils.online().forEach(to -> to.sendActionBar(text));
     }
 }

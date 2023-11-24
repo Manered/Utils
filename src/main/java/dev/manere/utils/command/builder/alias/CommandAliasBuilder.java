@@ -1,6 +1,7 @@
 package dev.manere.utils.command.builder.alias;
 
 import dev.manere.utils.command.builder.CommandBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,9 @@ public class CommandAliasBuilder {
      *
      * @param commandBuilder The CommandBuilder associated with this CommandAliasBuilder.
      */
-    public CommandAliasBuilder(CommandBuilder commandBuilder) {
+    public CommandAliasBuilder(@NotNull CommandBuilder commandBuilder) {
         this.commandBuilder = commandBuilder;
-        this.aliases = new ArrayList<>();
+        this.aliases = commandBuilder.command().getAliases().isEmpty() ? new ArrayList<>() : commandBuilder.command().getAliases();
     }
 
     /**
@@ -28,7 +29,7 @@ public class CommandAliasBuilder {
      * @param alias The alias to be added.
      * @return This CommandAliasBuilder instance for method chaining.
      */
-    public CommandAliasBuilder add(String alias) {
+    public @NotNull CommandAliasBuilder add(@NotNull String alias) {
         this.aliases.add(alias);
         return this;
     }
@@ -38,8 +39,28 @@ public class CommandAliasBuilder {
      *
      * @return A list of aliases for the command.
      */
-    public List<String> aliases() {
+    public @NotNull List<String> aliases() {
         return aliases;
+    }
+
+
+    public @NotNull CommandAliasBuilder aliases(@NotNull List<String> aliases) {
+        this.aliases.clear();
+
+        for (String alias : aliases) {
+            this.aliases().add(alias);
+        }
+
+        return this;
+    }
+
+    /**
+     * Gets the associated CommandBuilder.
+     *
+     * @return The CommandBuilder associated with this CommandAliasBuilder.
+     */
+    public @NotNull CommandBuilder commandBuilder() {
+        return commandBuilder;
     }
 
     /**
@@ -47,8 +68,11 @@ public class CommandAliasBuilder {
      *
      * @return The CommandBuilder with the associated aliases.
      */
-    public CommandBuilder build() {
-        this.commandBuilder.aliases(this);
+    public @NotNull CommandBuilder build() {
+        if (!aliases.isEmpty()) {
+            commandBuilder().command().setAliases(aliases);
+        }
+
         return commandBuilder;
     }
 }

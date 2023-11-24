@@ -1,8 +1,10 @@
 package dev.manere.utils.command;
 
+import dev.manere.utils.command.annotation.AutoRegister;
 import dev.manere.utils.command.builder.CommandBuilder;
 import dev.manere.utils.command.builder.dispatcher.CommandDispatcher;
 import dev.manere.utils.command.builder.dispatcher.SuggestionDispatcher;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.List;
 /**
  * Bukkit-like wrapper for a command, uses {@link CommandBuilder}.
  * @see CommandBuilder
+ * @see AutoRegister
  */
 public abstract class Commander implements CommandDispatcher, SuggestionDispatcher {
     private CommandSettings settings;
@@ -33,7 +36,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      *
      * @return The command settings
      */
-    public CommandSettings settings() {
+    public @NotNull CommandSettings settings() {
         return settings;
     }
 
@@ -42,7 +45,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      *
      * @return The command name
      */
-    public String name() {
+    public @NotNull String name() {
         return name;
     }
 
@@ -50,9 +53,11 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      * Sets the settings for this command.
      *
      * @param settings The new settings
+     * @return This commander instance
      */
-    public void settings(CommandSettings settings) {
+    public @NotNull Commander settings(@NotNull CommandSettings settings) {
         this.settings = settings;
+        return this;
     }
 
     /**
@@ -61,7 +66,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      * @param name The new name
      * @return This commander instance
      */
-    public Commander name(String name) {
+    public @NotNull Commander name(@NotNull String name) {
         this.name = name;
         return this;
     }
@@ -72,7 +77,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      * @param description The description
      * @return This commander instance
      */
-    public Commander description(String description) {
+    public @NotNull Commander description(@NotNull String description) {
         this.description = description;
         return this;
     }
@@ -83,7 +88,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      * @param permission The permission
      * @return This commander instance
      */
-    public Commander permission(String permission) {
+    public @NotNull Commander permission(@NotNull String permission) {
         this.permission = permission;
         return this;
     }
@@ -94,7 +99,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      * @param usage The usage info
      * @return This commander instance
      */
-    public Commander usage(String usage) {
+    public @NotNull Commander usage(@NotNull String usage) {
         this.usage = usage;
         return this;
     }
@@ -104,7 +109,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      *
      * @return The aliases
      */
-    public List<String> aliases() {
+    public @NotNull List<String> aliases() {
         return aliases;
     }
 
@@ -113,7 +118,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      *
      * @return The description
      */
-    public String description() {
+    public @NotNull String description() {
         return description;
     }
 
@@ -122,7 +127,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      *
      * @return The permission
      */
-    public String permission() {
+    public @NotNull String permission() {
         return permission;
     }
 
@@ -131,7 +136,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      *
      * @return The usage info
      */
-    public String usage() {
+    public @NotNull String usage() {
         return usage;
     }
 }

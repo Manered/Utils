@@ -5,6 +5,8 @@ import dev.manere.utils.config.section.ConfigSelection;
 import dev.manere.utils.config.setter.ConfigSetter;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.server.ServerUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -18,7 +20,7 @@ public class Config {
      *
      * @return The Config instance.
      */
-    public static Config config() {
+    public static @NotNull Config config() {
         return new Config();
     }
 
@@ -40,7 +42,7 @@ public class Config {
      * @param key The key used to identify the configuration value.
      * @return A new ConfigKey instance.
      */
-    public static ConfigKey key(String key) {
+    public static @NotNull ConfigKey key(@NotNull String key) {
         return ConfigKey.key(key);
     }
 
@@ -50,7 +52,7 @@ public class Config {
      * @param section The ConfigSection for which a selection is created.
      * @return A new ConfigSelection instance.
      */
-    public static ConfigSelection selection(ConfigSection section) {
+    public static @NotNull ConfigSelection selection(@NotNull ConfigSection section) {
         return ConfigSelection.selection(section);
     }
 
@@ -66,7 +68,7 @@ public class Config {
      *
      * @return A new ConfigSetter instance.
      */
-    public static ConfigSetter set() {
+    public static @NotNull ConfigSetter set() {
         return new ConfigSetter();
     }
 
@@ -76,7 +78,7 @@ public class Config {
      * @param key        The key to set.
      * @param object     The value to associate with the key.
      */
-    public static void set(ConfigKey key, Object object) {
+    public static void set(@NotNull ConfigKey key, @Nullable Object object) {
         set(key, object, false);
     }
 
@@ -87,7 +89,7 @@ public class Config {
      * @param object      The value to associate with the key.
      * @param defaultVal  A flag indicating whether the specified value is the default value.
      */
-    public static void set(ConfigKey key, Object object, boolean defaultVal) {
+    public static void set(@NotNull ConfigKey key, @Nullable Object object, boolean defaultVal) {
         new ConfigSetter()
                 .key(key)
                 .val(object)
@@ -99,7 +101,7 @@ public class Config {
      *
      * @param key The key to delete.
      */
-    public static void delete(ConfigKey key) {
+    public static void delete(@NotNull ConfigKey key) {
         Utils.plugin().getConfig().set(key.path, null);
     }
 
@@ -109,7 +111,7 @@ public class Config {
      * @param section The name of the section.
      * @return A new ConfigSection instance.
      */
-    public static ConfigSection section(String section) {
+    public static ConfigSection section(@NotNull String section) {
         return ConfigSection.section(section);
     }
 
@@ -118,7 +120,7 @@ public class Config {
      *
      * @param section The ConfigSection to delete.
      */
-    public static void delete(ConfigSection section) {
+    public static void delete(@NotNull ConfigSection section) {
         section.delete();
     }
 
@@ -129,7 +131,7 @@ public class Config {
         Utils.plugin().reloadConfig();
     }
 
-    Config a() {
+    @NotNull Config a() {
         return this;
     }
 }

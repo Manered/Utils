@@ -7,6 +7,8 @@ import dev.manere.utils.text.Text;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -35,7 +37,7 @@ public class ConfigVal {
      * @param key The ConfigKey associated with this ConfigVal.
      * @return A new ConfigVal instance.
      */
-    public static ConfigVal val(ConfigKey key) {
+    public static @NotNull ConfigVal val(@NotNull ConfigKey key) {
         return new ConfigVal(key);
     }
 
@@ -44,7 +46,7 @@ public class ConfigVal {
      *
      * @return A Bukkit Location representing the value.
      */
-    public Location asLocation() {
+    public @Nullable Location asLocation() {
         return LocationUtils.deserialize((String) object);
     }
 
@@ -53,7 +55,7 @@ public class ConfigVal {
      *
      * @return A Bukkit ItemStack representing the value.
      */
-    public ItemStack asItemStack() {
+    public @Nullable ItemStack asItemStack() {
         return ItemStack.deserializeBytes(((ItemStack) object).serializeAsBytes());
     }
 
@@ -62,7 +64,7 @@ public class ConfigVal {
      *
      * @return An ItemBuilder representing the value.
      */
-    public ItemBuilder asItemBuilder() {
+    public @Nullable ItemBuilder asItemBuilder() {
         return ItemBuilder.item(asItemStack());
     }
 
@@ -71,7 +73,7 @@ public class ConfigVal {
      *
      * @return A Text object representing the value.
      */
-    public Text asText() {
+    public @Nullable Text asText() {
         return Text.text((String) object);
     }
 
@@ -80,7 +82,7 @@ public class ConfigVal {
      *
      * @return A UUID representing the value.
      */
-    public UUID asUUID() {
+    public @Nullable UUID asUUID() {
         return UUID.fromString((String) object);
     }
 
@@ -125,7 +127,7 @@ public class ConfigVal {
      *
      * @return A Material representing the value.
      */
-    public Material asMaterial() {
+    public @Nullable Material asMaterial() {
         return Material.matchMaterial((String) object);
     }
 
@@ -134,7 +136,7 @@ public class ConfigVal {
      *
      * @return A ConfigList instance representing the value as a list.
      */
-    public ConfigList asListOf() {
+    public @Nullable ConfigList asListOf() {
         return ConfigList.list(this);
     }
 }

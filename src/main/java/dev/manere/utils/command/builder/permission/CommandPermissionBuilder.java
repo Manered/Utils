@@ -2,6 +2,8 @@ package dev.manere.utils.command.builder.permission;
 
 import dev.manere.utils.command.builder.CommandBuilder;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A builder class for setting custom permissions for a command associated with a CommandBuilder.
@@ -17,7 +19,7 @@ public class CommandPermissionBuilder {
      *
      * @param commandBuilder The CommandBuilder associated with this CommandPermissionBuilder.
      */
-    public CommandPermissionBuilder(CommandBuilder commandBuilder) {
+    public CommandPermissionBuilder(@NotNull CommandBuilder commandBuilder) {
         this.commandBuilder = commandBuilder;
     }
 
@@ -27,7 +29,7 @@ public class CommandPermissionBuilder {
      * @param type The type of the command permission.
      * @return This CommandPermissionBuilder instance for method chaining.
      */
-    public CommandPermissionBuilder type(CommandPermission type) {
+    public @NotNull CommandPermissionBuilder type(@NotNull CommandPermission type) {
         this.type = type;
         return this;
     }
@@ -38,7 +40,7 @@ public class CommandPermissionBuilder {
      * @param message The custom message for the command permission.
      * @return This CommandPermissionBuilder instance for method chaining.
      */
-    public CommandPermissionBuilder message(Component message) {
+    public @NotNull CommandPermissionBuilder message(@Nullable Component message) {
         this.message = message;
         return this;
     }
@@ -49,7 +51,7 @@ public class CommandPermissionBuilder {
      * @param custom The custom permission string.
      * @return This CommandPermissionBuilder instance for method chaining.
      */
-    public CommandPermissionBuilder custom(String custom) {
+    public @NotNull CommandPermissionBuilder custom(@NotNull String custom) {
         this.custom = custom;
         return this;
     }
@@ -59,7 +61,7 @@ public class CommandPermissionBuilder {
      *
      * @return The CommandBuilder associated with this CommandPermissionBuilder.
      */
-    public CommandBuilder commandBuilder() {
+    public @NotNull CommandBuilder commandBuilder() {
         return commandBuilder;
     }
 
@@ -68,7 +70,7 @@ public class CommandPermissionBuilder {
      *
      * @return The type of the command permission.
      */
-    public CommandPermission type() {
+    public @Nullable CommandPermission type() {
         return type;
     }
 
@@ -77,7 +79,7 @@ public class CommandPermissionBuilder {
      *
      * @return The custom permission string.
      */
-    public String custom() {
+    public @Nullable String custom() {
         return custom;
     }
 
@@ -86,7 +88,7 @@ public class CommandPermissionBuilder {
      *
      * @return The custom message for the command permission.
      */
-    public Component message() {
+    public @Nullable Component message() {
         return message;
     }
 
@@ -97,7 +99,7 @@ public class CommandPermissionBuilder {
      * @param suffix The suffix for the custom permission string.
      * @return This CommandPermissionBuilder instance for method chaining.
      */
-    public CommandPermissionBuilder custom(String prefix, String suffix) {
+    public @NotNull CommandPermissionBuilder custom(@NotNull String prefix, @NotNull String suffix) {
         this.custom = prefix + "." + suffix;
         return this;
     }
@@ -107,8 +109,13 @@ public class CommandPermissionBuilder {
      *
      * @return The CommandBuilder with the associated command permission.
      */
-    public CommandBuilder build() {
-        commandBuilder.permission(this);
+    public @NotNull CommandBuilder build() {
+        commandBuilder().command().setPermission(custom());
+
+        if (message() != null) {
+            commandBuilder().command().permissionMessage(message());
+        }
+
         return commandBuilder;
     }
 }

@@ -7,6 +7,7 @@ import dev.manere.utils.scheduler.TickTimes;
 import dev.manere.utils.scheduler.builder.SchedulerBuilder;
 import dev.manere.utils.scheduler.builder.TaskType;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -25,18 +26,18 @@ public class SchedulerStacker {
 
     /**
      * Creates a new instance of SchedulerStacker.
-     * @return A new SchedulerStacker instance.
+     * @return A new @NotNull SchedulerStacker instance.
      */
-    public static SchedulerStacker stacker() {
+    public static @NotNull SchedulerStacker stacker() {
         return new SchedulerStacker();
     }
 
     /**
      * Adds an asynchronous task to the scheduler.
      * @param task The asynchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker thenAsync(Consumer<BukkitTask> task) {
+    public @NotNull SchedulerStacker thenAsync(@NotNull Consumer<BukkitTask> task) {
         Schedulers.async().now(task);
         return this;
     }
@@ -44,9 +45,9 @@ public class SchedulerStacker {
     /**
      * Adds an asynchronous task to the scheduler.
      * @param task The asynchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker thenAsync(Runnable task) {
+    public @NotNull SchedulerStacker thenAsync(@NotNull Runnable task) {
         Schedulers.async().now(task);
         return this;
     }
@@ -54,9 +55,9 @@ public class SchedulerStacker {
     /**
      * Adds a synchronous task to the scheduler.
      * @param task The synchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker then(Consumer<BukkitTask> task) {
+    public @NotNull SchedulerStacker then(@NotNull Consumer<BukkitTask> task) {
         Schedulers.sync().now(task);
         return this;
     }
@@ -64,9 +65,9 @@ public class SchedulerStacker {
     /**
      * Adds a synchronous task to the scheduler.
      * @param task The synchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker then(Runnable task) {
+    public @NotNull SchedulerStacker then(@NotNull Runnable task) {
         Schedulers.sync().now(task);
         return this;
     }
@@ -75,9 +76,9 @@ public class SchedulerStacker {
      * Adds an asynchronous delayed task to the scheduler.
      * @param after The delay before the task is executed, in server ticks.
      * @param task The asynchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker thenAsync(long after, Consumer<BukkitTask> task) {
+    public @NotNull SchedulerStacker thenAsync(long after, @NotNull Consumer<BukkitTask> task) {
         Schedulers.async().later(task, after);
         return this;
     }
@@ -86,9 +87,9 @@ public class SchedulerStacker {
      * Adds an asynchronous delayed task to the scheduler.
      * @param after The delay before the task is executed, in server ticks.
      * @param task The asynchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker thenAsync(long after, Runnable task) {
+    public @NotNull SchedulerStacker thenAsync(long after, @NotNull Runnable task) {
         Schedulers.async().later(task, after);
         return this;
     }
@@ -97,9 +98,9 @@ public class SchedulerStacker {
      * Adds a synchronous delayed task to the scheduler.
      * @param after The delay before the task is executed, in server ticks.
      * @param task The synchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker then(long after, Consumer<BukkitTask> task) {
+    public @NotNull SchedulerStacker then(long after, @NotNull Consumer<BukkitTask> task) {
         Schedulers.sync().later(task, after);
         return this;
     }
@@ -108,9 +109,9 @@ public class SchedulerStacker {
      * Adds a synchronous delayed task to the scheduler.
      * @param after The delay before the task is executed, in server ticks.
      * @param task The synchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker then(long after, Runnable task) {
+    public @NotNull SchedulerStacker then(long after, @NotNull Runnable task) {
         Schedulers.sync().later(task, after);
         return this;
     }
@@ -120,9 +121,9 @@ public class SchedulerStacker {
      * @param after The delay before the first execution, in server ticks.
      * @param every The time between successive executions, in server ticks.
      * @param task The asynchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker thenAsync(long after, long every, Consumer<BukkitTask> task) {
+    public @NotNull SchedulerStacker thenAsync(long after, long every, @NotNull Consumer<BukkitTask> task) {
         Schedulers.async().repeating(task, after, every);
         return this;
     }
@@ -132,9 +133,9 @@ public class SchedulerStacker {
      * @param after The delay before the first execution, in server ticks.
      * @param every The time between successive executions, in server ticks.
      * @param task The asynchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker thenAsync(long after, long every, Runnable task) {
+    public @NotNull SchedulerStacker thenAsync(long after, long every, @NotNull Runnable task) {
         Schedulers.async().repeating(task, after, every);
         return this;
     }
@@ -144,9 +145,9 @@ public class SchedulerStacker {
      * @param after The delay before the first execution, in server ticks.
      * @param every The time between successive executions, in server ticks.
      * @param task The synchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker then(long after, long every, Consumer<BukkitTask> task) {
+    public @NotNull SchedulerStacker then(long after, long every, @NotNull Consumer<BukkitTask> task) {
         Schedulers.sync().repeating(task, after, every);
         return this;
     }
@@ -156,9 +157,9 @@ public class SchedulerStacker {
      * @param after The delay before the first execution, in server ticks.
      * @param every The time between successive executions, in server ticks.
      * @param task The synchronous task to be executed.
-     * @return The current SchedulerStacker instance for method chaining.
+     * @return The current @NotNull SchedulerStacker instance for method chaining.
      */
-    public SchedulerStacker then(long after, long every, Runnable task) {
+    public @NotNull SchedulerStacker then(long after, long every, @NotNull Runnable task) {
         Schedulers.sync().repeating(task, after, every);
         return this;
     }

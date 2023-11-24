@@ -5,6 +5,7 @@ import dev.manere.utils.event.crystal.SpigotEventListener;
 import dev.manere.utils.menu.MenuListener;
 import dev.manere.utils.registration.Registrar;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The {@code Utils} class provides utility methods and event registration for the Utils library.
@@ -18,15 +19,11 @@ public class Utils {
      *
      * @param plugin The JavaPlugin instance that will be used.
      */
-    private Utils(JavaPlugin plugin) {
+    private Utils(@NotNull JavaPlugin plugin) {
         Utils.plugin = plugin;
 
-        if (Utils.plugin() != null) {
-            Registrar.events(new SpigotEventListener());
-            Registrar.events(new MenuListener());
-        } else {
-            throw new NullPointerException("Did you seriously just make the most important part of a library NULL?");
-        }
+        Registrar.events(new SpigotEventListener());
+        Registrar.events(new MenuListener());
 
         AutoRegisterHandler.scanAndRegister();
     }
@@ -36,7 +33,7 @@ public class Utils {
      *
      * @param plugin The JavaPlugin instance that will be used.
      */
-    public static Utils init(JavaPlugin plugin) {
+    public static @NotNull Utils init(@NotNull JavaPlugin plugin) {
         return new Utils(plugin);
     }
 
@@ -45,7 +42,7 @@ public class Utils {
      *
      * @return The JavaPlugin instance that will be used for event registration and more.
      */
-    public static JavaPlugin plugin() {
+    public static @NotNull JavaPlugin plugin() {
         return plugin;
     }
 
@@ -57,7 +54,7 @@ public class Utils {
      *
      * @param plugin The JavaPlugin instance that will be used.
      */
-    public void plugin(JavaPlugin plugin) {
+    public void plugin(@NotNull JavaPlugin plugin) {
         Utils.plugin = plugin;
     }
 }

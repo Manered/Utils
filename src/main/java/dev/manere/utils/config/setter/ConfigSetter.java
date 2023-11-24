@@ -7,6 +7,8 @@ import dev.manere.utils.library.Utils;
 import dev.manere.utils.text.Text;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class ConfigSetter {
      * @param key The ConfigKey for the configuration value.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter key(ConfigKey key) {
+    public @NotNull ConfigSetter key(@NotNull ConfigKey key) {
         this.key = key;
         return this;
     }
@@ -43,7 +45,7 @@ public class ConfigSetter {
      * @param val The value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(Object val) {
+    public @NotNull ConfigSetter val(@Nullable Object val) {
         this.val = val;
         return this;
     }
@@ -54,8 +56,11 @@ public class ConfigSetter {
      * @param val The Text value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(Text val) {
-        this.val = val.toString();
+    public @NotNull ConfigSetter val(@Nullable Text val) {
+        if (val != null) {
+            this.val = val.toString();
+        }
+
         return this;
     }
 
@@ -65,7 +70,7 @@ public class ConfigSetter {
      * @param val The Location value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(Location val) {
+    public @NotNull ConfigSetter val(@Nullable Location val) {
         this.val = val;
         return this;
     }
@@ -76,7 +81,7 @@ public class ConfigSetter {
      * @param val The ItemStack value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(ItemStack val) {
+    public @NotNull ConfigSetter val(@Nullable ItemStack val) {
         this.val = val;
         return this;
     }
@@ -87,7 +92,7 @@ public class ConfigSetter {
      * @param val The ItemBuilder value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(ItemBuilder val) {
+    public @NotNull ConfigSetter val(@Nullable ItemBuilder val) {
         this.val = val;
         return this;
     }
@@ -98,7 +103,7 @@ public class ConfigSetter {
      * @param val The List value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(List<?> val) {
+    public @NotNull ConfigSetter val(@Nullable List<?> val) {
         this.val = val;
         return this;
     }
@@ -109,7 +114,7 @@ public class ConfigSetter {
      * @param val The integer value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(int val) {
+    public @NotNull ConfigSetter val(int val) {
         this.val = val;
         return this;
     }
@@ -120,7 +125,7 @@ public class ConfigSetter {
      * @param val The double value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(double val) {
+    public @NotNull ConfigSetter val(double val) {
         this.val = val;
         return this;
     }
@@ -131,7 +136,7 @@ public class ConfigSetter {
      * @param val The long value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(long val) {
+    public @NotNull ConfigSetter val(long val) {
         this.val = val;
         return this;
     }
@@ -142,7 +147,7 @@ public class ConfigSetter {
      * @param val The float value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(float val) {
+    public @NotNull ConfigSetter val(float val) {
         this.val = val;
         return this;
     }
@@ -153,7 +158,7 @@ public class ConfigSetter {
      * @param val The boolean value to set for the configuration key.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter val(boolean val) {
+    public @NotNull ConfigSetter val(boolean val) {
         this.val = val;
         return this;
     }
@@ -164,7 +169,7 @@ public class ConfigSetter {
      * @param defaultVal A boolean flag indicating whether the value is the default value.
      * @return The ConfigSetter instance for method chaining.
      */
-    public ConfigSetter defaultVal(boolean defaultVal) {
+    public @NotNull ConfigSetter defaultVal(boolean defaultVal) {
         this.defaultVal = defaultVal;
         return this;
     }
@@ -175,7 +180,7 @@ public class ConfigSetter {
      * @return The Config instance for further configuration or interaction.
      * @throws IllegalArgumentException If key, key.val, or val is null.
      */
-    public Config build() {
+    public @NotNull Config build() {
         if (key == null || key.val == null || val == null) {
             throw new IllegalArgumentException("key or val must not be null");
         }

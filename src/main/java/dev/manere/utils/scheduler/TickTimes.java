@@ -1,6 +1,7 @@
 package dev.manere.utils.scheduler;
 
 import dev.manere.utils.scheduler.builder.SchedulerBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,18 +24,19 @@ import java.util.concurrent.TimeUnit;
  * @see SyncScheduler
  * @see SchedulerBuilder
  */
+@SuppressWarnings("SameReturnValue")
 public class TickTimes {
-    public static long SECOND = oneSecondToTicks();
-    public static long MINUTE = oneMinuteToTicks();
-    public static long HOUR = oneHourToTicks();
-    public static long DAY = oneDayToTicks();
+    public static long SECOND = oneSecond();
+    public static long MINUTE = oneMinute();
+    public static long HOUR = oneHour();
+    public static long DAY = oneDay();
 
     /**
      * Converts 1 second to ticks.
      *
      * @return Ticks equivalent to 1 second.
      */
-    public static long oneSecondToTicks() {
+    public static long oneSecond() {
         return 20L;
     }
 
@@ -43,7 +45,7 @@ public class TickTimes {
      *
      * @return Ticks equivalent to 1 minute.
      */
-    public static long oneMinuteToTicks() {
+    public static long oneMinute() {
         return 1200L;
     }
 
@@ -52,7 +54,7 @@ public class TickTimes {
      *
      * @return Ticks equivalent to 1 hour.
      */
-    public static long oneHourToTicks() {
+    public static long oneHour() {
         return 72000L;
     }
 
@@ -61,7 +63,7 @@ public class TickTimes {
      *
      * @return Ticks equivalent to 1 day.
      */
-    public static long oneDayToTicks() {
+    public static long oneDay() {
         return 1728000L;
     }
 
@@ -72,7 +74,7 @@ public class TickTimes {
      * @return Equivalent ticks
      */
     public static long secondsToTicks(int seconds) {
-        return (long) seconds * oneSecondToTicks();
+        return (long) seconds * oneSecond();
     }
 
     /**
@@ -82,7 +84,7 @@ public class TickTimes {
      * @return Equivalent ticks
      */
     public static long minutesToTicks(int minutes) {
-        return (long) minutes * oneMinuteToTicks();
+        return (long) minutes * oneMinute();
     }
 
     /**
@@ -92,7 +94,7 @@ public class TickTimes {
      * @return Equivalent ticks
      */
     public static long hoursToTicks(int hours) {
-        return (long) hours * oneHourToTicks();
+        return (long) hours * oneHour();
     }
 
     /**
@@ -102,7 +104,7 @@ public class TickTimes {
      * @return Equivalent ticks
      */
     public static long daysToTicks(int days) {
-        return (long) days * oneDayToTicks();
+        return (long) days * oneDay();
     }
 
     /**
@@ -112,7 +114,7 @@ public class TickTimes {
      * @return Equivalent ticks
      */
     public static long secondsToTicks(long seconds) {
-        return seconds * oneSecondToTicks();
+        return seconds * oneSecond();
     }
 
     /**
@@ -122,7 +124,7 @@ public class TickTimes {
      * @return Equivalent ticks
      */
     public static long minutesToTicks(long minutes) {
-        return minutes * oneMinuteToTicks();
+        return minutes * oneMinute();
     }
 
     /**
@@ -132,7 +134,7 @@ public class TickTimes {
      * @return Equivalent ticks
      */
     public static long hoursToTicks(long hours) {
-        return hours * oneHourToTicks();
+        return hours * oneHour();
     }
 
     /**
@@ -142,7 +144,7 @@ public class TickTimes {
      * @return Equivalent ticks
      */
     public static long daysToTicks(long days) {
-        return days * oneDayToTicks();
+        return days * oneDay();
     }
 
     /**
@@ -152,7 +154,7 @@ public class TickTimes {
      * @return The number of seconds
      */
     public static long ticksToSeconds(int ticks) {
-        return ticks / oneSecondToTicks();
+        return ticks / oneSecond();
     }
 
     /**
@@ -162,7 +164,7 @@ public class TickTimes {
      * @return The number of minutes
      */
     public static long ticksToMinutes(int ticks) {
-        return ticks / oneMinuteToTicks();
+        return ticks / oneMinute();
     }
 
     /**
@@ -172,7 +174,7 @@ public class TickTimes {
      * @return The number of hours
      */
     public static long ticksToHours(int ticks) {
-        return ticks / oneHourToTicks();
+        return ticks / oneHour();
     }
 
     /**
@@ -182,7 +184,7 @@ public class TickTimes {
      * @return The number of days
      */
     public static long ticksToDays(int ticks) {
-        return ticks / oneDayToTicks();
+        return ticks / oneDay();
     }
 
     /**
@@ -192,7 +194,7 @@ public class TickTimes {
      * @return The number of seconds
      */
     public static long ticksToSeconds(long ticks) {
-        return ticks / oneSecondToTicks();
+        return ticks / oneSecond();
     }
 
     /**
@@ -202,7 +204,7 @@ public class TickTimes {
      * @return The number of minutes
      */
     public static long ticksToMinutes(long ticks) {
-        return ticks / oneMinuteToTicks();
+        return ticks / oneMinute();
     }
 
     /**
@@ -212,7 +214,7 @@ public class TickTimes {
      * @return The number of hours
      */
     public static long ticksToHours(long ticks) {
-        return ticks / oneHourToTicks();
+        return ticks / oneHour();
     }
 
     /**
@@ -222,7 +224,7 @@ public class TickTimes {
      * @return The number of days
      */
     public static long ticksToDays(long ticks) {
-        return ticks / oneDayToTicks();
+        return ticks / oneDay();
     }
 
     /**
@@ -233,7 +235,7 @@ public class TickTimes {
      * @return the number of ticks
      * @throws UnsupportedOperationException if the time unit is not supported
      */
-    public static long ticks(int val, TimeUnit unit) {
+    public static long ticks(int val, @NotNull TimeUnit unit) {
         return switch (unit) {
             case NANOSECONDS, MILLISECONDS, MICROSECONDS -> throw new UnsupportedOperationException();
             case SECONDS -> secondsToTicks(val);
@@ -252,7 +254,7 @@ public class TickTimes {
      * @return the amount of time units
      * @throws UnsupportedOperationException if the time unit is not supported
      */
-    public static int val(long ticks, TimeUnit unit) {
+    public static int val(long ticks, @NotNull TimeUnit unit) {
         return switch (unit) {
             case NANOSECONDS, MICROSECONDS, MILLISECONDS -> throw new UnsupportedOperationException();
             case SECONDS -> (int) ticksToSeconds(ticks);
