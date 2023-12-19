@@ -3,6 +3,9 @@ package dev.manere.utils.logger;
 import dev.manere.utils.library.Utils;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.LoggerFactory;
+
 import java.util.logging.Logger;
 
 /**
@@ -10,7 +13,6 @@ import java.util.logging.Logger;
  * in a Bukkit plugin, including Adventure loggers and prefixed loggers.
  */
 public class Loggers {
-
     /**
      * Returns an AdventureLogger instance for logging messages with Adventure components.
      *
@@ -85,5 +87,15 @@ public class Loggers {
      */
     public static Logger server(Plugin plugin) {
         return plugin.getServer().getLogger();
+    }
+
+    /**
+     * Returns the class logger associated with the provided class.
+     *
+     * @param clazz The class.
+     * @return The class logger.
+     */
+    public static <L> org.slf4j.Logger logger(@NotNull Class<L> clazz) {
+        return LoggerFactory.getLogger(clazz);
     }
 }

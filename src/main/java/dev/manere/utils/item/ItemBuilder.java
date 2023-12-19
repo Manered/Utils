@@ -1,8 +1,11 @@
 package dev.manere.utils.item;
 
 import dev.manere.utils.library.Utils;
+import dev.manere.utils.misc.Storable;
 import dev.manere.utils.player.PlayerUtils;
 import dev.manere.utils.scheduler.Schedulers;
+import dev.manere.utils.serializers.Serializers;
+import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -15,17 +18,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Utility class for building customized {@link ItemStack}s.
  * Provides methods for setting display name, lore, enchantments, etc.
  */
-public class ItemBuilder {
+public class ItemBuilder implements Storable<ItemBuilder> {
     private final ItemStack itemStack;
 
     /**
@@ -116,6 +121,10 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder name(String name) {
+        return name(TextStyle.style(name));
+    }
+
     /**
      * Sets the display name of the ItemStack without automatically colorizing it.
      *
@@ -166,7 +175,7 @@ public class ItemBuilder {
         SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
 
         if (itemMeta != null) {
-            Schedulers.async().now(() -> itemMeta.setOwnerProfile(Bukkit.getOfflinePlayer(UUID.fromString(playerName)).getPlayerProfile()));
+            Schedulers.async().execute(() -> itemMeta.setOwnerProfile(Bukkit.getOfflinePlayer(UUID.fromString(playerName)).getPlayerProfile()));
         }
 
         itemStack.setItemMeta(itemMeta);
@@ -184,7 +193,7 @@ public class ItemBuilder {
         SkullMeta itemMeta = (SkullMeta) itemStack.getItemMeta();
 
         if (itemMeta != null) {
-            Schedulers.async().now(() -> itemMeta.setOwnerProfile(player.getPlayerProfile()));
+            Schedulers.async().execute(() -> itemMeta.setOwnerProfile(player.getPlayerProfile()));
         }
 
         itemStack.setItemMeta(itemMeta);
@@ -299,12 +308,12 @@ public class ItemBuilder {
     /**
      * Sets the durability of the ItemStack.
      *
-     * @param durability The durability to set
+     * @param damage The durability to set
      * @return This builder, for chaining
      */
-    public ItemBuilder durability(int durability) {
+    public ItemBuilder durability(int damage) {
         if (itemStack.getItemMeta() instanceof Damageable damageable) {
-            damageable.setDamage(durability);
+            damageable.setDamage(damage);
             itemStack.setItemMeta(damageable);
         } else {
             throw new IllegalArgumentException("ItemMeta is required to be an instance of Damageable to set the durability!");
@@ -365,6 +374,7 @@ public class ItemBuilder {
      */
     public ItemBuilder removeGlow() {
         removeEnchantment(Enchantment.LUCK);
+        removeFlag(ItemFlag.HIDE_ENCHANTS);
         return this;
     }
 
@@ -378,6 +388,22 @@ public class ItemBuilder {
 
         if (meta != null) {
             meta.setUnbreakable(true);
+        }
+
+        itemStack.setItemMeta(meta);
+        return this;
+    }
+
+    /**
+     * Sets the ItemStack to be breakable.
+     *
+     * @return This builder, for chaining
+     */
+    public ItemBuilder breakable() {
+        ItemMeta meta = itemStack.getItemMeta();
+
+        if (meta != null) {
+            meta.setUnbreakable(false);
         }
 
         itemStack.setItemMeta(meta);
@@ -422,6 +448,48 @@ public class ItemBuilder {
     }
 
     /**
+     * Gets the {@link PersistentDataContainer} of the ItemStack.
+     *
+     * @return The PersistentDataContainer
+     */
+    public PersistentDataContainer pdc() {
+        return itemStack.getItemMeta().getPersistentDataContainer();
+    }
+
+    /**
+     * Edits the ItemMeta of the ItemStack using the provided consumer.
+     *
+     * @param metaConsumer The consumer to apply modifications to the ItemMeta
+     * @return This builder, for chaining
+     */
+    public ItemBuilder editMeta(Consumer<ItemMeta> metaConsumer) {
+        itemStack.editMeta(metaConsumer);
+        return this;
+    }
+
+    /**
+     * Edits the ItemStack using the provided consumer.
+     *
+     * @param stackConsumer The consumer to apply modifications to the ItemStack
+     * @return This builder, for chaining
+     */
+    public ItemBuilder editStack(Consumer<ItemStack> stackConsumer) {
+        stackConsumer.accept(itemStack);
+        return this;
+    }
+
+    /**
+     * Edits the PersistentDataContainer of the ItemStack using the provided consumer.
+     *
+     * @param pdcConsumer The consumer to apply modifications to the PersistentDataContainer
+     * @return This builder, for chaining
+     */
+    public ItemBuilder editPdc(Consumer<PersistentDataContainer> pdcConsumer) {
+        pdcConsumer.accept(itemStack.getItemMeta().getPersistentDataContainer());
+        return this;
+    }
+
+    /**
      * Creates an ItemBuilder from an existing {@link ItemStack}.
      *
      * @param itemStack The ItemStack to convert to an ItemBuilder
@@ -431,16 +499,34 @@ public class ItemBuilder {
         return new ItemBuilder(itemStack);
     }
 
+    /**
+     * Sets the book-related data for the ItemStack.
+     *
+     * @param bookMeta The BookMeta containing book-related data
+     * @return This builder, for chaining
+     */
     public ItemBuilder bookData(BookMeta bookMeta) {
         itemStack.setItemMeta(bookMeta);
         return this;
     }
 
+    /**
+     * Sets the banner-related data for the ItemStack.
+     *
+     * @param bannerMeta The BannerMeta containing banner-related data
+     * @return This builder, for chaining
+     */
     public ItemBuilder bannerData(BannerMeta bannerMeta) {
         itemStack.setItemMeta(bannerMeta);
         return this;
     }
 
+    /**
+     * Sets the color of the leather armor ItemStack.
+     *
+     * @param color The color to set for the leather armor
+     * @return This builder, for chaining
+     */
     public ItemBuilder leatherArmorColor(Color color) {
         LeatherArmorMeta meta = (LeatherArmorMeta) itemStack.getItemMeta();
 
@@ -450,12 +536,25 @@ public class ItemBuilder {
         return this;
     }
 
+    /**
+     * Sets the firework-related data for the ItemStack.
+     *
+     * @param meta The FireworkMeta containing firework-related data
+     * @return This builder, for chaining
+     */
     public ItemBuilder fireworkData(FireworkMeta meta) {
         itemStack.setItemMeta(meta);
         return this;
     }
 
-    public ItemBuilder addItemAttribute(Attribute attribute, AttributeModifier modifier) {
+    /**
+     * Adds an attribute to the ItemStack.
+     *
+     * @param attribute The attribute to add
+     * @param modifier The attribute modifier to apply
+     * @return This builder, for chaining
+     */
+    public ItemBuilder addAttribute(Attribute attribute, AttributeModifier modifier) {
         ItemMeta meta = itemStack.getItemMeta();
 
         if (meta != null) meta.addAttributeModifier(attribute, modifier);
@@ -464,7 +563,12 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder clearItemAttributes() {
+    /**
+     * Clears all attribute modifiers from the ItemStack.
+     *
+     * @return This builder, for chaining
+     */
+    public ItemBuilder clearAttributes() {
         ItemMeta meta = itemStack.getItemMeta();
 
         if (meta != null) Objects.requireNonNull(meta.getAttributeModifiers())
@@ -474,6 +578,11 @@ public class ItemBuilder {
         return this;
     }
 
+    /**
+     * Hides attributes from being displayed on the ItemStack.
+     *
+     * @return This builder, for chaining
+     */
     public ItemBuilder hideAttributes() {
         ItemMeta meta = itemStack.getItemMeta();
 
@@ -490,7 +599,23 @@ public class ItemBuilder {
      *
      * @return The built ItemStack
      */
-    public ItemStack build(){
+    public ItemStack build() {
         return itemStack;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String serialize() {
+        return Serializers.base64().serializeItemBuilder(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ItemBuilder deserialize(String serialized) {
+        return ItemBuilder.item(Serializers.base64().deserialize(serialized));
     }
 }

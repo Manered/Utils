@@ -13,7 +13,6 @@ import java.util.function.Predicate;
  * A utility class providing methods for reflection-related tasks.
  */
 public class ReflectionUtils {
-
     public static final String NM_PACKAGE = "net.minecraft";
     public static final String CRAFTBUKKIT_PACKAGE = "org.bukkit.craftbukkit";
     public static final String NMS_PACKAGE = NM_PACKAGE + ".server";
@@ -21,6 +20,10 @@ public class ReflectionUtils {
     private static final MethodType VOID_METHOD_TYPE = MethodType.methodType(void.class);
     private static final boolean NMS_REPACKAGED = optionalClass(NM_PACKAGE + ".network.protocol.Packet").isPresent();
     private static volatile Object theUnsafe;
+
+    public static boolean compare(Class<?> a, Class<?> b) {
+        return a.getCanonicalName().equals(b.getCanonicalName());
+    }
 
     /**
      * Checks if the net.minecraft server package has been repackaged.

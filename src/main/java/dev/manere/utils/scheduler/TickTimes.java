@@ -1,6 +1,7 @@
 package dev.manere.utils.scheduler;
 
-import dev.manere.utils.scheduler.builder.SchedulerBuilder;
+import dev.manere.utils.scheduler.async.AsyncScheduler;
+import dev.manere.utils.scheduler.sync.SyncScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
@@ -22,7 +23,6 @@ import java.util.concurrent.TimeUnit;
  * @see Schedulers
  * @see AsyncScheduler
  * @see SyncScheduler
- * @see SchedulerBuilder
  */
 @SuppressWarnings("SameReturnValue")
 public class TickTimes {

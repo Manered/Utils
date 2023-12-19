@@ -17,7 +17,6 @@ import java.util.concurrent.CompletableFuture;
  * Represents tier list data obtained from an external API.
  */
 public record TierList(List<List<List<JsonPrimitive>>> rankings, Map<String, ShortPlayerInfo> players) {
-
     /**
      * Represents a summary of player information for tier lists.
      */

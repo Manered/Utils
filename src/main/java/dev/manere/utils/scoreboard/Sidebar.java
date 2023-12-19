@@ -10,12 +10,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 
-/**
- * Lightweight packet-based scoreboard API for Bukkit plugins.
- * Basically the same as FastBoard. It's literally using the code of it, it's just made a tiny bit prettier.
- */
 public class Sidebar extends SidebarHandler<Component> {
-
     private static final MethodHandle COMPONENT_METHOD;
     private static final Object EMPTY_COMPONENT;
     private static final boolean ADVENTURE_SUPPORT;
@@ -47,6 +42,10 @@ public class Sidebar extends SidebarHandler<Component> {
      */
     public Sidebar(Player player) {
         super(player);
+    }
+
+    public static Sidebar sidebar(Player player) {
+        return new Sidebar(player);
     }
 
     /**

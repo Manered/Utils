@@ -14,7 +14,6 @@ import java.io.File;
  * Utility class for managing and interacting with configuration settings in a Bukkit plugin.
  */
 public class Config {
-
     /**
      * Retrieves the singleton instance of the Config class.
      *

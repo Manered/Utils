@@ -16,9 +16,9 @@ import java.util.UUID;
  * Represents a value associated with a configuration key.
  */
 public class ConfigVal {
-    public final ConfigKey key;
-    public final Object object;
-    public final String path;
+    private final ConfigKey key;
+    private final Object object;
+    final String path;
 
     /**
      * Constructs a ConfigVal with the specified ConfigKey.
@@ -138,5 +138,9 @@ public class ConfigVal {
      */
     public @Nullable ConfigList asListOf() {
         return ConfigList.list(this);
+    }
+
+    public ConfigKey key() {
+        return key;
     }
 }

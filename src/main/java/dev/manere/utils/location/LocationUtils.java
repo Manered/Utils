@@ -16,7 +16,6 @@ import java.util.Objects;
  * Utility class for performing operations and checks related to locations and coordinates.
  */
 public class LocationUtils {
-
     /**
      * Checks if a given integer value is between two other integer values.
      *

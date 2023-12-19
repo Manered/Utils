@@ -14,7 +14,6 @@ import java.util.Scanner;
  */
 @SuppressWarnings("UnstableApiUsage") /* I sure do love the Paper API */
 public class Updater {
-
     /**
      * Fetches the latest version of the plugin from the SpigotMC API.
      *

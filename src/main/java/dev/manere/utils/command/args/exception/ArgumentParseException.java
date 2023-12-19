@@ -3,7 +3,7 @@ package dev.manere.utils.command.args.exception;
 /**
  * Exception thrown when there is an issue parsing command arguments.
  */
-public class ArgumentParseException extends Exception {
+public class ArgumentParseException extends RuntimeException {
     private final ArgumentExType type;
 
     /**

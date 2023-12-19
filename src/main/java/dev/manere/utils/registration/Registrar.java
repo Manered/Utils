@@ -1,12 +1,12 @@
 package dev.manere.utils.registration;
 
-import dev.manere.utils.command.CommandType;
+import dev.manere.utils.command.CommandTypes;
 import dev.manere.utils.command.Commander;
 import dev.manere.utils.command.args.Argument;
-import dev.manere.utils.command.builder.CommandBuilder;
-import dev.manere.utils.command.builder.CommandBuilderHandler;
-import dev.manere.utils.command.builder.dispatcher.CommandContext;
-import dev.manere.utils.command.builder.permission.CommandPermission;
+import dev.manere.utils.command.impl.Commands;
+import dev.manere.utils.command.impl.CommandsRegistrar;
+import dev.manere.utils.command.impl.dispatcher.CommandContext;
+import dev.manere.utils.command.impl.permission.CommandPermission;
 import dev.manere.utils.library.Utils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,7 +25,6 @@ import java.util.function.Predicate;
  * A utility class for registering various components in a Bukkit plugin.
  */
 public class Registrar {
-
     /**
      * Registers a listener with the provided plugin.
      *
@@ -119,7 +118,7 @@ public class Registrar {
      */
     @SuppressWarnings("DataFlowIssue")
     public static void command(@NotNull Commander commander) {
-        if (commander.settings().type() == CommandType.COMMAND_MAP) {
+        if (commander.settings().type().type() == CommandTypes.COMMAND_MAP.type()) {
             Registrar.command(
                     commander,
                     commander.aliases(),
@@ -130,7 +129,9 @@ public class Registrar {
             return;
         }
 
-        if (commander.settings().type() == CommandType.PLUGIN_YML && Utils.plugin().getCommand(commander.name()) == null) {
+        if (commander.settings().type().type() == CommandTypes.PLUGIN_YML.type()
+                && Utils.plugin().getCommand(commander.name()) == null)
+        {
             throw new NullPointerException("You seem to have forgotten to provide the command '" + commander.name() + "' " +
                     "in the plugin.yml file inside of your project.");
         }
@@ -156,7 +157,7 @@ public class Registrar {
      * @see Commander
      */
     public static void command(@NotNull Commander commander, @Nullable List<String> aliases, @Nullable String description, @Nullable String permission, @Nullable String usage) {
-        CommandBuilder builder = CommandBuilder.command(commander.name(), commander.settings().type());
+        Commands builder = Commands.command(commander.name(), commander.settings().type());
 
         if (aliases != null && !aliases.isEmpty()) {
             builder.aliases().aliases(aliases).build();
@@ -184,8 +185,8 @@ public class Registrar {
     }
 
     @SuppressWarnings("DataFlowIssue")
-    public static void commandMap(CommandBuilderHandler handler) {
-        CommandBuilder builder = handler.commandBuilder();
+    public static void commandMap(CommandsRegistrar handler) {
+        Commands builder = handler.commandBuilder();
 
         Command command = new Command(builder.name(), builder.description(), builder.usage(), builder.aliases().aliases()) {
 
@@ -230,6 +231,6 @@ public class Registrar {
             command.permissionMessage(builder.command().permissionMessage());
         }
 
-        Registrar.commandMap().register(builder.command().getName(), Utils.plugin().getName(), command);
+        Registrar.commandMap().register(builder.command().getName(), builder.namespace(), command);
     }
 }

@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
  * Utility class for obtaining instances of message senders.
  */
 public class Messagers {
-
     /**
      * Creates an instance of ActionBarMessager for a specific player.
      *

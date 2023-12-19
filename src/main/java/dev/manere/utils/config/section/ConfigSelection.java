@@ -2,7 +2,7 @@ package dev.manere.utils.config.section;
 
 import dev.manere.utils.config.ConfigKey;
 import dev.manere.utils.config.val.ConfigVal;
-import dev.manere.utils.model.Duo;
+import dev.manere.utils.model.Tuple;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -11,8 +11,7 @@ import java.util.function.Consumer;
  * Utility class for selecting and iterating over keys and values within a specific section of the plugin's configuration.
  */
 public class ConfigSelection {
-
-    private final ConfigSection section;
+    final ConfigSection section;
 
     /**
      * Constructs a ConfigSelection for the specified ConfigSection.
@@ -38,10 +37,10 @@ public class ConfigSelection {
      *
      * @param consumer The consumer to apply to each key-value pair.
      */
-    public void forEach(@NotNull Consumer<Duo<ConfigKey, ConfigVal>> consumer) {
+    public void forEach(@NotNull Consumer<Tuple<ConfigKey, ConfigVal>> consumer) {
         if (this.section.section != null) {
             for (String key : this.section.section.getKeys(false)) {
-                consumer.accept(new Duo<>(ConfigKey.key(key), ConfigKey.key(key).val()));
+                consumer.accept(Tuple.duo(ConfigKey.key(key), ConfigKey.key(key).val()));
             }
         }
     }

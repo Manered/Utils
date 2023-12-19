@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * Lightweight packet-based scoreboard API for Bukkit plugins.
  * Basically the same as FastBoard. It's literally using the code of it, it's just made a tiny bit prettier.
  */
-public abstract class SidebarHandler<T> {
+public abstract class SidebarHandler<S> {
     private static final Map<Class<?>, Field[]> PACKETS = new HashMap<>(8);
 
     /**
@@ -80,7 +80,7 @@ public abstract class SidebarHandler<T> {
                     .findFirst().orElseThrow(NoSuchFieldException::new);
 
             Method sendPacketMethod = Stream.concat(
-                    Arrays.stream(playerConnectionClass.getSuperclass().getMethods()), Arrays.stream(playerConnectionClass.getMethods()))
+                            Arrays.stream(playerConnectionClass.getSuperclass().getMethods()), Arrays.stream(playerConnectionClass.getMethods()))
                     .filter(m -> m.getParameterCount() == 1 && m.getParameterTypes()[0] == packetClass)
                     .findFirst().orElseThrow(NoSuchMethodException::new);
 
@@ -140,8 +140,8 @@ public abstract class SidebarHandler<T> {
     private final Player player;
     private final String uniqueId;
 
-    private final List<T> lines = new ArrayList<>();
-    private T title = emptyLine();
+    private final List<S> lines = new ArrayList<>();
+    private S title = emptyLine();
 
     private boolean deleted = false;
 
@@ -167,7 +167,7 @@ public abstract class SidebarHandler<T> {
      *
      * @return the title text
      */
-    public T title() {
+    public S title() {
         return this.title;
     }
 
@@ -176,7 +176,7 @@ public abstract class SidebarHandler<T> {
      *
      * @param title the new title text
      */
-    public void updateTitle(T title) {
+    public void updateTitle(S title) {
         if (this.title.equals(Objects.requireNonNull(title, "title"))) {
             return;
         }
@@ -195,7 +195,7 @@ public abstract class SidebarHandler<T> {
      *
      * @return an unmodifiable list of lines
      */
-    public List<T> lines() {
+    public List<S> lines() {
         return new ArrayList<>(this.lines);
     }
 
@@ -206,7 +206,7 @@ public abstract class SidebarHandler<T> {
      * @return the text of the line
      * @throws IllegalArgumentException if line is out of bounds
      */
-    public T line(int line) {
+    public S line(int line) {
         checkLineNumber(line, true, false);
 
         return this.lines.get(line);
@@ -219,7 +219,7 @@ public abstract class SidebarHandler<T> {
      * @param text the new text for the line
      * @throws IllegalArgumentException if line is out of bounds
      */
-    public synchronized void updateLine(int line, T text) {
+    public synchronized void updateLine(int line, S text) {
         checkLineNumber(line, false, true);
 
         try {
@@ -230,7 +230,7 @@ public abstract class SidebarHandler<T> {
                 return;
             }
 
-            List<T> newLines = new ArrayList<>(this.lines);
+            List<S> newLines = new ArrayList<>(this.lines);
 
             if (line > size()) {
                 for (int i = size(); i < line; i++) {
@@ -259,7 +259,7 @@ public abstract class SidebarHandler<T> {
             return;
         }
 
-        List<T> newLines = new ArrayList<>(this.lines);
+        List<S> newLines = new ArrayList<>(this.lines);
         newLines.remove(line);
         updateLines(newLines);
     }
@@ -270,7 +270,7 @@ public abstract class SidebarHandler<T> {
      * @param lines the new contents of the scoreboard
      */
     @SafeVarargs
-    public final void updateLines(T... lines) {
+    public final void updateLines(S... lines) {
         updateLines(Arrays.asList(lines));
     }
 
@@ -279,11 +279,11 @@ public abstract class SidebarHandler<T> {
      *
      * @param lines the new contents of the scoreboard
      */
-    public synchronized void updateLines(Collection<T> lines) {
+    public synchronized void updateLines(Collection<S> lines) {
         Objects.requireNonNull(lines, "lines");
         checkLineNumber(lines.size(), false, true);
 
-        List<T> oldLines = new ArrayList<>(this.lines);
+        List<S> oldLines = new ArrayList<>(this.lines);
         this.lines.clear();
         this.lines.addAll(lines);
 
@@ -291,7 +291,7 @@ public abstract class SidebarHandler<T> {
 
         try {
             if (oldLines.size() != linesSize) {
-                List<T> oldLinesCopy = new ArrayList<>(oldLines);
+                List<S> oldLinesCopy = new ArrayList<>(oldLines);
 
                 if (oldLines.size() > linesSize) {
                     for (int i = oldLinesCopy.size(); i > linesSize; i--) {
@@ -379,12 +379,12 @@ public abstract class SidebarHandler<T> {
     protected abstract void sendLineChange(int score) throws Throwable;
 
     /**
-     * Converts {@code T} to a Minecraft component.
+     * Converts {@code S} to a Minecraft component.
      *
      * @param value the value to convert.
      * @return the Minecraft component.
      */
-    protected abstract Object toMinecraftComponent(T value) throws Throwable;
+    protected abstract Object toMinecraftComponent(S value) throws Throwable;
 
     /**
      * Serializes a line.
@@ -392,14 +392,14 @@ public abstract class SidebarHandler<T> {
      * @param value the value to serialize.
      * @return a String.
      */
-    protected abstract String serializeLine(T value);
+    protected abstract String serializeLine(S value);
 
     /**
      * Returns an empty line.
      *
      * @return an empty line.
      */
-    protected abstract T emptyLine();
+    protected abstract S emptyLine();
 
     private void checkLineNumber(int line, boolean checkInRange, boolean checkMax) {
         if (line < 0) {
@@ -419,11 +419,11 @@ public abstract class SidebarHandler<T> {
         return this.lines.size() - line - 1;
     }
 
-    protected T lineByScore(int score) {
+    protected S lineByScore(int score) {
         return lineByScore(this.lines, score);
     }
 
-    protected T lineByScore(List<T> lines, int score) {
+    protected S lineByScore(List<S> lines, int score) {
         return score < lines.size() ? lines.get(lines.size() - score - 1) : null;
     }
 
@@ -480,7 +480,7 @@ public abstract class SidebarHandler<T> {
         sendTeamPacket(score, mode, null, null);
     }
 
-    protected void sendTeamPacket(int score, TeamMode mode, T prefix, T suffix) throws Throwable {
+    protected void sendTeamPacket(int score, TeamMode mode, S prefix, S suffix) throws Throwable {
         if (mode == TeamMode.ADD_PLAYERS || mode == TeamMode.REMOVE_PLAYERS) {
             throw new UnsupportedOperationException();
         }
@@ -545,7 +545,7 @@ public abstract class SidebarHandler<T> {
         }
     }
 
-    private void componentField(Object packet, T value, int count) throws Throwable {
+    private void componentField(Object packet, S value, int count) throws Throwable {
         if (!VersionType.V1_13.isHigherOrEqual()) {
             String line = value != null ? serializeLine(value) : "";
             field(packet, String.class, line, count);

@@ -9,7 +9,6 @@ import java.sql.SQLException;
  * A record representing an SQL connector with specified authentication details.
  */
 public record SQLConnector(SQLAuthentication authentication) {
-
     /**
      * Creates a new SQL connector with default authentication settings.
      * @return A new SQLConnector instance with default authentication settings.

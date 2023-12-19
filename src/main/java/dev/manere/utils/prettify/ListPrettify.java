@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
  * To: a, b, c, d
  */
 public class ListPrettify {
-
     /**
      * Converts a List of Strings into a single comma-separated String.
      *

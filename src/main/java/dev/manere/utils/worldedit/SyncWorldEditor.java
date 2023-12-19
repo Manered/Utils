@@ -24,7 +24,6 @@ import java.util.Objects;
  * Utility class for interacting with WorldEdit in a synchronous manner.
  */
 public class SyncWorldEditor {
-
     /**
      * Copies a region specified by two corner locations.
      *

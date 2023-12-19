@@ -8,7 +8,6 @@ import java.util.List;
  * This class provides methods to calculate ELO ratings for two players after a match.
  */
 public class ELO {
-
     /**
      * Calculate the new ELO ratings for two players after a match.
      *

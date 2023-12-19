@@ -2,8 +2,8 @@ package dev.manere.utils.command.args;
 
 import dev.manere.utils.command.args.custom.CustomArgument;
 import dev.manere.utils.command.args.exception.ArgumentExType;
-import dev.manere.utils.command.builder.dispatcher.CommandContext;
-import dev.manere.utils.command.builder.dispatcher.SuggestionDispatcher;
+import dev.manere.utils.command.impl.dispatcher.CommandContext;
+import dev.manere.utils.command.impl.dispatcher.SuggestionDispatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

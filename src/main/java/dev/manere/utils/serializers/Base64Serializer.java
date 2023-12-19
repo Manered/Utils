@@ -14,7 +14,6 @@ import java.util.*;
  * The Base64Serializer class provides methods for serializing and deserializing ItemStacks and ItemBuilders using Base64 encoding.
  */
 public class Base64Serializer {
-
     /**
      * Serialize a map of ItemStacks into a Base64 encoded string.
      *

@@ -12,7 +12,6 @@ import java.util.List;
  * Utility class for working with menus.
  */
 public class MenuUtils {
-
     /**
      * Gets the center slot index for a menu of the given size.
      *

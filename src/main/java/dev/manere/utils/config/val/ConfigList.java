@@ -14,7 +14,6 @@ import java.util.List;
  * Represents a list of values in the configuration associated with a specific ConfigVal.
  */
 public record ConfigList(@NotNull ConfigVal val) {
-
     /**
      * Creates a new ConfigList instance with the specified ConfigVal.
      *

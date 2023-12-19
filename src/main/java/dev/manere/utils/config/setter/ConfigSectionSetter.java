@@ -16,7 +16,6 @@ import java.util.List;
  * Utility class for setting values in a specific section of the plugin's configuration.
  */
 public class ConfigSectionSetter {
-
     private final ConfigSection configSection;
     private Object val;
     private String key;

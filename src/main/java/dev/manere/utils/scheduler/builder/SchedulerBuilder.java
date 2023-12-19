@@ -1,177 +1,208 @@
 package dev.manere.utils.scheduler.builder;
 
-import dev.manere.utils.library.Utils;
+import dev.manere.utils.scheduler.Schedulers;
+import dev.manere.utils.scheduler.builder.task.SchedulerTask;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
 /**
- * Utility class for building Bukkit scheduler tasks.
+ * SchedulerBuilder is a class for building and executing scheduled tasks
+ * with customizable configurations using SchedulerConfig and SchedulerTask.
+ * It provides methods for configuring the task and execution details.
  */
 public class SchedulerBuilder {
-    private boolean asynchronous;
-    private long delay;
-    private long period;
-    private Consumer<BukkitTask> task;
-    private TaskType type;
+    private SchedulerTask schedulerTask;
+    private final @NotNull SchedulerConfig config;
 
     /**
-     * Constructs a new @NotNull SchedulerBuilder with default settings.
+     * Constructs a new SchedulerBuilder with default values.
      */
     public SchedulerBuilder() {
-        this.asynchronous = false;
-        this.delay = 0;
-        this.period = 0;
-        this.task = null;
-        this.type = TaskType.NORMAL;
+        this.config = new SchedulerConfig();
+        this.schedulerTask = null;
     }
 
     /**
-     * Creates a new instance of SchedulerBuilder.
+     * Constructs a new SchedulerBuilder with a provided runnable.
      *
-     * @return A new instance of SchedulerBuilder.
+     * @param runnable The runnable task to be scheduled.
      */
-    public static @NotNull SchedulerBuilder scheduler() {
-        return new SchedulerBuilder();
+    public SchedulerBuilder(@NotNull Runnable runnable) {
+        this.config = new SchedulerConfig();
+        this.schedulerTask = SchedulerTask.wrap(runnable);
     }
 
     /**
-     * Sets whether the task should be executed asynchronously.
+     * Constructs a new SchedulerBuilder with a provided task consumer.
      *
-     * @param async true if the task should be asynchronous, false otherwise.
-     * @return This @NotNull SchedulerBuilder for method chaining.
+     * @param task The task consumer to be scheduled.
      */
-    public @NotNull SchedulerBuilder async(boolean async) {
-        this.asynchronous = async;
+    public SchedulerBuilder(@NotNull Consumer<BukkitTask> task) {
+        this.config = new SchedulerConfig();
+        this.schedulerTask = SchedulerTask.wrap(task);
+    }
+
+    /**
+     * Configures the SchedulerConfig using a consumer.
+     *
+     * @param configConsumer The consumer for configuring SchedulerConfig.
+     * @return This SchedulerBuilder instance for method chaining.
+     */
+    public @NotNull SchedulerBuilder config(@NotNull Consumer<SchedulerConfig> configConsumer) {
+        configConsumer.accept(this.config);
         return this;
     }
 
     /**
-     * Sets the delay and period (in ticks) of the task.
+     * Sets the thread type to asynchronous.
      *
-     * @param delay The delay (in ticks).
-     * @param period The period (in ticks).
-     * @return This @NotNull SchedulerBuilder for method chaining.
+     * @return This SchedulerBuilder instance for method chaining.
      */
-    public @NotNull SchedulerBuilder time(long delay, long period) {
-        this.delay = delay;
-        this.period = period;
+    public @NotNull SchedulerBuilder async() {
+        this.config.async();
         return this;
     }
 
     /**
-     * Sets the delay (in ticks) before the task starts.
+     * Sets the thread type to synchronous.
      *
-     * @param delay The delay (in ticks).
-     * @return This @NotNull SchedulerBuilder for method chaining.
+     * @return This SchedulerBuilder instance for method chaining.
      */
-    public @NotNull SchedulerBuilder after(long delay) {
-        this.delay = delay;
+    public @NotNull SchedulerBuilder sync() {
+        this.config.sync();
         return this;
     }
 
     /**
-     * Sets the type of the task.
+     * Sets the interval between repeated executions in ticks.
      *
-     * @param type The type of the task.
-     * @return This @NotNull SchedulerBuilder for method chaining.
+     * @param everyTicks The number of ticks between each repeated execution.
+     * @return This SchedulerBuilder instance for method chaining.
      */
-    public @NotNull SchedulerBuilder type(TaskType type) {
-        this.type = type;
+    public @NotNull SchedulerBuilder everyTicks(int everyTicks) {
+        this.config.everyTicks(everyTicks);
         return this;
     }
 
     /**
-     * Sets the period (in ticks) between task executions for repeating tasks.
+     * Sets the delay before the first execution in ticks.
      *
-     * @param period The period (in ticks).
-     * @return This @NotNull SchedulerBuilder for method chaining.
+     * @param afterTicks The number of ticks to wait before the first execution.
+     * @return This SchedulerBuilder instance for method chaining.
      */
-    public @NotNull SchedulerBuilder every(long period) {
-        this.period = period;
+    public @NotNull SchedulerBuilder afterTicks(int afterTicks) {
+        this.config.afterTicks(afterTicks);
         return this;
     }
 
     /**
-     * Sets the task to be executed.
+     * Sets the runnable task.
      *
-     * @param task The task to be executed.
-     * @return This @NotNull SchedulerBuilder for method chaining.
+     * @param runnable The runnable task to be scheduled.
+     * @return This SchedulerBuilder instance for method chaining.
      */
-    public @NotNull SchedulerBuilder task(Consumer<BukkitTask> task) {
-        this.task = task;
+    public @NotNull SchedulerBuilder runnable(@NotNull Runnable runnable) {
+        this.schedulerTask = SchedulerTask.wrap(runnable);
         return this;
     }
 
     /**
-     * Builds and schedules the task according to the provided settings.
-     * If the task is null, nothing is scheduled.
+     * Sets the task consumer.
+     *
+     * @param task The task consumer to be scheduled.
+     * @return This SchedulerBuilder instance for method chaining.
      */
-    public void build() {
-        if (task == null) return;
+    public @NotNull SchedulerBuilder task(@NotNull Consumer<BukkitTask> task) {
+        this.schedulerTask = SchedulerTask.wrap(task);
+        return this;
+    }
 
-        if (type == TaskType.NORMAL) {
-            if (asynchronous) Utils.plugin().getServer().getScheduler().runTaskAsynchronously(Utils.plugin(), task);
+    /**
+     * Executes the scheduled task based on the configured options.
+     */
+    @SuppressWarnings("unchecked")
+    public void execute() {
+        switch (config.threadType()) {
+            case SYNC -> {
+                // Immediate, SYNC
+                if (config.everyTicks() == null && config.afterTicks() == null) {
+                    if (schedulerTask.appropriate() instanceof Consumer<?> consumer) {
+                        Consumer<BukkitTask> taskConsumer = (Consumer<BukkitTask>) consumer;
+                        Schedulers.sync().execute(taskConsumer);
+                    } else if (schedulerTask.appropriate() instanceof Runnable runnable) {
+                        Schedulers.sync().execute(runnable);
+                    }
 
-            else Utils.plugin().getServer().getScheduler().runTask(Utils.plugin(), task);
+                    break;
+                }
+
+                // Delayed, SYNC
+                if (config.everyTicks() == null && config.afterTicks() != null) {
+                    if (schedulerTask.appropriate() instanceof Consumer<?> consumer) {
+                        Consumer<BukkitTask> taskConsumer = (Consumer<BukkitTask>) consumer;
+                        Schedulers.sync().execute(taskConsumer, config.afterTicks());
+                    } else if (schedulerTask.appropriate() instanceof Runnable runnable) {
+                        Schedulers.sync().execute(runnable, config.afterTicks());
+                    }
+
+                    break;
+                }
+
+                // Timer, SYNC
+                if (config.everyTicks() != null && config.afterTicks() != null) {
+                    if (schedulerTask.appropriate() instanceof Consumer<?> consumer) {
+                        Consumer<BukkitTask> taskConsumer = (Consumer<BukkitTask>) consumer;
+                        Schedulers.sync().execute(taskConsumer, config.afterTicks(), config.everyTicks());
+                    } else if (schedulerTask.appropriate() instanceof Runnable runnable) {
+                        Schedulers.sync().execute(runnable, config.afterTicks(), config.everyTicks());
+                    }
+
+                    break;
+                }
+
+                throw new UnsupportedOperationException("Not supported");
+            }
+            case ASYNC -> {
+                // Immediate, SYNC
+                if (config.everyTicks() == null && config.afterTicks() == null) {
+                    if (schedulerTask.appropriate() instanceof Consumer<?> consumer) {
+                        Consumer<BukkitTask> taskConsumer = (Consumer<BukkitTask>) consumer;
+                        Schedulers.async().execute(taskConsumer);
+                    } else if (schedulerTask.appropriate() instanceof Runnable runnable) {
+                        Schedulers.async().execute(runnable);
+                    }
+
+                    break;
+                }
+
+                // Delayed, SYNC
+                if (config.everyTicks() == null && config.afterTicks() != null) {
+                    if (schedulerTask.appropriate() instanceof Consumer<?> consumer) {
+                        Consumer<BukkitTask> taskConsumer = (Consumer<BukkitTask>) consumer;
+                        Schedulers.async().execute(taskConsumer, config.afterTicks());
+                    } else if (schedulerTask.appropriate() instanceof Runnable runnable) {
+                        Schedulers.async().execute(runnable, config.afterTicks());
+                    }
+
+                    break;
+                }
+
+                // Timer, SYNC
+                if (config.everyTicks() != null && config.afterTicks() != null) {
+                    if (schedulerTask.appropriate() instanceof Consumer<?> consumer) {
+                        Consumer<BukkitTask> taskConsumer = (Consumer<BukkitTask>) consumer;
+                        Schedulers.async().execute(taskConsumer, config.afterTicks(), config.everyTicks());
+                    } else if (schedulerTask.appropriate() instanceof Runnable runnable) {
+                        Schedulers.async().execute(runnable, config.afterTicks(), config.everyTicks());
+                    }
+
+                    break;
+                }
+
+                throw new UnsupportedOperationException("Not supported");
+            }
         }
-
-        if (type == TaskType.LATER) {
-            if (asynchronous) Utils.plugin().getServer().getScheduler().runTaskLaterAsynchronously(Utils.plugin(), task, delay);
-
-            else Utils.plugin().getServer().getScheduler().runTaskLater(Utils.plugin(), task, delay);
-        }
-
-        if (type == TaskType.REPEATING) {
-            if (asynchronous) Utils.plugin().getServer().getScheduler().runTaskTimerAsynchronously(Utils.plugin(), task, delay, period);
-
-            else Utils.plugin().getServer().getScheduler().runTaskTimer(Utils.plugin(), task, delay, period);
-        }
-    }
-
-    /**
-     * Returns whether the task will be executed asynchronously.
-     *
-     * @return true if the task is asynchronous, false otherwise.
-     */
-    public boolean isAsynchronous() {
-        return asynchronous;
-    }
-
-    /**
-     * Returns the delay (in ticks) before the task starts.
-     *
-     * @return The delay (in ticks).
-     */
-    public long delay() {
-        return delay;
-    }
-
-    /**
-     * Returns the period (in ticks) between task executions for repeating tasks.
-     *
-     * @return The period (in ticks).
-     */
-    public long period() {
-        return period;
-    }
-
-    /**
-     * Returns the task to be executed.
-     *
-     * @return The task to be executed.
-     */
-    public Consumer<BukkitTask> task() {
-        return task;
-    }
-
-    /**
-     * Returns the type of the task.
-     *
-     * @return The type of the task.
-     */
-    public TaskType type() {
-        return type;
     }
 }

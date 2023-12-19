@@ -11,7 +11,6 @@ import java.util.function.Consumer;
  * A utility class for building custom potion items with different potion effects.
  */
 public class PotionBuilder {
-
     private final ItemStack item;
     private final PotionMeta potionMeta;
 
@@ -30,10 +29,21 @@ public class PotionBuilder {
         this.potionMeta = (PotionMeta) item.getItemMeta();
     }
 
+    /**
+     * Constructs a PotionBuilder using an existing ItemStack.
+     *
+     * @param item The ItemStack to be used as a base for the potion.
+     * @throws IllegalArgumentException If the provided item's ItemMeta is not an instance of PotionMeta.
+     */
     public static PotionBuilder potion(ItemStack item) {
         return new PotionBuilder(item);
     }
 
+    /**
+     * Constructs a PotionBuilder using a specified material for the potion item.
+     *
+     * @param material The material to be used for the potion.
+     */
     public static PotionBuilder potion(Material material) {
         return potion(new ItemStack(material));
     }

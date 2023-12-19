@@ -15,10 +15,10 @@ import java.util.List;
  * @param <T> The type of event to handle.
  */
 public class EventHandler<T extends Event> {
-    public final List<Object> actionList;
-    public final Class<T> eventType;
-    public EventPriority eventPriority;
-    public boolean ignoreCancelled;
+    final List<Object> actionList;
+    final Class<T> eventType;
+    EventPriority eventPriority;
+    boolean ignoreCancelled;
 
     /**
      * Constructs an EventHandler with the specified EventBuilder.
@@ -71,8 +71,27 @@ public class EventHandler<T extends Event> {
      * @param eventPriority The EventPriority to set.
      * @return The modified EventHandler instance.
      */
-    public @NotNull EventHandler<T> eventPriority(@NotNull EventPriority eventPriority) {
+    public @NotNull EventHandler<T> priority(@NotNull EventPriority eventPriority) {
         this.eventPriority = eventPriority;
         return this;
+    }
+
+    /**
+     * Sets the priority of the event.
+     *
+     * @param eventPriority The EventPriority identified via an integer to set.
+     * @return The modified EventHandler instance.
+     */
+    public @NotNull EventHandler<T> priority(int eventPriority) {
+        return switch (eventPriority) {
+            case 1000, 100, 10, 1 -> priority(EventPriority.MONITOR);
+            case 2000, 200, 20, 2 -> priority(EventPriority.HIGHEST);
+            case 3000, 300, 30, 3 -> priority(EventPriority.HIGH);
+            case 4000, 400, 40, 4 -> priority(EventPriority.NORMAL);
+            case 5000, 500, 50, 5 -> priority(EventPriority.LOW);
+            case 6000, 600, 60, 6 -> priority(EventPriority.LOWEST);
+
+            default -> this;
+        };
     }
 }

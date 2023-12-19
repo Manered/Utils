@@ -3,7 +3,7 @@ package dev.manere.utils.command.args.text;
 import dev.manere.utils.command.args.exception.ArgumentParseException;
 import dev.manere.utils.command.args.exception.ArgumentExType;
 import dev.manere.utils.command.args.custom.CustomArgument;
-import dev.manere.utils.command.builder.dispatcher.CommandContext;
+import dev.manere.utils.command.impl.dispatcher.CommandContext;
 import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;

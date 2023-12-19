@@ -10,7 +10,6 @@ package dev.manere.utils.worldedit;
  * </code>
  */
 public class WorldEditor {
-
     /**
      * Gets an instance of AsyncWorldEditor.
      * @return An instance of AsyncWorldEditor.

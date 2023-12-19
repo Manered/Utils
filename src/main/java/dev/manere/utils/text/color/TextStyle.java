@@ -5,6 +5,9 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ChatColor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +15,6 @@ import java.util.regex.Pattern;
  * Utility class for handling formatting in text strings.
  */
 public class TextStyle {
-
     /**
      * Replaces hexadecimal legacy tags in the input string with ChatColor values.
      * <p></p>
@@ -119,6 +121,20 @@ public class TextStyle {
         return miniMessage.deserialize(text).decoration(TextDecoration.ITALIC, false);
     }
 
+    public static List<Component> component(List<String> texts) {
+        List<Component> list = new ArrayList<>();
+
+        for (String text : texts) {
+            list.add(component(text));
+        }
+
+        return list;
+    }
+
+    public static List<Component> component(String... texts) {
+        return component(Arrays.asList(texts));
+    }
+
     /**
      * Converts a text string to a Component using MiniMessage.
      *
@@ -127,6 +143,22 @@ public class TextStyle {
      */
     public static Component color(String text) {
         return component(text);
+    }
+
+    public static List<Component> color(List<String> texts) {
+        return component(texts);
+    }
+
+    public static List<Component> color(String... texts) {
+        return component(texts);
+    }
+
+    public static List<Component> style(List<String> texts) {
+        return component(texts);
+    }
+
+    public static List<Component> style(String... texts) {
+        return component(texts);
     }
 
     /**

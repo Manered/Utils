@@ -3,11 +3,10 @@ package dev.manere.utils.menu.normal;
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.menu.Button;
-import dev.manere.utils.menu.CloseListener;
-import dev.manere.utils.menu.DragListener;
 import dev.manere.utils.menu.MenuBase;
-import dev.manere.utils.scheduler.builder.SchedulerBuilder;
-import dev.manere.utils.scheduler.builder.TaskType;
+import dev.manere.utils.menu.listener.CloseListener;
+import dev.manere.utils.menu.listener.DragListener;
+import dev.manere.utils.scheduler.Schedulers;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -20,18 +19,22 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * The Menu class allows you to create custom menus with buttons and items in Bukkit/Spigot.
+ * The Menu class allows you to create custom menus with buttons and items in Paper/Bukkit/Spigot.
+ * <P>
  * You can set buttons, items, borders, and fill patterns within the menu.
+ * <P>
  * Menus are displayed to players using the open(Player player) method.
+ * <P>
+ * This implementation does not support pagination.
  */
 public class Menu implements InventoryHolder, MenuBase<Menu> {
-    public final Inventory inventory;
-    public final Component title;
-    public final int size;
-    public final Map<Integer, Button> buttons;
-    public final Map<Integer, ItemBuilder> items;
-    public CloseListener onClose;
-    public DragListener onDrag;
+    private final Inventory inventory;
+    private final Component title;
+    private final int size;
+    private final Map<Integer, Button> buttons;
+    private final Map<Integer, ItemBuilder> items;
+    private CloseListener onClose;
+    private DragListener onDrag;
 
     /**
      * Constructs a new Menu with the specified title and size.
@@ -126,27 +129,26 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
 
         for (Button button : buttons.values()) {
             if (button.isRefreshingButton()) {
-                SchedulerBuilder.scheduler()
-                        .type(TaskType.REPEATING)
-                        .async(button.isRefreshingAsync())
-                        .after(button.refreshDelay())
-                        .every(button.refreshPeriod())
-                        .task(task -> {
-                            if (player.getOpenInventory().getTopInventory() != getInventory()) {
-                                task.cancel();
-                                return;
-                            }
+                Schedulers.builder(task -> {
+                    if (player.getOpenInventory().getTopInventory() != getInventory()) {
+                        task.cancel();
+                        return;
+                    }
 
-                            int slot = slotByButton(button);
+                    int slot = slotByButton(button);
 
-                            getInventory().clear(slot);
-                            getInventory().setItem(slot, button.item().build());
+                    getInventory().clear(slot);
+                    getInventory().setItem(slot, button.item().build());
+                }).config(config -> {
+                    if (button.isRefreshingAsync()) {
+                        config.async();
+                    } else {
+                        config.sync();
+                    }
 
-                            /* player.updateInventory();
-                             * This probably shouldn't be used.
-                             */
-                        })
-                        .build();
+                    config.afterTicks((int) button.refreshDelay());
+                    config.everyTicks((int) button.refreshPeriod());
+                }).execute();
             }
         }
     }
@@ -210,7 +212,7 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
                         } else {
                             int callersLineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
                             Utils.plugin().getLogger().log(Level.WARNING, "You can not use Menu.fill(Object filler, String... pattern) with a object different than an ItemBuilder or Button!");
-                            Utils.plugin().getLogger().log(Level.WARNING, "    Line: [" + callersLineNumber + "], File: [" + Thread.currentThread().getStackTrace()[2].getFileName() + "]");
+                            Utils.plugin().getLogger().log(Level.WARNING, "    Line: [" + callersLineNumber + "], FileBuilder: [" + Thread.currentThread().getStackTrace()[2].getFileName() + "]");
                         }
                     }
                 }
@@ -319,5 +321,13 @@ public class Menu implements InventoryHolder, MenuBase<Menu> {
     public @NotNull Menu onDrag(@Nullable DragListener onDrag) {
         this.onDrag = onDrag;
         return this;
+    }
+
+    public CloseListener onClose() {
+        return onClose;
+    }
+
+    public DragListener onDrag() {
+        return onDrag;
     }
 }

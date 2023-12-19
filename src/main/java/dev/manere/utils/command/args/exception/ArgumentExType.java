@@ -1,5 +1,7 @@
 package dev.manere.utils.command.args.exception;
 
+import dev.manere.utils.command.args.primitive.IntegerArgument;
+
 /**
  * Enum representing different types of argument parsing exceptions.
  */
@@ -17,5 +19,11 @@ public enum ArgumentExType {
     /**
      * Indicates that the syntax of the command is invalid. (Incorrect Usage)
      */
-    INVALID_SYNTAX
+    INVALID_SYNTAX,
+
+    /**
+     * Indicates that the argument provided is not within the expected integer range.
+     * @see IntegerArgument
+     */
+    INVALID_RANGE
 }

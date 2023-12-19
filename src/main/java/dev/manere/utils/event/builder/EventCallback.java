@@ -22,12 +22,12 @@ import java.util.function.Consumer;
 public class EventCallback<T extends Event> implements EventExecutor, Listener {
     public static final HandlerListCache HANDLER_LIST_CACHE = new HandlerListCache();
 
-    public final Class<T> eventType;
-    public final EventPriority eventPriority;
-    public final boolean ignoredCancelled;
-    public final Object[] handlerArray;
-    public final AtomicBoolean isRegistered;
-    public final JavaPlugin plugin;
+    private final Class<T> eventType;
+    private final EventPriority eventPriority;
+    private final boolean ignoredCancelled;
+    private final Object[] handlerArray;
+    private final AtomicBoolean isRegistered;
+    private final JavaPlugin plugin;
 
     /**
      * Constructs an EventCallback.

@@ -16,7 +16,6 @@ import java.util.List;
  * Utility class for setting values in the plugin's configuration.
  */
 public class ConfigSetter {
-
     private ConfigKey key;
     private Object val;
     private boolean defaultVal;

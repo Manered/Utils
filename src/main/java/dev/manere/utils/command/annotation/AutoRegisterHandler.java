@@ -1,11 +1,11 @@
 package dev.manere.utils.command.annotation;
 
-import dev.manere.utils.command.CommandType;
+import dev.manere.utils.command.CommandTypes;
 import dev.manere.utils.command.Commander;
 import dev.manere.utils.event.EventListener;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.logger.Loggers;
-import dev.manere.utils.model.Duo;
+import dev.manere.utils.model.Tuple;
 import dev.manere.utils.registration.Registrar;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
  * @see AutoRegister
  */
 public class AutoRegisterHandler {
-
     /**
      * Scans the project using this library and then
      * attempts to register the class as an event listener or command.
@@ -59,7 +58,7 @@ public class AutoRegisterHandler {
         }
     }
 
-    private static @NotNull Duo<FindInstance, Object> findInstance(@NotNull Class<?> clazz) {
+    private static @NotNull Tuple<FindInstance, Object> findInstance(@NotNull Class<?> clazz) {
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
 
         Object instance = null;
@@ -101,12 +100,12 @@ public class AutoRegisterHandler {
 
         }
 
-        return new Duo<>(mode, instance);
+        return new Tuple<>(mode, instance);
     }
 
     private static void autoRegister(@NotNull Class<?> clazz) {
         JavaPlugin plugin = Utils.plugin();
-        Duo<FindInstance, Object> tuple = findInstance(clazz);
+        Tuple<FindInstance, Object> tuple = findInstance(clazz);
 
         Object instance = tuple.val();
 
@@ -128,7 +127,7 @@ public class AutoRegisterHandler {
         } else if (Commander.class.isAssignableFrom(clazz)) {
             Commander commander = (Commander) instance;
 
-            if (commander.settings().type() == CommandType.PLUGIN_YML) {
+            if (commander.settings().type() == CommandTypes.PLUGIN_YML) {
                 Registrar.command(commander);
             } else {
                 Registrar.command(
@@ -183,7 +182,7 @@ public class AutoRegisterHandler {
         return classes;
     }
 
-    private static @NotNull File src() {
+    public static @NotNull File src() {
         try {
             JavaPlugin plugin = (JavaPlugin) Utils.plugin().getServer().getPluginManager().getPlugin(Utils.plugin().getName());
             Method getFileMethod = JavaPlugin.class.getDeclaredMethod("getFile");

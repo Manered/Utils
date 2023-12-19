@@ -6,7 +6,7 @@
 
     <groupId>dev.manere</groupId>
     <artifactId>utils</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
     <packaging>jar</packaging>
 
     <name>Utils</name>
@@ -26,6 +26,27 @@
                     <source>17</source>
                     <target>17</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.jeff_media.customblockdata</pattern>
+                            <shadedPattern>dev.manere.utils.customblockdata</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
@@ -85,6 +106,12 @@
                     <groupId>*</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.jeff-media</groupId>
+            <artifactId>custom-block-data</artifactId>
+            <version>2.2.2</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

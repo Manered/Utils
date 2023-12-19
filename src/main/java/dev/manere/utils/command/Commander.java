@@ -1,21 +1,21 @@
 package dev.manere.utils.command;
 
 import dev.manere.utils.command.annotation.AutoRegister;
-import dev.manere.utils.command.builder.CommandBuilder;
-import dev.manere.utils.command.builder.dispatcher.CommandDispatcher;
-import dev.manere.utils.command.builder.dispatcher.SuggestionDispatcher;
+import dev.manere.utils.command.impl.Commands;
+import dev.manere.utils.command.impl.dispatcher.CommandDispatcher;
+import dev.manere.utils.command.impl.dispatcher.SuggestionDispatcher;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Bukkit-like wrapper for a command, uses {@link CommandBuilder}.
- * @see CommandBuilder
+ * Bukkit-like wrapper for a command, uses {@link Commands}.
+ * @see Commands
  * @see AutoRegister
  */
 public abstract class Commander implements CommandDispatcher, SuggestionDispatcher {
-    private CommandSettings settings;
+    private CommandConfig settings;
     private String name;
     private final List<String> aliases = new ArrayList<>();
     private String description;
@@ -27,7 +27,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      * @param name The name of the command to use for registration.
      */
     public Commander(String name) {
-        this.settings = CommandSettings.settings();
+        this.settings = CommandConfig.settings();
         this.name = name;
     }
 
@@ -36,7 +36,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      *
      * @return The command settings
      */
-    public @NotNull CommandSettings settings() {
+    public @NotNull CommandConfig settings() {
         return settings;
     }
 
@@ -55,7 +55,7 @@ public abstract class Commander implements CommandDispatcher, SuggestionDispatch
      * @param settings The new settings
      * @return This commander instance
      */
-    public @NotNull Commander settings(@NotNull CommandSettings settings) {
+    public @NotNull Commander settings(@NotNull CommandConfig settings) {
         this.settings = settings;
         return this;
     }

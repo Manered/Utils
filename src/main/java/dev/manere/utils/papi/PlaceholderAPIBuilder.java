@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.BiFunction;
 
 public class PlaceholderAPIBuilder {
-
     private final String prefix;
     private String author;
     private String version;
@@ -23,7 +22,8 @@ public class PlaceholderAPIBuilder {
      *
      * @param prefix The identifier for the PlaceholderAPI expansion.
      */
-    /* I hate you paper (why would you deprecate JavaPlugin#getDescription() and then make the alternative (PluginMeta) "unstable" */
+    /* I hate you paper (why would you deprecate JavaPlugin#getDescription()
+       and then make the alternative (PluginMeta) "unstable" */
     @SuppressWarnings("UnstableApiUsage")
     public PlaceholderAPIBuilder(@NotNull String prefix) {
         this.prefix = prefix;
@@ -96,7 +96,10 @@ public class PlaceholderAPIBuilder {
      * @param offlineResult The function to handle placeholder requests for offline players.
      * @return The updated PlaceholderAPIBuilder instance.
      */
-    public @NotNull PlaceholderAPIBuilder request(@Nullable BiFunction<Player, String, String> onlineResult, @Nullable BiFunction<OfflinePlayer, String, String> offlineResult) {
+    public @NotNull PlaceholderAPIBuilder request(
+            @Nullable BiFunction<Player, String, String> onlineResult,
+            @Nullable BiFunction<OfflinePlayer, String, String> offlineResult
+    ) {
         this.playerResult = onlineResult;
         this.offlinePlayerResult = offlineResult;
         return this;

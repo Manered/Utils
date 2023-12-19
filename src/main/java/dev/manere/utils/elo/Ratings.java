@@ -27,7 +27,7 @@ public class Ratings<A, B> {
      * @param playerElo1 The initial ELO rating of the first player.
      * @param playerElo2 The initial ELO rating of the second player.
      */
-    public static Ratings<Integer, Integer> ratings(int playerElo1, int playerElo2) {
+    public static Ratings<Integer, Integer> of(int playerElo1, int playerElo2) {
         return new Ratings<>(playerElo1, playerElo2);
     }
 

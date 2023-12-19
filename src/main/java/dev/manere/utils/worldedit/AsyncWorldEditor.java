@@ -9,7 +9,6 @@ import org.bukkit.Location;
  * Utility class for interacting with WorldEdit in an asynchronous manner using {@link TaskManager#async(Runnable runnable)}.
  */
 public class AsyncWorldEditor extends SyncWorldEditor {
-
     /**
      * This method is run asynchronously using {@link TaskManager#async(Runnable runnable)}
      * <p>

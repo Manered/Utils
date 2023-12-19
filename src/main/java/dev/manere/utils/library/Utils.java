@@ -1,8 +1,10 @@
 package dev.manere.utils.library;
 
+import com.jeff_media.customblockdata.CustomBlockData;
 import dev.manere.utils.command.annotation.AutoRegisterHandler;
-import dev.manere.utils.event.crystal.SpigotEventListener;
-import dev.manere.utils.menu.MenuListener;
+import dev.manere.utils.event.crystal.impl.SpigotAnchorEventListener;
+import dev.manere.utils.event.crystal.impl.SpigotCrystalEventListener;
+import dev.manere.utils.menu.listener.MenuListener;
 import dev.manere.utils.registration.Registrar;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
  * The {@code Utils} class provides utility methods and event registration for the Utils library.
  */
 public class Utils {
-
     public static JavaPlugin plugin;
 
     /**
@@ -22,7 +23,10 @@ public class Utils {
     private Utils(@NotNull JavaPlugin plugin) {
         Utils.plugin = plugin;
 
-        Registrar.events(new SpigotEventListener());
+        CustomBlockData.registerListener(plugin);
+
+        Registrar.events(new SpigotAnchorEventListener());
+        Registrar.events(new SpigotCrystalEventListener());
         Registrar.events(new MenuListener());
 
         AutoRegisterHandler.scanAndRegister();

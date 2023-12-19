@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * This class provides methods for creating, modifying, and retrieving values from the specified section.
  */
 public class ConfigSection {
-    public final ConfigurationSection section;
+    final ConfigurationSection section;
     public final String sectionPath;
 
     /**

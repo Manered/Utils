@@ -3,11 +3,11 @@ package dev.manere.utils.event.builder;
 import dev.manere.utils.library.Utils;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * The EventBuilder class is used to easily listen to events without
@@ -16,9 +16,8 @@ import java.util.List;
  * @param <T> Any subclass of {@link Event}
  */
 public class EventBuilder<T extends Event> {
-
-    public final List<Object> actionList;
-    public final Class<T> eventType;
+    final List<Object> actionList;
+    final Class<T> eventType;
 
     /**
      * Constructs a new EventBuilder with the specified event type.
@@ -36,7 +35,7 @@ public class EventBuilder<T extends Event> {
      * @param consumer The event consumer.
      * @return This EventBuilder instance, for chaining methods.
      */
-    public @NotNull EventBuilder<T> listener(@NotNull Consumer<T> consumer) {
+    public @NotNull EventBuilder<T> execute(@NotNull Consumer<T> consumer) {
         actionList.add(consumer);
         return this;
     }
@@ -79,5 +78,13 @@ public class EventBuilder<T extends Event> {
      */
     public @NotNull EventCallback<T> register() {
         return build().register(Utils.plugin());
+    }
+
+    public List<Object> actionList() {
+        return actionList;
+    }
+
+    public Class<T> eventType() {
+        return eventType;
     }
 }

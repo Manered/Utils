@@ -3,11 +3,10 @@ package dev.manere.utils.menu.paginated;
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.menu.Button;
-import dev.manere.utils.menu.CloseListener;
-import dev.manere.utils.menu.DragListener;
 import dev.manere.utils.menu.MenuBase;
-import dev.manere.utils.scheduler.builder.SchedulerBuilder;
-import dev.manere.utils.scheduler.builder.TaskType;
+import dev.manere.utils.menu.listener.CloseListener;
+import dev.manere.utils.menu.listener.DragListener;
+import dev.manere.utils.scheduler.Schedulers;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,29 +20,27 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * A {@link PaginatedMenu} class for creating paginated menus in Bukkit/Spigot.
- * This class allows you to build and manage paginated menus with customizable buttons,
- * items, and pagination controls.
+ * A {@link PaginatedMenu} class for creating paginated menus in Paper/Bukkit/Spigot.
+ * <P>
+ * This class allows you to build and manage paginated menus with customizable buttons, items, and pagination controls.
  */
-
 public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
-
-    public final Inventory inventory;
-    public final Component title;
-    public final int size;
-    public final Map<PaginatedSlot, Button> buttons;
-    public final Map<PaginatedSlot, ItemBuilder> items;
-    public int totalPages;
-    public int currentPage;
-    public final Map<Integer, ItemBuilder> previousButton;
-    public final Map<Integer, ItemBuilder> nextButton;
-    public final Map<Button, String[]> borderMap;
-    public final Map<Integer, Button> stickyButtons;
-    public boolean currentPageItemEnabled;
-    public ItemBuilder currentPageItem;
-    public int currentPageSlot;
-    public CloseListener onClose;
-    public DragListener onDrag;
+    private final Inventory inventory;
+    private final Component title;
+    private final int size;
+    private final Map<PaginatedSlot, Button> buttons;
+    private final Map<PaginatedSlot, ItemBuilder> items;
+    private int totalPages;
+    private int currentPage;
+    private final Map<Integer, ItemBuilder> previousButton;
+    private final Map<Integer, ItemBuilder> nextButton;
+    private final Map<Button, String[]> borderMap;
+    private final Map<Integer, Button> stickyButtons;
+    private boolean currentPageItemEnabled;
+    private ItemBuilder currentPageItem;
+    private int currentPageSlot;
+    private CloseListener onClose;
+    private DragListener onDrag;
 
     /**
      * Constructs a new PaginatedMenu with the specified title and size.
@@ -311,7 +308,7 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
                         } else {
                             int callersLineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
                             Utils.plugin().getLogger().log(Level.WARNING, "You can not use PaginatedMenu.fill(Object filler, String... pattern) with a object different than an ItemBuilder or Button!");
-                            Utils.plugin().getLogger().log(Level.WARNING, "    Line: [" + callersLineNumber + "], File: [" + Thread.currentThread().getStackTrace()[2].getFileName() + "]");
+                            Utils.plugin().getLogger().log(Level.WARNING, "    Line: [" + callersLineNumber + "], FileBuilder: [" + Thread.currentThread().getStackTrace()[2].getFileName() + "]");
                         }
                     }
                 }
@@ -376,30 +373,34 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
                 if (!button.isRefreshingButton()) {
                     this.inventory.setItem(pageSlotHolderByButton(button).slot(), button.item().build());
                 } else {
-                    SchedulerBuilder.scheduler()
-                            .type(TaskType.REPEATING)
-                            .async(button.isRefreshingAsync())
-                            .after(button.refreshDelay())
-                            .every(button.refreshPeriod())
-                            .task(task -> {
-                                if (player.getOpenInventory().getTopInventory() != getInventory()) {
-                                    task.cancel();
-                                    return;
-                                }
+                    Schedulers.builder(task -> {
+                        if (player.getOpenInventory().getTopInventory() != getInventory()) {
+                            task.cancel();
+                            return;
+                        }
 
-                                if (pageSlotHolderByButton(button).page() != currentPage) {
-                                    task.cancel();
-                                    return;
-                                }
+                        if (pageSlotHolderByButton(button).page() != currentPage) {
+                            task.cancel();
+                            return;
+                        }
 
-                                int slot = pageSlotHolderByButton(button).slot();
+                        int slot = pageSlotHolderByButton(button).slot();
 
-                                getInventory().clear(slot);
-                                getInventory().setItem(slot, button.item().name(button.item().build().displayName()).build());
+                        getInventory().clear(slot);
+                        getInventory().setItem(slot, button.item().name(button.item().build().displayName()).build());
 
-                                player.updateInventory();
-                            })
-                            .build();
+                        player.updateInventory();
+                    }).config(config -> {
+                        if (button.isRefreshingAsync()) {
+                            config.async();
+                        } else {
+                            config.sync();
+                        }
+
+                        config.afterTicks((int) button.refreshDelay());
+                        config.everyTicks((int) button.refreshPeriod());
+                    })
+                    .execute();
                 }
             }
         }
@@ -622,5 +623,25 @@ public class PaginatedMenu implements InventoryHolder, MenuBase<PaginatedMenu> {
     public @NotNull PaginatedMenu onDrag(@Nullable DragListener onDrag) {
         this.onDrag = onDrag;
         return this;
+    }
+
+    public CloseListener onClose() {
+        return onClose;
+    }
+
+    public DragListener onDrag() {
+        return onDrag;
+    }
+
+    public boolean currentPageItemEnabled() {
+        return currentPageItemEnabled;
+    }
+
+    public ItemBuilder currentPageItem() {
+        return currentPageItem;
+    }
+
+    public int currentPageSlot() {
+        return currentPageSlot;
     }
 }

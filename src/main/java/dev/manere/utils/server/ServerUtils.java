@@ -21,7 +21,6 @@ import java.util.List;
  * The ServerUtils class provides utility methods for accessing server-related components.
  */
 public class ServerUtils {
-
     /**
      * Retrieves the PluginManager associated with the server.
      *

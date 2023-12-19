@@ -7,7 +7,6 @@ import java.util.Map;
  * A utility class for converting text to a small font representation using a character mapping.
  */
 public class SmallFont {
-
     /**
      * A map that holds the character mapping for converting normal characters to small font characters.
      */

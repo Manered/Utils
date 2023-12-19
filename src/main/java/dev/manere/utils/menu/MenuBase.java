@@ -1,6 +1,8 @@
 package dev.manere.utils.menu;
 
 import dev.manere.utils.item.ItemBuilder;
+import dev.manere.utils.menu.listener.CloseListener;
+import dev.manere.utils.menu.listener.DragListener;
 import dev.manere.utils.menu.paginated.PaginatedSlot;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -9,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface MenuBase<T> {
-
     /**
      * Returns T, used for default values and for
      * miscalculation purposes.

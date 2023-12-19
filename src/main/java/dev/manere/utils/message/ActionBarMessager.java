@@ -55,8 +55,8 @@ public class ActionBarMessager {
      * @param after The delay before the first message is sent (in ticks).
      * @param every The interval between subsequent messages (in ticks).
      */
-    public void send(@NotNull Component text, long after, long every) {
-        Schedulers.async().repeating(task -> send(text), after, every);
+    public void send(@NotNull Component text, int after, int every) {
+        Schedulers.async().execute(task -> send(text), after, every);
     }
 
     /**

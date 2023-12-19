@@ -1,7 +1,7 @@
 package dev.manere.utils.command.args.custom;
 
 import dev.manere.utils.command.args.exception.ArgumentParseException;
-import dev.manere.utils.command.builder.dispatcher.CommandContext;
+import dev.manere.utils.command.impl.dispatcher.CommandContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
  * @param <T> The type to which the argument will be parsed.
  */
 public interface CustomArgument<T> {
-
     /**
      * Parses the given argument into the specified type.
      *

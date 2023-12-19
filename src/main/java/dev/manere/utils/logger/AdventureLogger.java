@@ -9,7 +9,6 @@ import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
  * in Bukkit plugins using Kyori Adventure's component logger.
  */
 public class AdventureLogger {
-
     private static final ComponentLogger LOGGER = Utils.plugin().getComponentLogger();
 
     /**
