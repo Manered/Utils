@@ -76,6 +76,22 @@ public class ServerUtils {
     }
 
     /**
+     * Gets a list of all online players.
+     *
+     * @return List of online Player objects.
+     */
+    public static @NotNull List<String> onlineNames() {
+        List<String> list = new ArrayList<>();
+
+        for (Player player : online()) {
+            String name = player.getName();
+            list.add(name);
+        }
+
+        return list;
+    }
+
+    /**
      * Gets the number of online players.
      *
      * @return Number of online players.

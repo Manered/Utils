@@ -36,7 +36,7 @@ public class CachableSnapshotImpl<K, V> implements CachableSnapshot<K, V> {
 
         for (K key : cachable.cache.keySet()) {
             for (V val : cachable.cache.values()) {
-                list.add(Tuple.duo(key, val));
+                list.add(Tuple.tuple(key, val));
             }
         }
 

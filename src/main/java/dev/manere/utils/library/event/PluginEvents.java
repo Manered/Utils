@@ -16,6 +16,14 @@ import java.util.function.Consumer;
  */
 public class PluginEvents {
     /**
+     * Static method to create a new PluginEvents object.
+     * @return The newly created PluginEvents object.
+     */
+    public static PluginEvents handler() {
+        return new PluginEvents();
+    }
+
+    /**
      * Registers an event with a callback to be executed on event occurrence with normal priority.
      *
      * @param <E>         The type of the event.

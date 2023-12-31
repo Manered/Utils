@@ -40,7 +40,7 @@ public class ConfigSelection {
     public void forEach(@NotNull Consumer<Tuple<ConfigKey, ConfigVal>> consumer) {
         if (this.section.section != null) {
             for (String key : this.section.section.getKeys(false)) {
-                consumer.accept(Tuple.duo(ConfigKey.key(key), ConfigKey.key(key).val()));
+                consumer.accept(Tuple.tuple(ConfigKey.key(key), ConfigKey.key(key).val()));
             }
         }
     }

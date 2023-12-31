@@ -1,6 +1,5 @@
 package dev.manere.utils.text;
 
-import dev.manere.utils.misc.Storable;
 import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.text.Component;
 
@@ -8,7 +7,7 @@ import net.kyori.adventure.text.Component;
  * Represents a simple text utility with formatting options.
  * @param string The text string to be encapsulated.
  */
-public record Text(String string) implements Storable<Text> {
+public record Text(String string) {
     /**
      * Creates a new Text instance with the specified string.
      *
@@ -54,21 +53,5 @@ public record Text(String string) implements Storable<Text> {
     @Override
     public String toString() {
         return string;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String serialize() {
-        return string;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Text deserialize(String serialized) {
-        return Text.text(serialized);
     }
 }

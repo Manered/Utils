@@ -68,4 +68,12 @@ public class SyncScheduler extends SchedulerBase {
     public @Nullable Object execute(@NotNull Supplier<?> supplier) {
         return supplier.get();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> @Nullable T supply(@NotNull Supplier<T> supplier) {
+        return supplier.get();
+    }
 }

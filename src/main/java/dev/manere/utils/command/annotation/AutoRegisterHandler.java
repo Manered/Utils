@@ -1,12 +1,9 @@
 package dev.manere.utils.command.annotation;
 
-import dev.manere.utils.command.CommandTypes;
-import dev.manere.utils.command.Commander;
 import dev.manere.utils.event.EventListener;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.logger.Loggers;
 import dev.manere.utils.model.Tuple;
-import dev.manere.utils.registration.Registrar;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +26,6 @@ public class AutoRegisterHandler {
      * Scans the project using this library and then
      * attempts to register the class as an event listener or command.
      *
-     * @see Commander
      * @see EventListener
      */
     public static void scanAndRegister() {
@@ -39,7 +35,7 @@ public class AutoRegisterHandler {
             try {
                 AutoRegister autoRegister = clazz.getAnnotation(AutoRegister.class);
 
-                if (autoRegister != null || Commander.class.isAssignableFrom(clazz) || EventListener.class.isAssignableFrom(clazz)) {
+                if (autoRegister != null || EventListener.class.isAssignableFrom(clazz)) {
                     try {
                         autoRegister(clazz);
                     } catch (NoClassDefFoundError | NoSuchFieldError ex) {
@@ -124,20 +120,6 @@ public class AutoRegisterHandler {
                     Utils.plugin(),
                     inst.ignoreCancelled()
             );
-        } else if (Commander.class.isAssignableFrom(clazz)) {
-            Commander commander = (Commander) instance;
-
-            if (commander.settings().type() == CommandTypes.PLUGIN_YML) {
-                Registrar.command(commander);
-            } else {
-                Registrar.command(
-                        commander,
-                        commander.aliases(),
-                        commander.description(),
-                        commander.permission(),
-                        commander.usage()
-                );
-            }
         } else {
             throw new UnsupportedOperationException("@AutoRegister cannot be used on " + clazz);
         }
@@ -165,7 +147,7 @@ public class AutoRegisterHandler {
 
                 // Look up the Java class, silently ignore if failing
                 try {
-                    clazz = Utils.plugin.getClass().getClassLoader().loadClass(className);
+                    clazz = Utils.plugin().getClass().getClassLoader().loadClass(className);
                 } catch (ClassFormatError | VerifyError | NoClassDefFoundError | ClassNotFoundException | IncompatibleClassChangeError error) {
                     continue;
                 }

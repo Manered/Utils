@@ -4,6 +4,7 @@ import dev.manere.utils.config.ConfigKey;
 import dev.manere.utils.item.ItemBuilder;
 import dev.manere.utils.location.LocationUtils;
 import dev.manere.utils.text.Text;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -138,6 +139,29 @@ public class ConfigVal {
      */
     public @Nullable ConfigList asListOf() {
         return ConfigList.list(this);
+    }
+
+    /**
+     * Returns the Object value representation.
+     * @return the Object value representation.
+     */
+    public @Nullable Object raw() {
+        return object;
+    }
+
+    /**
+     * Returns a Object cast value representation
+     * @param type The class type of the return value.
+     * @return T
+     * @param <T> The type (converted) value.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> @Nullable T as(@NotNull Class<T> type) {
+        if (type == Component.class) {
+            return (T) asText().component();
+        }
+
+        return (T) object;
     }
 
     public ConfigKey key() {

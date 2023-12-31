@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * This class provides methods for retrieving scheduler types.
@@ -93,44 +92,5 @@ public class Schedulers {
      */
     public static @NotNull SchedulerStacker stacker() {
         return new SchedulerStacker();
-    }
-
-    public static SchedulerBase base() {
-        return new SchedulerBase() {
-            @Override
-            public void execute(@NotNull Consumer<BukkitTask> task) {
-                Schedulers.sync().execute(task);
-            }
-
-            @Override
-            public void execute(@NotNull Runnable runnable) {
-                Schedulers.sync().execute(runnable);
-            }
-
-            @Override
-            public void execute(@NotNull Consumer<BukkitTask> task, int afterTicks) {
-                Schedulers.sync().execute(task, afterTicks);
-            }
-
-            @Override
-            public void execute(@NotNull Runnable runnable, int afterTicks) {
-                Schedulers.sync().execute(runnable, afterTicks);
-            }
-
-            @Override
-            public void execute(@NotNull Consumer<BukkitTask> task, int afterTicks, int everyTicks) {
-                Schedulers.sync().execute(task, afterTicks, everyTicks);
-            }
-
-            @Override
-            public void execute(@NotNull Runnable runnable, int afterTicks, int everyTicks) {
-                Schedulers.sync().execute(runnable, afterTicks, everyTicks);
-            }
-
-            @Override
-            public @Nullable Object execute(@NotNull Supplier<?> supplier) {
-                return Schedulers.sync().execute(supplier);
-            }
-        };
     }
 }

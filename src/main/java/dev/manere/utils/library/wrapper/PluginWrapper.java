@@ -86,13 +86,13 @@ public abstract class PluginWrapper extends JavaPlugin implements Listener {
 
     @Override
     public final void onDisable() {
-        Utils.init(this);
-
         this.stop();
     }
 
     @Override
     public final void onEnable() {
+        Utils.init(this);
+
         this.start();
         this.isReloading = false;
     }

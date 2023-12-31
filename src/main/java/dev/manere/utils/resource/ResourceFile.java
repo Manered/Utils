@@ -78,7 +78,7 @@ public class ResourceFile {
      * @return The loaded FileConfiguration.
      */
     public FileConfiguration loadYml() {
-        return (FileConfiguration) Schedulers.async().execute(() -> YamlConfiguration.loadConfiguration(file()));
+        return Schedulers.async().supply(() -> YamlConfiguration.loadConfiguration(file()));
     }
 
     /**

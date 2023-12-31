@@ -18,19 +18,4 @@ public interface Context<S> {
      * @return The source associated with this context.
      */
     S source();
-
-    /**
-     * The {@code Source} interface represents a wrapper for a specific type of source.
-     * It provides a method to unwrap and obtain the original source object.
-     *
-     * @param <T> The type of the source object.
-     */
-    interface Source<T> {
-        /**
-         * Unwraps and obtains the original source object.
-         *
-         * @return The original source object.
-         */
-        T unwrap();
-    }
 }

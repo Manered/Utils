@@ -1,10 +1,8 @@
 package dev.manere.utils.item;
 
 import dev.manere.utils.library.Utils;
-import dev.manere.utils.misc.Storable;
 import dev.manere.utils.player.PlayerUtils;
 import dev.manere.utils.scheduler.Schedulers;
-import dev.manere.utils.serializers.Serializers;
 import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -30,7 +28,7 @@ import java.util.function.Consumer;
  * Utility class for building customized {@link ItemStack}s.
  * Provides methods for setting display name, lore, enchantments, etc.
  */
-public class ItemBuilder implements Storable<ItemBuilder> {
+public class ItemBuilder {
     private final ItemStack itemStack;
 
     /**
@@ -601,21 +599,5 @@ public class ItemBuilder implements Storable<ItemBuilder> {
      */
     public ItemStack build() {
         return itemStack;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String serialize() {
-        return Serializers.base64().serializeItemBuilder(this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ItemBuilder deserialize(String serialized) {
-        return ItemBuilder.item(Serializers.base64().deserialize(serialized));
     }
 }

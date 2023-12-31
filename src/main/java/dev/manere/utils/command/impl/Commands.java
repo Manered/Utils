@@ -8,6 +8,7 @@ import dev.manere.utils.command.impl.dispatcher.CommandDispatcher;
 import dev.manere.utils.command.impl.dispatcher.SuggestionDispatcher;
 import dev.manere.utils.command.impl.permission.CommandPermission;
 import dev.manere.utils.command.impl.permission.CommandPermissionBuilder;
+import dev.manere.utils.command.impl.suggestions.Suggestions;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.text.Component;
@@ -77,10 +78,20 @@ public class Commands {
         };
     }
 
+    /**
+     * Constructs a new Commands with the specified name and the default type.
+     *
+     * @param name The name of the command.
+     */
     public Commands(@NotNull String name) {
         this(name, CommandTypes.commandMap());
     }
 
+    /**
+     * Constructs a new Commands with the specified Bukkit command.
+     *
+     * @param command The Bukkit command.
+     */
     private Commands(Command command) {
         CommandTypes commandType = Utils.plugin().getCommand(command.getName()) != null
                 ? CommandTypes.PLUGIN_YML
@@ -92,19 +103,25 @@ public class Commands {
         this.args = new ArrayList<>();
         this.command = command;
 
-        this.dispatcher = ctx -> this.command.execute(
+        this.dispatcher = ctx -> CommandResultWrapper.unwrap(this.command.execute(
                 ctx.sender(),
                 ctx.commandRan(),
                 ctx.rawArgs().toArray(new String[0])
-        );
+        ));
 
-        this.suggestionDispatcher = ctx -> this.command.tabComplete(
+        this.suggestionDispatcher = ctx -> Suggestions.wrap(this.command.tabComplete(
                 ctx.sender(),
                 ctx.commandRan(),
                 ctx.rawArgs().toArray(new String[0])
-        );
+        ));
     }
 
+    /**
+     * Constructs a new Commands with the specified Bukkit command.
+     * If you're using this, you're doing something wrong.
+     *
+     * @param command The Bukkit command.
+     */
     @ApiStatus.Internal
     public static @NotNull Commands legacy(Command command) {
         return new Commands(command);
@@ -131,10 +148,11 @@ public class Commands {
         return new Commands(name);
     }
 
-    void test() {
-
-    }
-
+    /**
+     * Edits the information associated with this command.
+     * @param infoConsumer The consumer in which the information is modified in.
+     * @return This Commands instance for method chaining.
+     */
     public Commands info(Consumer<CommandInfo> infoConsumer) {
         CommandInfo info = new CommandInfo(this);
         infoConsumer.accept(info);
@@ -196,7 +214,7 @@ public class Commands {
      *
      * @return The Bukkit Command object.
      */
-    public @NotNull Command command() {
+    public @NotNull Command bukkitCommand() {
         return command;
     }
 
@@ -268,7 +286,7 @@ public class Commands {
      * @return This Commands instance for method chaining.
      */
     public @NotNull Commands permissionMessage(@NotNull Component permissionMessage) {
-        command().permissionMessage(permissionMessage);
+        bukkitCommand().permissionMessage(permissionMessage);
         return this;
     }
 
@@ -398,6 +416,10 @@ public class Commands {
         return argument(argument);
     }
 
+    /**
+     * Returns the command custom arguments.
+     * @return The command custom arguments.
+     */
     @NotNull
     public List<Argument<?>> args() {
         return args;

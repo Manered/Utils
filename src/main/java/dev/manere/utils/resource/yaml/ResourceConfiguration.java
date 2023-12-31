@@ -205,14 +205,13 @@ public record ResourceConfiguration(ResourceFile resourceFile) {
      * @param key The key to retrieve the value for.
      * @return The value associated with the key.
      */
-    @SuppressWarnings("unchecked")
     public <T> T val(String key, Class<T> clazz) {
         if (clazz.getCanonicalName().equals(Component.class.getCanonicalName())) {
-            return (T) valAsComponent(key);
+            return clazz.cast(valAsComponent(key));
         }
 
         if (clazz.getCanonicalName().equals(ItemBuilder.class.getCanonicalName())) {
-            return (T) valAsItemBuilder(key);
+            return clazz.cast(valAsItemBuilder(key));
         }
 
         return bukkit().getObject(key, clazz);

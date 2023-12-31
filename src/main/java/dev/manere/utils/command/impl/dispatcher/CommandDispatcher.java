@@ -1,5 +1,6 @@
 package dev.manere.utils.command.impl.dispatcher;
 
+import dev.manere.utils.command.CommandResult;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -10,7 +11,7 @@ public interface CommandDispatcher {
      * Executes a command based on the provided command context.
      *
      * @param context The context of the command to be executed.
-     * @return true if the command was executed successfully, false otherwise.
+     * @return the result of the execution.
      */
-    boolean run(@NotNull CommandContext context);
+    @NotNull CommandResult run(@NotNull CommandContext context);
 }

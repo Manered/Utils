@@ -110,10 +110,10 @@ public class CommandPermissionBuilder {
      * @return The Commands with the associated command permission.
      */
     public @NotNull Commands build() {
-        commandBuilder().command().setPermission(custom());
+        commandBuilder().bukkitCommand().setPermission(custom());
 
         if (message() != null) {
-            commandBuilder().command().permissionMessage(message());
+            commandBuilder().bukkitCommand().permissionMessage(message());
         }
 
         return commandBuilder;

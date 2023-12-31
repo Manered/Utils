@@ -1,13 +1,12 @@
 package dev.manere.utils.registration;
 
-import dev.manere.utils.command.CommandTypes;
-import dev.manere.utils.command.Commander;
 import dev.manere.utils.command.args.Argument;
+import dev.manere.utils.command.impl.CommandResultWrapper;
 import dev.manere.utils.command.impl.Commands;
 import dev.manere.utils.command.impl.CommandsRegistrar;
 import dev.manere.utils.command.impl.dispatcher.CommandContext;
-import dev.manere.utils.command.impl.permission.CommandPermission;
 import dev.manere.utils.library.Utils;
+import me.lucko.commodore.CommodoreProvider;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
@@ -15,7 +14,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -110,80 +108,6 @@ public class Registrar {
         commandMap(Utils.plugin(), commandName, command);
     }
 
-    /**
-     * Registers a custom command that extends {@link Commander}.
-     *
-     * @param commander The commander instance to register.
-     * @see Commander
-     */
-    @SuppressWarnings("DataFlowIssue")
-    public static void command(@NotNull Commander commander) {
-        if (commander.settings().type().type() == CommandTypes.COMMAND_MAP.type()) {
-            Registrar.command(
-                    commander,
-                    commander.aliases(),
-                    commander.description(),
-                    commander.permission(),
-                    commander.usage()
-            );
-            return;
-        }
-
-        if (commander.settings().type().type() == CommandTypes.PLUGIN_YML.type()
-                && Utils.plugin().getCommand(commander.name()) == null)
-        {
-            throw new NullPointerException("You seem to have forgotten to provide the command '" + commander.name() + "' " +
-                    "in the plugin.yml file inside of your project.");
-        }
-
-        Utils.plugin().getCommand(commander.name()).setExecutor((sender, command, label, args) -> commander.settings()
-                .executes().run(new CommandContext(sender, command, label, args)));
-
-        if (commander.settings().completes() != null) {
-            Utils.plugin().getCommand(commander.name()).setTabCompleter((sender, command, label, args) -> {
-                if (commander.settings().completes().suggest(new CommandContext(sender, command, label, args)) == null) {
-                    return List.of();
-                } else {
-                    return commander.settings().completes().suggest(new CommandContext(sender, command, label, args));
-                }
-            });
-        }
-    }
-
-    /**
-     * Registers a custom command that extends {@link Commander}.
-     *
-     * @param commander The commander instance to register.
-     * @see Commander
-     */
-    public static void command(@NotNull Commander commander, @Nullable List<String> aliases, @Nullable String description, @Nullable String permission, @Nullable String usage) {
-        Commands builder = Commands.command(commander.name(), commander.settings().type());
-
-        if (aliases != null && !aliases.isEmpty()) {
-            builder.aliases().aliases(aliases).build();
-        }
-
-        builder.executes(commander.settings().executes());
-        builder.completes(commander.settings().completes());
-
-        if (description != null) {
-            builder.description(description);
-        }
-
-        if (permission != null) {
-            builder.permission()
-                    .type(CommandPermission.CUSTOM)
-                    .custom(permission)
-                    .build();
-        }
-
-        if (usage != null) {
-            builder.usage(usage);
-        }
-
-        builder.build().register();
-    }
-
     @SuppressWarnings("DataFlowIssue")
     public static void commandMap(CommandsRegistrar handler) {
         Commands builder = handler.commandBuilder();
@@ -198,7 +122,7 @@ public class Registrar {
                 for (Argument<?> arg : builder.args()) ctx.args().add(arg);
                 for (Predicate<CommandContext> filter : builder.requirements()) if (filter.test(ctx)) return true;
 
-                return builder.executes().run(ctx);
+                return CommandResultWrapper.wrap(builder.executes().run(ctx));
             }
 
             @Override
@@ -209,28 +133,34 @@ public class Registrar {
                     if (arg.suggestions() == null || ctx.argPos(arg.identifier()) == -1 || ctx.args().size() != ctx.argPos(arg.identifier())) continue;
                     if (arg.suggestions().suggest(ctx) == null) return List.of();
 
-                    return arg.suggestions().suggest(ctx);
+                    return arg.suggestions().suggest(ctx).unwrap();
                 }
 
                 if (builder.completes().suggest(ctx) == null) return List.of();
-                return builder.completes().suggest(ctx);
+                return builder.completes().suggest(ctx).unwrap();
             }
         };
 
-        command.setName(builder.command().getName());
-        command.setAliases(builder.command().getAliases());
-        command.setDescription(builder.command().getDescription());
+        command.setName(builder.bukkitCommand().getName());
+        command.setAliases(builder.bukkitCommand().getAliases());
+        command.setDescription(builder.bukkitCommand().getDescription());
 
-        if (builder.command().getPermission() != null) {
-            command.setPermission(builder.command().getPermission());
+        if (builder.bukkitCommand().getPermission() != null) {
+            command.setPermission(builder.bukkitCommand().getPermission());
         }
 
-        command.setUsage(builder.command().getUsage());
+        command.setUsage(builder.bukkitCommand().getUsage());
 
-        if (builder.command().permissionMessage() != null) {
-            command.permissionMessage(builder.command().permissionMessage());
+        if (builder.bukkitCommand().permissionMessage() != null) {
+            command.permissionMessage(builder.bukkitCommand().permissionMessage());
         }
 
-        Registrar.commandMap().register(builder.command().getName(), builder.namespace(), command);
+        if (CommodoreProvider.isSupported()) {
+            if (handler.brigadier()) {
+                handler.brigadierRegister(Utils.plugin());
+            }
+        }
+
+        Registrar.commandMap().register(builder.bukkitCommand().getName(), builder.namespace(), command);
     }
 }

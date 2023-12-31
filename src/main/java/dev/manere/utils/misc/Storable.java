@@ -1,5 +1,8 @@
 package dev.manere.utils.misc;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * The {@code Storable} interface defines methods for serializing an object to a string and deserializing from a string.
  *
@@ -11,7 +14,7 @@ public interface Storable<T> {
      *
      * @return A string representation of the serialized object.
      */
-    String serialize();
+    @Nullable String repr();
 
     /**
      * Deserializes the object from a string representation.
@@ -19,5 +22,5 @@ public interface Storable<T> {
      * @param serialized the object to be deserialized.
      * @return The deserialized object.
      */
-    T deserialize(String serialized);
+    @Nullable T ref(@NotNull String serialized);
 }

@@ -10,6 +10,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Implementation of the {@link Cachable} interface.
+ * @param <K> The type of keys in the cache.
+ * @param <V> The type of values in the cache
+ * @see Cachable
+ */
 public class CachableImpl<K, V> implements Cachable<K, V> {
     /**
      * Internal {@link ConcurrentHashMap}.

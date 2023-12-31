@@ -1,19 +1,23 @@
 package dev.manere.utils.library;
 
-import com.jeff_media.customblockdata.CustomBlockData;
 import dev.manere.utils.command.annotation.AutoRegisterHandler;
 import dev.manere.utils.event.crystal.impl.SpigotAnchorEventListener;
 import dev.manere.utils.event.crystal.impl.SpigotCrystalEventListener;
 import dev.manere.utils.menu.listener.MenuListener;
+import dev.manere.utils.misc.Versions;
 import dev.manere.utils.registration.Registrar;
+import me.lucko.commodore.Commodore;
+import me.lucko.commodore.CommodoreProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@code Utils} class provides utility methods and event registration for the Utils library.
  */
 public class Utils {
-    public static JavaPlugin plugin;
+    private static JavaPlugin plugin;
+    private static Commodore commodore;
 
     /**
      * Constructs a new {@code Utils} instance.
@@ -23,9 +27,16 @@ public class Utils {
     private Utils(@NotNull JavaPlugin plugin) {
         Utils.plugin = plugin;
 
-        CustomBlockData.registerListener(plugin);
+        if (Versions.isHigherThanOrEqualTo("1.16")) {
+            try {
+                Registrar.events(new SpigotAnchorEventListener());
+            } catch (Exception ignored) {}
+        }
 
-        Registrar.events(new SpigotAnchorEventListener());
+        if (CommodoreProvider.isSupported()) {
+            commodore = CommodoreProvider.getCommodore(plugin);
+        }
+
         Registrar.events(new SpigotCrystalEventListener());
         Registrar.events(new MenuListener());
 
@@ -48,6 +59,15 @@ public class Utils {
      */
     public static @NotNull JavaPlugin plugin() {
         return plugin;
+    }
+
+    /**
+     * Returns the JavaPlugin instance that will be used for event registration and more.
+     *
+     * @return The JavaPlugin instance that will be used for event registration and more.
+     */
+    public static @Nullable Commodore commodore() {
+        return commodore;
     }
 
     /**

@@ -165,7 +165,7 @@ public class SchedulerBuilder {
                 throw new UnsupportedOperationException("Not supported");
             }
             case ASYNC -> {
-                // Immediate, SYNC
+                // Immediate, ASYNC
                 if (config.everyTicks() == null && config.afterTicks() == null) {
                     if (schedulerTask.appropriate() instanceof Consumer<?> consumer) {
                         Consumer<BukkitTask> taskConsumer = (Consumer<BukkitTask>) consumer;
@@ -177,7 +177,7 @@ public class SchedulerBuilder {
                     break;
                 }
 
-                // Delayed, SYNC
+                // Delayed, ASYNC
                 if (config.everyTicks() == null && config.afterTicks() != null) {
                     if (schedulerTask.appropriate() instanceof Consumer<?> consumer) {
                         Consumer<BukkitTask> taskConsumer = (Consumer<BukkitTask>) consumer;
@@ -189,7 +189,7 @@ public class SchedulerBuilder {
                     break;
                 }
 
-                // Timer, SYNC
+                // Timer, ASYNC
                 if (config.everyTicks() != null && config.afterTicks() != null) {
                     if (schedulerTask.appropriate() instanceof Consumer<?> consumer) {
                         Consumer<BukkitTask> taskConsumer = (Consumer<BukkitTask>) consumer;

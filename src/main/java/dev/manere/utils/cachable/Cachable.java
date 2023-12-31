@@ -70,6 +70,21 @@ public interface Cachable<K, V> {
     }
 
     /**
+     * Creates and returns a Cachable instance initialized with the given key and value types.
+     *
+     * @param <K> The key type
+     * @param <V> The value type
+     * @param keyType The key type
+     * @param valType The value type
+     *
+     * @return A Cachable instance with the given initial entries
+     */
+    @SuppressWarnings("Convert2Diamond")
+    static <K, V> CachableImpl<K, V> of(Class<K> keyType, Class<V> valType) {
+        return new CachableImpl<K, V>();
+    }
+
+    /**
      * Retrieves the value associated with the given key.
      *
      * @param key The key whose associated value is to be returned.

@@ -33,7 +33,7 @@ public class Tuple<K, V> {
      * @param val The value
      * @return A new tuple with the specified key and value
      */
-    public static @NotNull <K, V> Tuple<K, V> duo(@Nullable K key, @Nullable V val) {
+    public static @NotNull <K, V> Tuple<K, V> tuple(@Nullable K key, @Nullable V val) {
         return new Tuple<>(key, val);
     }
 

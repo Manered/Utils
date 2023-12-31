@@ -8,17 +8,17 @@ import org.bukkit.plugin.java.JavaPlugin;
  * An enumeration representing the registration system to use.
  */
 public class CommandTypes {
-    private final int type;
+    private final int ordinal;
 
-    private CommandTypes(int type) {
-        this.type = type;
+    private CommandTypes(int ordinal) {
+        this.ordinal = ordinal;
     }
 
     /**
      * Self-explanatory. Uses the plugin.yml file
      * and {@link JavaPlugin#getCommand(String)} to retrieve and register the command.
      */
-    public static final CommandTypes PLUGIN_YML = CommandTypes.type(0);
+    public static final CommandTypes PLUGIN_YML = CommandTypes.of(0);
 
     /**
      * Used for registering commands via the {@link CommandMap}
@@ -29,7 +29,7 @@ public class CommandTypes {
      * <P>
      * Access to the command map is provided via the {@link Bukkit#getCommandMap()} method.
      */
-    public static final CommandTypes COMMAND_MAP = CommandTypes.type(1);
+    public static final CommandTypes COMMAND_MAP = CommandTypes.of(1);
 
     public static CommandTypes pluginYml() {
         return PLUGIN_YML;
@@ -67,11 +67,11 @@ public class CommandTypes {
         return commandMap();
     }
 
-    public int type() {
-        return type;
+    public int ordinal() {
+        return ordinal;
     }
 
-    public static CommandTypes type(int type) {
-        return new CommandTypes(type);
+    public static CommandTypes of(int ordinal) {
+        return new CommandTypes(ordinal);
     }
 }

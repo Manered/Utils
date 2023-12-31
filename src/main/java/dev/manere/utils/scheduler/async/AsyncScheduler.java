@@ -74,4 +74,16 @@ public class AsyncScheduler extends SchedulerBase {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> @Nullable T supply(@NotNull Supplier<T> supplier) {
+        try {
+            return CompletableFuture.supplyAsync(supplier).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

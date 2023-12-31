@@ -81,6 +81,14 @@ public abstract class SchedulerBase {
     public abstract @Nullable Object execute(@NotNull Supplier<?> supplier);
 
     /**
+     * Executes a supplier task and returns the result.
+     *
+     * @param supplier The supplier task to be executed.
+     * @return The result of the supplier task.
+     */
+    public abstract @Nullable <T> T supply(@NotNull Supplier<T> supplier);
+
+    /**
      * Retrieves the Bukkit scheduler associated with this scheduler.
      *
      * @return The Bukkit scheduler.

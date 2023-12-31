@@ -20,7 +20,7 @@ public class CommandAliasBuilder {
      */
     public CommandAliasBuilder(@NotNull Commands commandBuilder) {
         this.commandBuilder = commandBuilder;
-        this.aliases = commandBuilder.command().getAliases().isEmpty() ? new ArrayList<>() : commandBuilder.command().getAliases();
+        this.aliases = commandBuilder.bukkitCommand().getAliases().isEmpty() ? new ArrayList<>() : commandBuilder.bukkitCommand().getAliases();
     }
 
     /**
@@ -66,7 +66,7 @@ public class CommandAliasBuilder {
      */
     public @NotNull Commands build() {
         if (!aliases.isEmpty()) {
-            commandBuilder.command().setAliases(aliases);
+            commandBuilder.bukkitCommand().setAliases(aliases);
         }
 
         return commandBuilder;
