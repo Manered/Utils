@@ -4,7 +4,7 @@ Utils is a Paper/Bukkit Library for simplifying everything you use on a daily ba
 
 **Some features include:**
 - GUI Menus
-- Very advanced commands using Commander or CommandBuilder
+- Very advanced commands using Commands
 - Easy to use SQL
 - An ItemBuilder so you can shorten your ItemStack code
 - and more...
