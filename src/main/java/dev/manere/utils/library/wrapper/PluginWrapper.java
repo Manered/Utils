@@ -11,9 +11,7 @@ import dev.manere.utils.resource.format.ResourceFormats;
 import dev.manere.utils.resource.path.ResourcePath;
 import dev.manere.utils.resource.path.ResourcePaths;
 import org.bukkit.Server;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -45,8 +43,6 @@ import java.util.logging.Level;
  * @see JavaPlugin
  */
 public abstract class PluginWrapper extends JavaPlugin implements Listener {
-    private boolean isReloading = false;
-
     /**
      * Called when initializing the plugin (before enabling the plugin), before start().
      * You should avoid calling unsafe methods.
@@ -65,22 +61,8 @@ public abstract class PluginWrapper extends JavaPlugin implements Listener {
      */
     protected void stop() {}
 
-    /**
-     * Event handler for server load events. Sets {@code isReloading} to true if the load type is RELOAD.
-     *
-     * @param event The ServerLoadEvent
-     */
-    @EventHandler
-    public final void onServerLoadEvent(ServerLoadEvent event) {
-        if (event.getType() == ServerLoadEvent.LoadType.RELOAD) {
-            isReloading = true;
-        }
-    }
-
     @Override
     public final void onLoad() {
-        getServer().getPluginManager().registerEvents(this, this);
-
         this.load();
     }
 
@@ -94,7 +76,6 @@ public abstract class PluginWrapper extends JavaPlugin implements Listener {
         Utils.init(this);
 
         this.start();
-        this.isReloading = false;
     }
 
     /**
@@ -214,14 +195,6 @@ public abstract class PluginWrapper extends JavaPlugin implements Listener {
      */
     public final @NotNull Server server() {
         return this.getServer();
-    }
-
-    /**
-     * Executes a runnable if a player is reloading via the command {@code /bukkit:reload}
-     * @param toRunIfTrue The runnable to execute
-     */
-    public final void ifReloadingRun(@NotNull Runnable toRunIfTrue) {
-        if (this.isReloading) toRunIfTrue.run();
     }
 
     /**
