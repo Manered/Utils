@@ -1,6 +1,6 @@
 package dev.manere.utils.message;
 
-import dev.manere.utils.server.ServerUtils;
+import dev.manere.utils.server.Servers;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -45,6 +45,6 @@ public class ChatMessager {
      * @param text The message to be broadcast.
      */
     public void broadcast(@NotNull Component text) {
-        ServerUtils.online().forEach(to -> to.sendMessage(text));
+        Servers.online().forEach(to -> to.sendMessage(text));
     }
 }

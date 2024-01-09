@@ -4,7 +4,7 @@ import dev.manere.utils.config.section.ConfigSection;
 import dev.manere.utils.config.section.ConfigSelection;
 import dev.manere.utils.config.setter.ConfigSetter;
 import dev.manere.utils.library.Utils;
-import dev.manere.utils.server.ServerUtils;
+import dev.manere.utils.server.Servers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +27,7 @@ public class Config {
      * Initializes the configuration file. If the file does not exist, it will be created and populated with default values.
      */
     public static void init() {
-        File file = new File(ServerUtils.dataFolder(), "config.yml");
+        File file = new File(Servers.dataFolder(), "config.yml");
 
         if (file.exists()) return;
 

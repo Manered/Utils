@@ -1,6 +1,6 @@
 package dev.manere.utils.library;
 
-import dev.manere.utils.command.annotation.AutoRegisterHandler;
+import dev.manere.utils.annotation.AutoRegisterHandler;
 import dev.manere.utils.event.crystal.impl.SpigotAnchorEventListener;
 import dev.manere.utils.event.crystal.impl.SpigotCrystalEventListener;
 import dev.manere.utils.menu.listener.MenuListener;

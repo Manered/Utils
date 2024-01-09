@@ -3,7 +3,7 @@ package dev.manere.utils.command.impl.suggestions;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import dev.manere.utils.elements.Elements;
 import dev.manere.utils.elements.impl.ElementsImpl;
-import dev.manere.utils.server.ServerUtils;
+import dev.manere.utils.server.Servers;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -123,7 +123,7 @@ public class Suggestions {
     public static @NotNull Suggestions players() {
         List<Suggestion> suggestionsList = new ArrayList<>();
 
-        for (String name : ServerUtils.onlineNames()) {
+        for (String name : Servers.onlineNames()) {
             suggestionsList.add(Suggestion.text(name));
         }
 
@@ -147,7 +147,7 @@ public class Suggestions {
     public static @NotNull Suggestions playersWithout(@NotNull String player) {
         List<Suggestion> suggestionsList = new ArrayList<>();
 
-        for (String name : ServerUtils.onlineNames()) {
+        for (String name : Servers.onlineNames()) {
             suggestionsList.add(Suggestion.text(name));
         }
 
@@ -164,7 +164,7 @@ public class Suggestions {
     public static @NotNull Suggestions playersWithPermission(@NotNull String permission) {
         List<Suggestion> suggestionsList = new ArrayList<>();
 
-        for (Player player : ServerUtils.online()) {
+        for (Player player : Servers.online()) {
             if (player.hasPermission(permission)) {
                 suggestionsList.add(Suggestion.text(player.getName()));
             }

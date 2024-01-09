@@ -22,14 +22,16 @@ import java.util.function.Predicate;
  */
 public final class CommandsRegistrar {
     private final @NotNull Commands commandBuilder;
-    private boolean brigadier = false;
-    private String commodorePath = commandBuilder().name() + ".commodore";
+    private boolean brigadier;
+    private String commodorePath;
 
     /**
      * @param commandBuilder The command builder to handle.
      */
     public CommandsRegistrar(@NotNull Commands commandBuilder) {
         this.commandBuilder = commandBuilder;
+        this.commodorePath = commandBuilder.name() + ".commodore";
+        this.brigadier = false;
     }
 
     /**
@@ -44,7 +46,7 @@ public final class CommandsRegistrar {
      * Enables Brigadier Tab Completions for the command.
      * @return This CommandsRegistrar instance for method chaining.
      */
-    public CommandsRegistrar enableBrigadier() {
+    public @NotNull CommandsRegistrar enableBrigadier() {
         this.brigadier = true;
         return this;
     }
@@ -56,7 +58,7 @@ public final class CommandsRegistrar {
      * @param commodorePath The path of the command's commodore file.
      * @return This CommandsRegistrar instance for method chaining.
      */
-    public CommandsRegistrar commodorePath(String commodorePath) {
+    public @NotNull CommandsRegistrar commodorePath(@NotNull String commodorePath) {
         this.commodorePath = commodorePath;
         return this;
     }

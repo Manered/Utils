@@ -4,7 +4,7 @@ import dev.manere.utils.command.args.exception.ArgumentParseException;
 import dev.manere.utils.command.args.exception.ArgumentExType;
 import dev.manere.utils.command.args.custom.CustomArgument;
 import dev.manere.utils.command.impl.dispatcher.CommandContext;
-import dev.manere.utils.server.ServerUtils;
+import dev.manere.utils.server.Servers;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +23,6 @@ public class OfflinePlayerArgument implements CustomArgument<OfflinePlayer> {
             throw new ArgumentParseException("CustomArgument cannot be null", ArgumentExType.ARG_IS_NULL);
         }
 
-        return ServerUtils.server().getOfflinePlayer(arg);
+        return Servers.server().getOfflinePlayer(arg);
     }
 }

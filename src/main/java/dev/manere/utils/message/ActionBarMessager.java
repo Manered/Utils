@@ -1,7 +1,7 @@
 package dev.manere.utils.message;
 
 import dev.manere.utils.scheduler.Schedulers;
-import dev.manere.utils.server.ServerUtils;
+import dev.manere.utils.server.Servers;
 import dev.manere.utils.text.color.TextStyle;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -65,6 +65,6 @@ public class ActionBarMessager {
      * @param text The message to be broadcast.
      */
     public void broadcast(@NotNull Component text) {
-        ServerUtils.online().forEach(to -> to.sendActionBar(text));
+        Servers.online().forEach(to -> to.sendActionBar(text));
     }
 }

@@ -1,4 +1,4 @@
-package dev.manere.utils.command.annotation;
+package dev.manere.utils.annotation;
 
 import dev.manere.utils.event.EventListener;
 import dev.manere.utils.library.Utils;

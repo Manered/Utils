@@ -1,6 +1,7 @@
 package dev.manere.utils.server;
 
 import dev.manere.utils.library.Utils;
+import dev.manere.utils.library.wrapper.PluginWrapper;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -12,21 +13,22 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.structure.StructureManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The ServerUtils class provides utility methods for accessing server-related components.
+ * The Servers class provides utility methods for accessing server-related components.
  */
-public class ServerUtils {
+public class Servers {
     /**
      * Retrieves the PluginManager associated with the server.
      *
      * @return The PluginManager of the server.
      */
-    public static @NotNull PluginManager manager() {
+    public static @NotNull PluginManager handler() {
         return Utils.plugin().getServer().getPluginManager();
     }
 
@@ -164,5 +166,25 @@ public class ServerUtils {
      */
     public static @NotNull FileConfiguration config() {
         return Utils.plugin().getConfig();
+    }
+
+    /**
+     * Gets the plugin from a class that extends JavaPlugin.
+     * @param clazz The class that extends JavaPlugin
+     * @return The plugin
+     * @param <T> The object that extends JavaPlugin
+     */
+    public static @Nullable <T extends JavaPlugin> T plugin(@NotNull Class<T> clazz) {
+        return JavaPlugin.getPlugin(clazz);
+    }
+
+    /**
+     * Gets the plugin from a class that extends PluginWrapper.
+     * @param clazz The class that extends PluginWrapper
+     * @return The plugin
+     * @param <T> The object that extends PluginWrapper
+     */
+    public static @Nullable <T extends PluginWrapper> T wrapped(@NotNull Class<T> clazz) {
+        return plugin(clazz);
     }
 }
