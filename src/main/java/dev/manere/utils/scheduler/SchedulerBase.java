@@ -1,9 +1,6 @@
 package dev.manere.utils.scheduler;
 
 import dev.manere.utils.library.Utils;
-import io.papermc.paper.threadedregions.scheduler.AsyncScheduler;
-import io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler;
-import io.papermc.paper.threadedregions.scheduler.RegionScheduler;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
@@ -17,11 +14,6 @@ import java.util.function.Supplier;
  * This class provides access to various Bukkit/Paper schedulers and Folia region-related schedulers.
  */
 public abstract class SchedulerBase {
-    private final BukkitScheduler scheduler = Utils.plugin().getServer().getScheduler();
-    private final RegionScheduler regionScheduler = Utils.plugin().getServer().getRegionScheduler();
-    private final GlobalRegionScheduler globalRegionScheduler = Utils.plugin().getServer().getGlobalRegionScheduler();
-    private final AsyncScheduler asyncFoliaScheduler = Utils.plugin().getServer().getAsyncScheduler();
-
     /**
      * Executes a task using the Bukkit scheduler.
      *
@@ -94,33 +86,6 @@ public abstract class SchedulerBase {
      * @return The Bukkit scheduler.
      */
     public final @NotNull BukkitScheduler scheduler() {
-        return scheduler;
-    }
-
-    /**
-     * Retrieves the region scheduler associated with this scheduler.
-     *
-     * @return The region scheduler.
-     */
-    public final @NotNull RegionScheduler regionScheduler() {
-        return regionScheduler;
-    }
-
-    /**
-     * Retrieves the global region scheduler associated with this scheduler.
-     *
-     * @return The global region scheduler.
-     */
-    public final @NotNull GlobalRegionScheduler globalRegionScheduler() {
-        return globalRegionScheduler;
-    }
-
-    /**
-     * Retrieves the asynchronous Folia scheduler associated with this scheduler.
-     *
-     * @return The asynchronous Folia scheduler.
-     */
-    public final @NotNull AsyncScheduler asyncFoliaScheduler() {
-        return asyncFoliaScheduler;
+        return Utils.plugin().getServer().getScheduler();
     }
 }
