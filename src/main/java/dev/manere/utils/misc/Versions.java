@@ -5,6 +5,7 @@ import dev.manere.utils.library.Utils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -95,7 +96,7 @@ public class Versions {
      * @return A list of Minecraft versions.
      */
     public static @NotNull List<String> minecraft() {
-        return List.of(
+        return new ArrayList<>(List.of(
                 "1.20.4", "1.20.3", "1.20.2", "1.20.1", "1.20",
                 "1.19.4", "1.19.3", "1.19.2", "1.19.1", "1.19",
                 "1.18.2", "1.18.1", "1.18",
@@ -116,7 +117,7 @@ public class Versions {
                 "1.2.5", "1.2.4", "1.2.3", "1.2.2", "1.2.1",
                 "1.1",
                 "1.0"
-        );
+        ));
     }
 
     /**

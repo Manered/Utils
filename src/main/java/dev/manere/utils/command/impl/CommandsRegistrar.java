@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -91,7 +92,7 @@ public final class CommandsRegistrar {
                     for (Predicate<CommandContext> filter : commandBuilder.requirements())
                         if (filter.test(ctx)) return true;
 
-                    return CommandResultWrapper.wrap(commandBuilder.executes().run(ctx));
+                    return CommandResultWrapper.unwrap(commandBuilder.executes().run(ctx));
                 });
 
                 if (commandBuilder.completes() != null) {
@@ -111,13 +112,13 @@ public final class CommandsRegistrar {
                         if (commandBuilder.completes().suggest(ctx) == null) return List.of();
                         return commandBuilder.completes().suggest(ctx).unwrap();
                     });
+                } else {
+                    plugin.getCommand(commandBuilder.name()).setTabCompleter(
+                            (sender, command, label, args) -> new ArrayList<>()
+                    );
                 }
 
-                if (CommodoreProvider.isSupported()) {
-                    if (brigadier) {
-                        brigadierRegister(plugin);
-                    }
-                }
+                if (CommodoreProvider.isSupported() && brigadier) brigadierRegister(plugin);
             }
 
             case 1 -> Registrar.commandMap(this);

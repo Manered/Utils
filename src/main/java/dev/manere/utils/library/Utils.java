@@ -1,6 +1,5 @@
 package dev.manere.utils.library;
 
-import dev.manere.utils.annotation.AutoRegisterHandler;
 import dev.manere.utils.event.crystal.impl.SpigotAnchorEventListener;
 import dev.manere.utils.event.crystal.impl.SpigotCrystalEventListener;
 import dev.manere.utils.menu.listener.MenuListener;
@@ -27,7 +26,7 @@ public class Utils {
     private Utils(@NotNull JavaPlugin plugin) {
         Utils.plugin = plugin;
 
-        if (Versions.isHigherThanOrEqualTo("1.16")) {
+        if (Versions.isHigherThanOrEqualTo("1.20")) {
             try {
                 Registrar.events(new SpigotAnchorEventListener());
             } catch (Exception ignored) {}
@@ -39,8 +38,6 @@ public class Utils {
 
         Registrar.events(new SpigotCrystalEventListener());
         Registrar.events(new MenuListener());
-
-        AutoRegisterHandler.scanAndRegister();
     }
 
     /**

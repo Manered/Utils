@@ -13,7 +13,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.structure.StructureManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -172,9 +171,9 @@ public class Servers {
      * Gets the plugin from a class that extends JavaPlugin.
      * @param clazz The class that extends JavaPlugin
      * @return The plugin
-     * @param <T> The object that extends JavaPlugin
+     * @param <P> The object that extends JavaPlugin
      */
-    public static @Nullable <T extends JavaPlugin> T plugin(@NotNull Class<T> clazz) {
+    public static <P extends JavaPlugin> P plugin(@NotNull Class<P> clazz) {
         return JavaPlugin.getPlugin(clazz);
     }
 
@@ -182,9 +181,9 @@ public class Servers {
      * Gets the plugin from a class that extends PluginWrapper.
      * @param clazz The class that extends PluginWrapper
      * @return The plugin
-     * @param <T> The object that extends PluginWrapper
+     * @param <P> The object that extends PluginWrapper
      */
-    public static @Nullable <T extends PluginWrapper> T wrapped(@NotNull Class<T> clazz) {
+    public static <P extends PluginWrapper> P wrapped(@NotNull Class<P> clazz) {
         return plugin(clazz);
     }
 }

@@ -5,6 +5,7 @@ import dev.manere.utils.command.impl.CommandResultWrapper;
 import dev.manere.utils.command.impl.Commands;
 import dev.manere.utils.command.impl.CommandsRegistrar;
 import dev.manere.utils.command.impl.dispatcher.CommandContext;
+import dev.manere.utils.command.impl.suggestions.Suggestions;
 import dev.manere.utils.library.Utils;
 import me.lucko.commodore.CommodoreProvider;
 import org.bukkit.command.Command;
@@ -122,7 +123,7 @@ public class Registrar {
                 for (Argument<?> arg : builder.args()) ctx.args().add(arg);
                 for (Predicate<CommandContext> filter : builder.requirements()) if (filter.test(ctx)) return true;
 
-                return CommandResultWrapper.wrap(builder.executes().run(ctx));
+                return CommandResultWrapper.unwrap(builder.executes().run(ctx));
             }
 
             @Override
@@ -136,8 +137,10 @@ public class Registrar {
                     return arg.suggestions().suggest(ctx).unwrap();
                 }
 
-                if (builder.completes().suggest(ctx) == null) return List.of();
-                return builder.completes().suggest(ctx).unwrap();
+                Suggestions suggestions = builder.completes().suggest(ctx);
+
+                if (suggestions == null) return List.of();
+                return suggestions.unwrap();
             }
         };
 

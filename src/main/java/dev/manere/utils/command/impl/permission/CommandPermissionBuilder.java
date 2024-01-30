@@ -110,6 +110,15 @@ public class CommandPermissionBuilder {
      * @return The Commands with the associated command permission.
      */
     public @NotNull Commands build() {
+        if (type() == CommandPermission.OP
+                || type() == CommandPermission.OPERATOR
+                || type() == CommandPermission.SERVER_OPERATOR
+                || type() == CommandPermission.SERVER_OP
+        ) {
+            commandBuilder().bukkitCommand().setPermission("minecraft.admin");
+            return commandBuilder;
+        }
+
         commandBuilder().bukkitCommand().setPermission(custom());
 
         if (message() != null) {

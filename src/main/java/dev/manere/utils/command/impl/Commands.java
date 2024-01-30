@@ -103,7 +103,7 @@ public class Commands {
         this.args = new ArrayList<>();
         this.command = command;
 
-        this.dispatcher = ctx -> CommandResultWrapper.unwrap(this.command.execute(
+        this.dispatcher = ctx -> CommandResultWrapper.wrap(this.command.execute(
                 ctx.sender(),
                 ctx.commandRan(),
                 ctx.rawArgs().toArray(new String[0])
@@ -366,6 +366,11 @@ public class Commands {
      * @return This Commands instance for method chaining.
      */
     public @NotNull Commands completes(@Nullable SuggestionDispatcher suggestionDispatcher) {
+        if (suggestionDispatcher == null) {
+            this.suggestionDispatcher = ctx -> Suggestions.empty();
+            return this;
+        }
+
         this.suggestionDispatcher = suggestionDispatcher;
         return this;
     }

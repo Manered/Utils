@@ -1,12 +1,15 @@
 package dev.manere.utils.text.color;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -169,6 +172,18 @@ public class TextStyle {
      */
     public static Component style(String text) {
         return component(text);
+    }
+
+    public Component joined(Collection<Component> values) {
+        return Component.join(JoinConfiguration.newlines(), values);
+    }
+
+    public Component joined(Component... values) {
+        return Component.join(JoinConfiguration.newlines(), values);
+    }
+
+    public Component joined(Iterable<? extends ComponentLike> values) {
+        return Component.join(JoinConfiguration.newlines(), values);
     }
 
     /**

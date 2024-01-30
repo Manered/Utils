@@ -6,7 +6,7 @@
 
     <groupId>dev.manere</groupId>
     <artifactId>utils</artifactId>
-    <version>3.3.3</version>
+    <version>3.3.4</version>
     <packaging>jar</packaging>
 
     <name>Utils</name>
@@ -38,6 +38,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <artifactSet>
                                 <includes>
                                     <include>me.lucko:commodore</include>
