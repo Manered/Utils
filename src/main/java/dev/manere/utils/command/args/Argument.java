@@ -12,11 +12,11 @@ import java.util.function.BiFunction;
 /**
  * Represents a command argument with a specified type and additional properties.
  *
- * @param <T> The type of the custom argument associated with this Argument.
+ * @param <A> The type of the custom argument associated with this Argument.
  */
-public class Argument<T extends CustomArgument<?>> {
+public class Argument<A extends CustomArgument<?>> {
     private BiFunction<CommandContext, ArgumentExType, Boolean> onError;
-    private T type;
+    private A type;
     private final String identifier;
     private SuggestionDispatcher suggestions;
     private String defaultVal;
@@ -36,7 +36,7 @@ public class Argument<T extends CustomArgument<?>> {
      * @param identifier The identifier of the argument.
      * @param type       The custom argument type associated with this Argument.
      */
-    public Argument(@NotNull String identifier, @NotNull T type) {
+    public Argument(@NotNull String identifier, @NotNull A type) {
         this.identifier = identifier;
         this.type = type;
     }
@@ -79,7 +79,7 @@ public class Argument<T extends CustomArgument<?>> {
      * @param onError The error handling function.
      * @return This Argument instance.
      */
-    public @NotNull Argument<T> onError(@NotNull BiFunction<CommandContext, ArgumentExType, Boolean> onError) {
+    public @NotNull Argument<A> onError(@NotNull BiFunction<CommandContext, ArgumentExType, Boolean> onError) {
         this.onError = onError;
         return this;
     }
@@ -99,7 +99,7 @@ public class Argument<T extends CustomArgument<?>> {
      * @param suggestions The suggestion dispatcher.
      * @return This Argument instance.
      */
-    public @NotNull Argument<T> suggestions(@NotNull SuggestionDispatcher suggestions) {
+    public @NotNull Argument<A> suggestions(@NotNull SuggestionDispatcher suggestions) {
         this.suggestions = suggestions;
         return this;
     }
@@ -109,7 +109,7 @@ public class Argument<T extends CustomArgument<?>> {
      *
      * @return The custom argument type.
      */
-    public @NotNull T type() {
+    public @NotNull A type() {
         return type;
     }
 
@@ -119,7 +119,7 @@ public class Argument<T extends CustomArgument<?>> {
      * @param type The custom argument type.
      * @return This Argument instance.
      */
-    public @NotNull Argument<T> type(@NotNull T type) {
+    public @NotNull Argument<A> type(@NotNull A type) {
         this.type = type;
         return this;
     }
@@ -139,7 +139,7 @@ public class Argument<T extends CustomArgument<?>> {
      * @param defaultVal The default value.
      * @return This Argument instance.
      */
-    public @NotNull Argument<T> defaultVal(@NotNull String defaultVal) {
+    public @NotNull Argument<A> defaultVal(@NotNull String defaultVal) {
         this.defaultVal = defaultVal;
         return this;
     }

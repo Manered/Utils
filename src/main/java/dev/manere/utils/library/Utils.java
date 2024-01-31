@@ -26,7 +26,7 @@ public class Utils {
     private Utils(@NotNull JavaPlugin plugin) {
         Utils.plugin = plugin;
 
-        if (Versions.isHigherThanOrEqualTo("1.20")) {
+        if (Versions.isHigherThanOrEqualTo("1.20.1")) {
             try {
                 Registrar.events(new SpigotAnchorEventListener());
             } catch (Exception ignored) {}
