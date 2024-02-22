@@ -11,6 +11,8 @@ import java.util.function.Predicate;
 
 /**
  * A utility class providing methods for reflection-related tasks.
+ * 
+ * @author MrMicky
  */
 public class ReflectionUtils {
     public static final String NM_PACKAGE = "net.minecraft";
