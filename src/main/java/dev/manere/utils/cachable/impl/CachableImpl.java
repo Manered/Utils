@@ -7,6 +7,7 @@ import dev.manere.utils.model.Tuple;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -149,5 +150,10 @@ public class CachableImpl<K, V> implements Cachable<K, V> {
     @Override
     public @NotNull CachableSnapshot<K, V> snapshot() {
         return new CachableSnapshotImpl<>(this);
+    }
+
+    @Override
+    public @NotNull Iterator<Tuple<K, V>> iterator() {
+        return snapshot().asList().iterator();
     }
 }

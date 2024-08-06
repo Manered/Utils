@@ -175,6 +175,7 @@ public interface Elements<E> extends Iterable<E> {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     Iterator<E> iterator();
 
     /**

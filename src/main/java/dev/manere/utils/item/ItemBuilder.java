@@ -360,7 +360,7 @@ public class ItemBuilder {
      * @return This builder, for chaining
      */
     public ItemBuilder glow() {
-        addUnsafeEnchantment(Enchantment.LUCK, 1);
+        addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, 1);
         addFlag(ItemFlag.HIDE_ENCHANTS);
         return this;
     }
@@ -371,7 +371,7 @@ public class ItemBuilder {
      * @return This builder, for chaining
      */
     public ItemBuilder removeGlow() {
-        removeEnchantment(Enchantment.LUCK);
+        removeEnchantment(Enchantment.LUCK_OF_THE_SEA);
         removeFlag(ItemFlag.HIDE_ENCHANTS);
         return this;
     }

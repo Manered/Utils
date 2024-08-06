@@ -1,6 +1,5 @@
 package dev.manere.utils.command.impl;
 
-import dev.manere.utils.command.CommandTypes;
 import dev.manere.utils.command.args.Argument;
 import dev.manere.utils.command.impl.alias.CommandAliasBuilder;
 import dev.manere.utils.command.impl.dispatcher.CommandContext;
@@ -39,19 +38,14 @@ import java.util.function.Predicate;
  * - <strong>{@code true}</strong> if you want to stop execution of the command,
  * <P>
  * - <strong>{@code false}</strong> if you want to continue execution of the command.
- * <P></P>
- * <strong>COMMAND TYPES:</strong>
- * <P>You will find documentation for Command Types in {@link CommandTypes}</P>
  *
  * @see CommandDispatcher
  * @see SuggestionDispatcher
- * @see CommandTypes
  * @see Argument
  * @see CommandContext
  */
 public class Commands {
     private final String name;
-    private final CommandTypes type;
     private CommandDispatcher dispatcher;
     private SuggestionDispatcher suggestionDispatcher;
     private final Command command;
@@ -63,11 +57,9 @@ public class Commands {
      * Constructs a new Commands with the specified name and type.
      *
      * @param name The name of the command.
-     * @param type The type of the command.
      */
-    public Commands(@NotNull String name, @NotNull CommandTypes type) {
+    public Commands(@NotNull String name) {
         this.name = name;
-        this.type = type;
         this.requirements = new ArrayList<>();
         this.args = new ArrayList<>();
         this.command = new Command(name) {
@@ -79,26 +71,12 @@ public class Commands {
     }
 
     /**
-     * Constructs a new Commands with the specified name and the default type.
-     *
-     * @param name The name of the command.
-     */
-    public Commands(@NotNull String name) {
-        this(name, CommandTypes.commandMap());
-    }
-
-    /**
      * Constructs a new Commands with the specified Bukkit command.
      *
      * @param command The Bukkit command.
      */
     private Commands(Command command) {
-        CommandTypes commandType = Utils.plugin().getCommand(command.getName()) != null
-                ? CommandTypes.PLUGIN_YML
-                : CommandTypes.COMMAND_MAP;
-
         this.name = command.getName();
-        this.type = commandType;
         this.requirements = new ArrayList<>();
         this.args = new ArrayList<>();
         this.command = command;
@@ -125,17 +103,6 @@ public class Commands {
     @ApiStatus.Internal
     public static @NotNull Commands legacy(Command command) {
         return new Commands(command);
-    }
-
-    /**
-     * Create a new Commands with the specified name and type.
-     *
-     * @param name The name of the command.
-     * @param type The type of the command.
-     * @return A new Commands instance.
-     */
-    public static @NotNull Commands command(@NotNull String name, @NotNull CommandTypes type) {
-        return new Commands(name, type);
     }
 
     /**
@@ -391,15 +358,6 @@ public class Commands {
      */
     public @NotNull String name() {
         return name;
-    }
-
-    /**
-     * Gets the type of the command.
-     *
-     * @return The type of the command
-     */
-    public @NotNull CommandTypes type() {
-        return type;
     }
 
     /**

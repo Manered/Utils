@@ -16,7 +16,6 @@ public class EntityTypeArgument implements CustomArgument<EntityType> {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("deprecation")
     @Override
     public @Nullable EntityType parse(@NotNull CommandContext ctx, @Nullable String arg) throws ArgumentParseException {
         if (arg == null) {

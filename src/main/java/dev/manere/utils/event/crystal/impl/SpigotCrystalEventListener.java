@@ -25,7 +25,7 @@ public class SpigotCrystalEventListener implements Listener {
 
     @EventHandler
     public void onCrystalExplode(EntityDamageByEntityEvent event) {
-        if (event.getEntityType() != EntityType.ENDER_CRYSTAL) return;
+        if (event.getEntityType() != EntityType.END_CRYSTAL) return;
 
         if (event.getDamager().getType() != EntityType.PLAYER) return;
 

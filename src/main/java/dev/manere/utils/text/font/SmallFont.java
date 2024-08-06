@@ -30,7 +30,7 @@ public class SmallFont {
         smallFontMap.put('n' , 'ɴ');
         smallFontMap.put('o' , 'ᴏ');
         smallFontMap.put('p' , 'ᴘ');
-        smallFontMap.put('q' , 'q');
+        smallFontMap.put('q' , 'ꞯ');
         smallFontMap.put('r' , 'ʀ');
         smallFontMap.put('s' , 'ꜱ');
         smallFontMap.put('t' , 'ᴛ');

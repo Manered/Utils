@@ -3,9 +3,11 @@ package dev.manere.utils.cachable;
 import dev.manere.utils.cachable.impl.CachableImpl;
 import dev.manere.utils.consumers.PairConsumer;
 import dev.manere.utils.model.Tuple;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -14,7 +16,7 @@ import java.util.Map;
  * @param <K> The type of keys in the cache.
  * @param <V> The type of values in the cache.
  */
-public interface Cachable<K, V> {
+public interface Cachable<K, V> extends Iterable<Tuple<K, V>> {
     /**
      * Creates and returns a Cachable instance.
      *
@@ -183,4 +185,8 @@ public interface Cachable<K, V> {
      * @return A snapshot of the cache.
      */
     CachableSnapshot<K, V> snapshot();
+
+    @NotNull
+    @Override
+    Iterator<Tuple<K, V>> iterator();
 }
