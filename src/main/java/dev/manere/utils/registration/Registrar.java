@@ -7,7 +7,6 @@ import dev.manere.utils.command.impl.CommandsRegistrar;
 import dev.manere.utils.command.impl.dispatcher.CommandContext;
 import dev.manere.utils.command.impl.suggestions.Suggestions;
 import dev.manere.utils.library.Utils;
-import me.lucko.commodore.CommodoreProvider;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
@@ -156,12 +155,6 @@ public class Registrar {
 
         if (builder.bukkitCommand().permissionMessage() != null) {
             command.permissionMessage(builder.bukkitCommand().permissionMessage());
-        }
-
-        if (CommodoreProvider.isSupported()) {
-            if (handler.brigadier()) {
-                handler.brigadierRegister(Utils.plugin());
-            }
         }
 
         Registrar.commandMap().register(builder.bukkitCommand().getName(), builder.namespace(), command);

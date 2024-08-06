@@ -5,18 +5,14 @@ import dev.manere.utils.event.crystal.impl.SpigotCrystalEventListener;
 import dev.manere.utils.menu.listener.MenuListener;
 import dev.manere.utils.misc.Versions;
 import dev.manere.utils.registration.Registrar;
-import me.lucko.commodore.Commodore;
-import me.lucko.commodore.CommodoreProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@code Utils} class provides utility methods and event registration for the Utils library.
  */
 public class Utils {
     private static JavaPlugin plugin;
-    private static Commodore commodore;
 
     /**
      * Constructs a new {@code Utils} instance.
@@ -30,10 +26,6 @@ public class Utils {
             try {
                 Registrar.events(new SpigotAnchorEventListener());
             } catch (Exception ignored) {}
-        }
-
-        if (CommodoreProvider.isSupported()) {
-            commodore = CommodoreProvider.getCommodore(plugin);
         }
 
         Registrar.events(new SpigotCrystalEventListener());
@@ -56,15 +48,6 @@ public class Utils {
      */
     public static @NotNull JavaPlugin plugin() {
         return plugin;
-    }
-
-    /**
-     * Returns the JavaPlugin instance that will be used for event registration and more.
-     *
-     * @return The JavaPlugin instance that will be used for event registration and more.
-     */
-    public static @Nullable Commodore commodore() {
-        return commodore;
     }
 
     /**

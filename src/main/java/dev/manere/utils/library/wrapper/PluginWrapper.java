@@ -1,6 +1,5 @@
 package dev.manere.utils.library.wrapper;
 
-import dev.manere.utils.command.CommandTypes;
 import dev.manere.utils.command.impl.Commands;
 import dev.manere.utils.library.Utils;
 import dev.manere.utils.library.event.PluginEvents;
@@ -169,24 +168,13 @@ public abstract class PluginWrapper extends JavaPlugin implements Listener {
     }
 
     /**
-     * Create a new Commands with the specified name and default (PLUGIN_YML) type.
+     * Create a new Commands with the specified name
      *
      * @param name The name of the command.
      * @return A new Commands instance.
      */
     public final @NotNull Commands command(String name) {
         return Commands.command(name);
-    }
-
-    /**
-     * Create a new Commands with the specified name and type.
-     *
-     * @param name The name of the command.
-     * @param type The type of the command.
-     * @return A new Commands instance.
-     */
-    public final @NotNull Commands command(String name, CommandTypes type) {
-        return Commands.command(name, type);
     }
 
     /**
